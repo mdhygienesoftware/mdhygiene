@@ -4,9 +4,11 @@ import { getContactInfo } from "@/lib/queries";
 import CartBadge from "@/components/CartBadge";
 
 const NAV_LINKS = [
+  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/products", label: "Products" },
   { href: "/products#brands", label: "Brands" },
+  { href: "/products?type=oem", label: "OEM / Private Label" },
   { href: "/about#certifications", label: "Certifications" },
 ];
 

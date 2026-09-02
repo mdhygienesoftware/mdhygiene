@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { saveProductAction } from "@/lib/admin-actions";
 import MediaUploader from "@/components/admin/MediaUploader";
-import type { Brand, Category, Product } from "@/lib/types";
+import { CATALOG_TYPES, type Brand, type Category, type Product } from "@/lib/types";
 
 export default function ProductForm({ product, brands, categories }: { product?: Product; brands: Brand[]; categories: Category[] }) {
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +26,14 @@ export default function ProductForm({ product, brands, categories }: { product?:
         <Field label="Name" name="name" defaultValue={product?.name} required />
         <Field label="Slug" name="slug" defaultValue={product?.slug} required />
       </div>
+      <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+        Catalog
+        <select name="catalog_type" defaultValue={product?.catalog_type ?? "own_brand"} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal">
+          {CATALOG_TYPES.map((t) => (
+            <option key={t.value} value={t.value}>{t.label}</option>
+          ))}
+        </select>
+      </label>
       <div className="grid md:grid-cols-2 gap-4">
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
           Brand

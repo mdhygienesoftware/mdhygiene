@@ -269,6 +269,7 @@ export type Database = {
         Row: {
           badges: string[];
           brand_id: string | null;
+          catalog_type: string;
           category_id: string | null;
           created_at: string;
           description: string | null;
@@ -284,6 +285,7 @@ export type Database = {
         Insert: {
           badges?: string[];
           brand_id?: string | null;
+          catalog_type?: string;
           category_id?: string | null;
           created_at?: string;
           description?: string | null;
@@ -299,6 +301,7 @@ export type Database = {
         Update: {
           badges?: string[];
           brand_id?: string | null;
+          catalog_type?: string;
           category_id?: string | null;
           created_at?: string;
           description?: string | null;

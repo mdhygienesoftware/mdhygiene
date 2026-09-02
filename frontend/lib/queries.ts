@@ -23,13 +23,19 @@ export async function getCategories(): Promise<Category[]> {
   return data ?? [];
 }
 
-export async function getProducts(filter?: { brandSlug?: string; categorySlug?: string }): Promise<Product[]> {
+export async function getProducts(filter?: {
+  brandSlug?: string;
+  categorySlug?: string;
+  catalogType?: string;
+}): Promise<Product[]> {
   const supabase = await createClient();
   let query = supabase
     .from("products")
     .select("*, brand:brands(*), category:product_categories(*), variants:product_variants(*)")
     .eq("is_active", true)
     .order("sort_order");
+
+  if (filter?.catalogType) query = query.eq("catalog_type", filter.catalogType);
 
   if (filter?.brandSlug) {
     const { data: brand } = await supabase.from("brands").select("id").eq("slug", filter.brandSlug).single();

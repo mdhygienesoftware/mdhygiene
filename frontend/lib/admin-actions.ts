@@ -50,6 +50,7 @@ export async function saveProductAction(id: string | null, formData: FormData): 
     name: String(formData.get("name") ?? "").trim(),
     brand_id: String(formData.get("brand_id") ?? "") || null,
     category_id: String(formData.get("category_id") ?? "") || null,
+    catalog_type: String(formData.get("catalog_type") ?? "own_brand"),
     description: String(formData.get("description") ?? "").trim() || null,
     features: textArrayFromForm(formData, "features"),
     badges: textArrayFromForm(formData, "badges"),

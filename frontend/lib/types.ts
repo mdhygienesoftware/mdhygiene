@@ -49,3 +49,13 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number];
 
 export const STOCK_STATUSES = ["in_stock", "low_stock", "out_of_stock"] as const;
 export type StockStatus = (typeof STOCK_STATUSES)[number];
+
+export const CATALOG_TYPES = [
+  { value: "own_brand", label: "Our Brands" },
+  { value: "oem", label: "OEM / Private Label" },
+] as const;
+
+export type CatalogType = (typeof CATALOG_TYPES)[number]["value"];
+
+export const catalogTypeLabel = (value: string) =>
+  CATALOG_TYPES.find((t) => t.value === value)?.label ?? value;
