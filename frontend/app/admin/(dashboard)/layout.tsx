@@ -30,8 +30,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen flex bg-cream">
-      <aside className="w-60 shrink-0 bg-navy text-white flex flex-col gap-1 p-5">
+    // Fixed-height shell: the sidebar stays put and only the content pane scrolls.
+    <div className="h-screen overflow-hidden flex bg-cream">
+      <aside className="w-60 shrink-0 bg-navy text-white flex flex-col gap-1 p-5 h-full overflow-y-auto">
         <span className="font-extrabold text-lg mb-6">MDHygiene Admin</span>
         {NAV.map((item) => (
           <Link key={item.href} href={item.href} className="px-3 py-2 rounded-lg text-sm font-medium text-[#C3D6E7] hover:bg-white/10 hover:text-white transition-colors">
@@ -44,7 +45,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </button>
         </form>
       </aside>
-      <main className="flex-1 p-8 max-w-6xl">{children}</main>
+      <main className="flex-1 h-full overflow-y-auto">
+        <div className="p-8 max-w-6xl">{children}</div>
+      </main>
     </div>
   );
 }
