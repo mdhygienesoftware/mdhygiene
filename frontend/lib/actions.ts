@@ -35,49 +35,6 @@ export async function submitInquiryAction(formData: FormData): Promise<ActionRes
   return { ok: true };
 }
 
-export interface OrderItemInput {
-  product_variant_id: string;
-  product_name_snapshot: string;
-  variant_label_snapshot: string;
-  quantity: number;
-  unit_price_snapshot: number | null;
-}
-
-export async function submitOrderAction(
-  details: { company_name: string; contact_name: string; email: string; phone: string; region?: string; notes?: string },
-  items: OrderItemInput[]
-): Promise<ActionResult> {
-  if (!details.company_name || !details.contact_name || !details.email || !details.phone) {
-    return { ok: false, error: "Please fill in all required fields." };
-  }
-  if (!items.length) {
-    return { ok: false, error: "Your request list is empty." };
-  }
-
-  const supabase = await createClient();
-  const { data: order, error: orderError } = await supabase
-    .from("orders")
-    .insert({
-      company_name: details.company_name,
-      contact_name: details.contact_name,
-      email: details.email,
-      phone: details.phone,
-      region: details.region || null,
-      notes: details.notes || null,
-    })
-    .select("id")
-    .single();
-
-  if (orderError || !order) return { ok: false, error: "Something went wrong — please try again." };
-
-  const { error: itemsError } = await supabase
-    .from("order_items")
-    .insert(items.map((item) => ({ ...item, order_id: order.id })));
-
-  if (itemsError) return { ok: false, error: "Something went wrong — please try again." };
-  return { ok: true };
-}
-
 export async function adminSignInAction(formData: FormData): Promise<ActionResult> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");

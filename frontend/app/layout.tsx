@@ -1,27 +1,32 @@
 import type { Metadata } from "next";
-import { CartProvider } from "@/lib/cart-context";
+import { Schibsted_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
+// Self-hosted by next/font — no render-blocking request to Google, no layout shift.
+const sans = Schibsted_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "MDHygiene — Sanitary Pads & Baby Diapers Manufacturer",
+  title: "M.D. Hygiene — Sanitary Napkin, Baby & Adult Diaper Manufacturer",
   description:
-    "MDHygiene manufactures sanitary pads and baby diapers in Surat, India, for distribution, private label / OEM, and government tender partners across India and export markets.",
+    "M.D. Hygiene Private Limited manufactures sanitary napkins, baby diapers and adult diapers in Surat, India — for distribution, private label / OEM, and government tender supply across India and export markets.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-sans text-navy antialiased">
-        <CartProvider>{children}</CartProvider>
-      </body>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+      <body className="font-sans text-navy antialiased">{children}</body>
     </html>
   );
 }

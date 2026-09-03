@@ -19,12 +19,15 @@ Two consequences worth knowing:
 | Action | Args | Effect |
 |---|---|---|
 | `submitInquiryAction` | `FormData` | Inserts into `distributor_inquiries` (status `new`). Honeypot `website` field silently drops bots. |
-| `submitOrderAction` | `details`, `items[]` | Inserts one `orders` row (status `pending`) + its `order_items`, with price/name snapshots. |
 | `adminSignInAction` | `FormData` (email, password) | Supabase password sign-in, sets the session cookie, redirects to `/admin`. |
 | `adminSignOutAction` | — | Ends the session, redirects to `/admin/login`. |
 
 Returns `{ ok: true }` or `{ ok: false, error }` — errors are deliberately generic to
 avoid leaking whether an email exists.
+
+> The public site has no cart/checkout: enquiries are the only inbound channel. The
+> `orders` / `order_items` tables and the admin Orders screen remain in place for
+> tracking, but nothing on the public site writes to them.
 
 ### Admin (`frontend/lib/admin-actions.ts`)
 

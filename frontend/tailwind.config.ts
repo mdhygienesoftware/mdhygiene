@@ -15,8 +15,8 @@ const config: Config = {
         "muted-2": "#7E8C93",
       },
       fontFamily: {
-        sans: ["'Schibsted Grotesk'", "Helvetica", "Arial", "sans-serif"],
-        mono: ["'IBM Plex Mono'", "ui-monospace", "monospace"],
+        sans: ["var(--font-sans)", "Helvetica", "Arial", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
     },
   },

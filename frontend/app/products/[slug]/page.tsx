@@ -42,11 +42,11 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
               </ul>
             )}
             <div className="flex gap-3 pt-2">
-              <Link href="/request" className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors">
-                View request list
+              <Link href="/contact" className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors">
+                Request a quote
               </Link>
-              <Link href="/contact" className="border border-border px-6 py-3 rounded-lg font-semibold text-navy hover:border-pink transition-colors">
-                Ask a question
+              <Link href="/products" className="border border-border px-6 py-3 rounded-lg font-semibold text-navy hover:border-pink transition-colors">
+                Back to catalog
               </Link>
             </div>
           </div>

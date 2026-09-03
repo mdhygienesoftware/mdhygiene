@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getContactInfo } from "@/lib/queries";
-import CartBadge from "@/components/CartBadge";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -49,10 +48,8 @@ export default async function Header() {
           >
             Get a Quote
           </Link>
-          <CartBadge />
         </nav>
         <div className="lg:hidden flex items-center gap-4">
-          <CartBadge />
           <Link href="/contact" className="bg-pink text-white px-4 py-2 rounded-lg font-semibold text-sm">
             Quote
           </Link>
