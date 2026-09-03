@@ -30,7 +30,7 @@ export default async function AdminOemPage() {
             Lines manufactured under a client&apos;s own brand, kept separate from our four house brands.
           </p>
         </div>
-        <Link href="/admin/products/new" className="bg-navy text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-pink transition-colors">
+        <Link href="/admin/products/new?type=oem" className="bg-navy text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-pink transition-colors">
           + New OEM product
         </Link>
       </div>
@@ -39,8 +39,8 @@ export default async function AdminOemPage() {
         <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2">
           <p className="font-bold text-navy">No OEM products yet.</p>
           <p className="text-sm text-muted-2">
-            Add a product and set its <span className="font-semibold">Catalog</span> field to
-            &ldquo;OEM / Private Label&rdquo; — it will appear here instead of under Products.
+            Use <span className="font-semibold">+ New OEM product</span> above — anything added from
+            this section is filed here instead of under Products.
           </p>
         </div>
       ) : (

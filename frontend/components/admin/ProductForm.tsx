@@ -3,11 +3,23 @@
 import { FormEvent, useState } from "react";
 import { saveProductAction } from "@/lib/admin-actions";
 import MediaUploader from "@/components/admin/MediaUploader";
-import { CATALOG_TYPES, type Brand, type Category, type Product } from "@/lib/types";
+import { catalogTypeLabel, type Brand, type Category, type Product } from "@/lib/types";
 
-export default function ProductForm({ product, brands, categories }: { product?: Product; brands: Brand[]; categories: Category[] }) {
+export default function ProductForm({
+  product,
+  brands,
+  categories,
+  defaultCatalogType = "own_brand",
+}: {
+  product?: Product;
+  brands: Brand[];
+  categories: Category[];
+  /** Which section this form was opened from — determines the catalog it saves into. */
+  defaultCatalogType?: string;
+}) {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const catalogType = product?.catalog_type ?? defaultCatalogType;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,14 +38,8 @@ export default function ProductForm({ product, brands, categories }: { product?:
         <Field label="Name" name="name" defaultValue={product?.name} required />
         <Field label="Slug" name="slug" defaultValue={product?.slug} required />
       </div>
-      <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
-        Catalog
-        <select name="catalog_type" defaultValue={product?.catalog_type ?? "own_brand"} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal">
-          {CATALOG_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>{t.label}</option>
-          ))}
-        </select>
-      </label>
+      {/* Set by the section the product is created from, not chosen in the form. */}
+      <input type="hidden" name="catalog_type" value={catalogType} />
       <div className="grid md:grid-cols-2 gap-4">
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
           Brand
@@ -77,9 +83,12 @@ export default function ProductForm({ product, brands, categories }: { product?:
       </div>
       <Field label="Sort order" name="sort_order" type="number" defaultValue={String(product?.sort_order ?? 0)} />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <button type="submit" disabled={saving} className="self-start bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors disabled:opacity-60">
-        {saving ? "Saving…" : product ? "Save product" : "Create product"}
-      </button>
+      <div className="flex items-center gap-3">
+        <button type="submit" disabled={saving} className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors disabled:opacity-60">
+          {saving ? "Saving…" : product ? "Save product" : "Create product"}
+        </button>
+        <span className="text-xs text-muted">Saves under {catalogTypeLabel(catalogType)}</span>
+      </div>
     </form>
   );
 }
