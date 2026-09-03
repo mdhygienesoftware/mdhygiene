@@ -6,6 +6,7 @@ import { adminSignOutAction } from "@/lib/actions";
 const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/oem", label: "OEM / Private Label" },
   { href: "/admin/brands", label: "Brands" },
   { href: "/admin/hero", label: "Hero & Media" },
   { href: "/admin/content", label: "Site Content" },
