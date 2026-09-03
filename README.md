@@ -33,6 +33,12 @@ npm install
 npm run dev                    # http://localhost:3000
 ```
 
+> **Don't run `npm run build` while `npm run dev` is running.** Both write to `.next`,
+> and the production build wipes the dev server's chunks — every CSS/JS request then
+> 404s and the site renders as unstyled HTML with no interactivity. To check types
+> without disturbing dev, use `npm run typecheck`. If it does happen: stop dev,
+> `rm -rf .next`, start dev again.
+
 `.env.local` needs:
 
 ```
