@@ -24,17 +24,16 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
   return (
     <form onSubmit={handleSubmit} className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-4 max-w-xl">
       <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
-        Media type
+        Slide media
         <select name="media_type" value={mediaType} onChange={(e) => setMediaType(e.target.value)} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal">
           <option value="image">Image</option>
-          <option value="video">Video</option>
+          <option value="video">Video (autoplays, muted, looped)</option>
         </select>
       </label>
       <MediaUploader
         label={mediaType === "video" ? "Hero video" : "Hero image"}
         name="media_url"
         defaultValue={slide?.media_url}
-        accept={mediaType === "video" ? "video/*" : "image/*"}
         kind={mediaType === "video" ? "video" : "image"}
       />
       {mediaType === "video" && <MediaUploader label="Poster image (shown while video loads)" name="poster_url" defaultValue={slide?.poster_url} />}

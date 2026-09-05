@@ -18,7 +18,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const slide = slides[active];
 
   return (
-    <section className="relative overflow-hidden min-h-[520px] md:min-h-[600px] flex items-center mx-3 md:mx-6 mt-3 md:mt-5 rounded-[24px] md:rounded-[32px]">
+    <section className="relative overflow-hidden min-h-[520px] md:min-h-[600px] flex items-center m-3 md:m-6 rounded-[24px] md:rounded-[32px]">
       {/* Full-bleed media, edge to edge. Slides cross-fade and drift left→right. */}
       {slides.map((s, i) => (
         <div
