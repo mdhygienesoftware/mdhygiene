@@ -18,7 +18,7 @@ Two consequences worth knowing:
 
 | Action | Args | Effect |
 |---|---|---|
-| `submitInquiryAction` | `FormData` | Inserts into `distributor_inquiries` (status `new`). Honeypot `website` field silently drops bots. |
+| `submitInquiryAction` | `FormData` | Inserts into `distributor_inquiries` (status `new`), then emails `INQUIRY_NOTIFICATION_TO` via `lib/email.ts`. Honeypot `website` field silently drops bots. Mail failures are logged, never returned — the record is already saved. |
 | `adminSignInAction` | `FormData` (email, password) | Supabase password sign-in, sets the session cookie, redirects to `/admin`. |
 | `adminSignOutAction` | — | Ends the session, redirects to `/admin/login`. |
 

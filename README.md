@@ -69,6 +69,29 @@ in the migration history and this README.
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
 | Orders | Order requests with line items and a pending → … → delivered pipeline |
 
+### Enquiry email notifications
+
+When someone submits the contact form the enquiry is written to
+`distributor_inquiries` (visible under **Inquiries** in the admin panel) and an email
+notification is sent to `INQUIRY_NOTIFICATION_TO`.
+
+Email is **best-effort by design**: the record is saved first, and a mail failure is
+logged rather than shown to the visitor — an outage at the mail provider must never
+lose an enquiry. If `RESEND_API_KEY` is unset, notifications are simply skipped and
+everything else still works.
+
+To switch notifications on:
+
+1. Create a free account at [resend.com](https://resend.com) and generate an API key.
+2. Set `RESEND_API_KEY` in `.env.local` (and in the Vercel project's env vars).
+3. Leave `INQUIRY_NOTIFICATION_FROM` as `onboarding@resend.dev` to start. To send from
+   your own domain, verify `mdhygiene.in` in Resend (add the DNS records it gives you)
+   and change it to e.g. `M.D. Hygiene <enquiries@mdhygiene.in>` — this also improves
+   deliverability, since mail from a verified domain is far less likely to land in spam.
+
+The notification's reply-to is set to the enquirer's address, so replying from the
+inbox goes straight back to them.
+
 ### How enquiries work
 
 This is a wholesale/tender business, not retail, so the public site has **no cart and no

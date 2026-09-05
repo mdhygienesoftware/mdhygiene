@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { sendInquiryNotification } from "@/lib/email";
 
 export interface ActionResult {
   ok: boolean;
@@ -32,6 +33,11 @@ export async function submitInquiryAction(formData: FormData): Promise<ActionRes
   const supabase = await createClient();
   const { error } = await supabase.from("distributor_inquiries").insert(payload);
   if (error) return { ok: false, error: "Something went wrong — please try again." };
+
+  // Saved first, notified second: a mail outage must not lose the enquiry or
+  // show the visitor an error, so the result is logged rather than surfaced.
+  await sendInquiryNotification(payload);
+
   return { ok: true };
 }
 
