@@ -25,9 +25,9 @@ Two consequences worth knowing:
 Returns `{ ok: true }` or `{ ok: false, error }` — errors are deliberately generic to
 avoid leaking whether an email exists.
 
-> The public site has no cart/checkout: enquiries are the only inbound channel. The
-> `orders` / `order_items` tables and the admin Orders screen remain in place for
-> tracking, but nothing on the public site writes to them.
+> The public site has no cart/checkout and the admin has no Orders screen: enquiries are
+> the only inbound channel. The `orders` / `order_items` tables remain in the database
+> but are unused by the app.
 
 ### Admin (`frontend/lib/admin-actions.ts`)
 
@@ -45,7 +45,6 @@ All require an `admin_profiles` row; RLS rejects them otherwise.
 | `deleteHeroSlideAction` | `id` | Delete a hero slide |
 | `updateSiteSettingAction` | `key`, `value` | Upsert a `site_settings` row |
 | `updateInquiryStatusAction` | `id`, `status` | `new` → `contacted` → `closed` |
-| `updateOrderStatusAction` | `id`, `status` | `pending` → `confirmed` → … → `delivered`/`cancelled` |
 
 Each mutation calls `revalidatePath` so public pages reflect changes immediately.
 

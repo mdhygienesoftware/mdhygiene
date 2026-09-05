@@ -5,8 +5,6 @@ export type Category = Tables<"product_categories">;
 export type ProductVariant = Tables<"product_variants">;
 export type HeroSlide = Tables<"hero_slides">;
 export type Inquiry = Tables<"distributor_inquiries">;
-export type Order = Tables<"orders">;
-export type OrderItem = Tables<"order_items">;
 
 export type Product = Tables<"products"> & {
   brand: Brand | null;
@@ -43,12 +41,6 @@ export const INQUIRY_TYPES = [
 ] as const;
 
 export type InquiryType = (typeof INQUIRY_TYPES)[number]["value"];
-
-export const ORDER_STATUSES = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"] as const;
-export type OrderStatus = (typeof ORDER_STATUSES)[number];
-
-export const STOCK_STATUSES = ["in_stock", "low_stock", "out_of_stock"] as const;
-export type StockStatus = (typeof STOCK_STATUSES)[number];
 
 export const CATALOG_TYPES = [
   { value: "own_brand", label: "Our Brands" },

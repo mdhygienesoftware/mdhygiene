@@ -159,17 +159,10 @@ export async function updateSiteSettingAction(key: string, value: unknown): Prom
   return { ok: true };
 }
 
-// ---------- Inquiries & orders ----------
+// ---------- Inquiries ----------
 
 export async function updateInquiryStatusAction(id: string, status: string) {
   const supabase = await createClient();
   await supabase.from("distributor_inquiries").update({ status }).eq("id", id);
   revalidatePath("/admin/inquiries");
-}
-
-export async function updateOrderStatusAction(id: string, status: string) {
-  const supabase = await createClient();
-  await supabase.from("orders").update({ status }).eq("id", id);
-  revalidatePath("/admin/orders");
-  revalidatePath(`/admin/orders/${id}`);
 }

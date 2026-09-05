@@ -67,7 +67,6 @@ in the migration history and this README.
 | Hero & Media | Manage homepage carousel slides — upload **images or videos**, set headline/CTA/order/visibility |
 | Site Content | Edit stats, contact details, addresses, about copy and certifications without a redeploy |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
-| Orders | Order requests with line items and a pending → … → delivered pipeline |
 
 ### Enquiry email notifications
 
@@ -98,9 +97,10 @@ This is a wholesale/tender business, not retail, so the public site has **no car
 checkout**. Distributors browse the catalog with MRP and net pricing visible, then send an
 enquiry through the contact form, which lands in Inquiries for the team to quote.
 
-The `orders` / `order_items` tables and the admin Orders screen are still there for
-tracking order requests, but nothing on the public site writes to them — they're
-populated only if a cart/checkout or manual order entry is added later.
+There is no order-request screen: enquiries are the whole inbound funnel. The `orders`
+and `order_items` tables still exist in the database but are unused by the app — they're
+left in place (empty, RLS-protected) so an ordering flow can be reintroduced without a
+migration. Drop them if you're sure you won't want one.
 
 ## Adding another admin
 

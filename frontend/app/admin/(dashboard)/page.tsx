@@ -3,17 +3,17 @@ import { createClient } from "@/lib/supabase/server";
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
-  const [{ count: products }, { count: newInquiries }, { count: pendingOrders }, { count: brands }] = await Promise.all([
-    supabase.from("products").select("id", { count: "exact", head: true }).eq("is_active", true),
+  const [{ count: products }, { count: newInquiries }, { count: oemProducts }, { count: brands }] = await Promise.all([
+    supabase.from("products").select("id", { count: "exact", head: true }).eq("is_active", true).eq("catalog_type", "own_brand"),
     supabase.from("distributor_inquiries").select("id", { count: "exact", head: true }).eq("status", "new"),
-    supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    supabase.from("products").select("id", { count: "exact", head: true }).eq("catalog_type", "oem"),
     supabase.from("brands").select("id", { count: "exact", head: true }),
   ]);
 
   const cards = [
     { label: "Active products", value: products ?? 0, href: "/admin/products" },
     { label: "New inquiries", value: newInquiries ?? 0, href: "/admin/inquiries" },
-    { label: "Pending orders", value: pendingOrders ?? 0, href: "/admin/orders" },
+    { label: "OEM products", value: oemProducts ?? 0, href: "/admin/oem" },
     { label: "Brands", value: brands ?? 0, href: "/admin/brands" },
   ];
 
