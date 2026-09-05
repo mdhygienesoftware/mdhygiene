@@ -14,7 +14,7 @@ brands
 product_categories
   id (uuid, pk), slug (unique), name, description
   1—N  products
-  rows: sanitary-pads, baby-diapers, adult-diapers (no SKUs yet)
+  rows: sanitary-pads, baby-diapers
 
 products                       ← a product *line* (e.g. "7Soft Maxi Care Cottony (XXL)")
   id (uuid, pk), brand_id → brands, category_id → product_categories,

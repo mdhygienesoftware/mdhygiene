@@ -18,9 +18,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "M.D. Hygiene — Sanitary Napkin, Baby & Adult Diaper Manufacturer",
+  title: "M.D. Hygiene — Sanitary Napkin & Baby Diaper Manufacturer",
   description:
-    "M.D. Hygiene Private Limited manufactures sanitary napkins, baby diapers and adult diapers in Surat, India — for distribution, private label / OEM, and government tender supply across India and export markets.",
+    "M.D. Hygiene Private Limited manufactures sanitary napkins and baby diapers in Surat, India — for distribution, private label / OEM, and government tender supply across India and export markets.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

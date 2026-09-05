@@ -6,6 +6,9 @@ import Footer from "@/components/Footer";
 import VariantTable from "@/components/VariantTable";
 import { getProductBySlug } from "@/lib/queries";
 
+// Always render against current data — admin edits must show up immediately.
+export const dynamic = "force-dynamic";
+
 export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
   const product = await getProductBySlug(params.slug);
   if (!product) return notFound();
@@ -53,11 +56,10 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
         </div>
 
         <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-extrabold text-navy">Pricing &amp; availability</h2>
+          <h2 className="text-xl font-extrabold text-navy">Sizes &amp; packs</h2>
           <VariantTable product={product} />
           <p className="text-xs text-muted">
-            MRP and Net (distributor) pricing as listed in the current price list. Prices exclude taxes and
-            freight; confirm current rates before placing a bulk order.
+            Distributor pricing and MOQs are quoted on enquiry — <Link href="/contact" className="text-blue font-semibold">request a quote</Link>.
           </p>
         </div>
       </main>

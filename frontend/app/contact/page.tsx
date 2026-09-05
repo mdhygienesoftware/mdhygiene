@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import { getContactInfo } from "@/lib/queries";
 
+// Always render against current data — admin edits must show up immediately.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Get a Quote — MDHygiene" };
 
 export default async function ContactPage() {

@@ -6,6 +6,9 @@ import Brands from "@/components/Brands";
 import { getBrands, getCategories, getProducts } from "@/lib/queries";
 import { CATALOG_TYPES } from "@/lib/types";
 
+// Always render against current data — admin edits must show up immediately.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Products — MDHygiene" };
 
 export default async function ProductsPage({
@@ -77,7 +80,7 @@ export default async function ProductsPage({
                 <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2 max-w-3xl">
                   <h2 className="text-xl font-extrabold text-navy">OEM / Private label</h2>
                   <p className="text-muted-2 text-[15px] leading-relaxed">
-                    We manufacture sanitary napkins, baby diapers and adult diapers under your own brand —
+                    We manufacture sanitary napkins and baby diapers under your own brand —
                     specification, production and packaging handled end-to-end. Private-label lines aren&apos;t
                     listed publicly; tell us your requirement and we&apos;ll quote.
                   </p>

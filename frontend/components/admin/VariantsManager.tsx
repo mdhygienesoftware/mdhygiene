@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { deleteVariantAction, saveVariantAction } from "@/lib/admin-actions";
-import { STOCK_STATUSES, type ProductVariant } from "@/lib/types";
+import type { ProductVariant } from "@/lib/types";
 
 export default function VariantsManager({ productId, variants }: { productId: string; variants: ProductVariant[] }) {
   const [showNew, setShowNew] = useState(false);
@@ -16,12 +16,8 @@ export default function VariantsManager({ productId, variants }: { productId: st
               <th className="px-3 py-2">Size</th>
               <th className="px-3 py-2">Pack</th>
               <th className="px-3 py-2">Case</th>
-              <th className="px-3 py-2">MRP</th>
-              <th className="px-3 py-2">Net</th>
               <th className="px-3 py-2">SKU</th>
-              <th className="px-3 py-2">Stock</th>
-              <th className="px-3 py-2" />
-            </tr>
+              <th className="px-3 py-2" /></tr>
           </thead>
           <tbody>
             {variants.map((v) => (
@@ -50,10 +46,7 @@ function VariantRow({ productId, variant }: { productId: string; variant: Produc
       <td className="px-3 py-2 font-semibold text-navy">{variant.size_label}</td>
       <td className="px-3 py-2">{variant.pack_count}</td>
       <td className="px-3 py-2">{variant.case_qty}</td>
-      <td className="px-3 py-2">{variant.mrp}</td>
-      <td className="px-3 py-2 font-bold">{variant.net_price}</td>
       <td className="px-3 py-2 text-muted-2">{variant.sku}</td>
-      <td className="px-3 py-2">{variant.stock_status}</td>
       <td className="px-3 py-2 flex gap-3">
         <button onClick={() => setEditing(true)} className="text-blue font-semibold">Edit</button>
         <form action={deleteVariantAction.bind(null, productId, variant.id)}>
@@ -67,7 +60,7 @@ function VariantRow({ productId, variant }: { productId: string; variant: Produc
 function VariantEditorRow({ productId, variant, onDone }: { productId: string; variant: ProductVariant; onDone: () => void }) {
   return (
     <tr className="border-t border-border bg-[#FBF9F6]">
-      <td colSpan={8} className="px-3 py-3">
+      <td colSpan={5} className="px-3 py-3">
         <VariantEditor productId={productId} variant={variant} onDone={onDone} />
       </td>
     </tr>
@@ -97,17 +90,7 @@ function VariantEditor({ productId, variant, onDone }: { productId: string; vari
       <Field label="Size" name="size_label" defaultValue={variant?.size_label} required />
       <Field label="Pack" name="pack_count" defaultValue={variant?.pack_count ?? ""} />
       <Field label="Case qty" name="case_qty" type="number" defaultValue={String(variant?.case_qty ?? "")} />
-      <Field label="MRP" name="mrp" type="number" step="0.01" defaultValue={String(variant?.mrp ?? "")} />
-      <Field label="Net price" name="net_price" type="number" step="0.01" defaultValue={String(variant?.net_price ?? "")} />
       <Field label="SKU" name="sku" defaultValue={variant?.sku ?? ""} />
-      <label className="flex flex-col gap-1 text-xs font-semibold text-navy">
-        Stock
-        <select name="stock_status" defaultValue={variant?.stock_status ?? "in_stock"} className="border border-border rounded-lg px-2 py-1.5 text-sm font-normal">
-          {STOCK_STATUSES.map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-      </label>
       <Field label="Sort" name="sort_order" type="number" defaultValue={String(variant?.sort_order ?? 0)} />
       {error && <p className="text-xs text-red-600 w-full">{error}</p>}
       <button type="submit" disabled={saving} className="bg-navy text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-pink transition-colors disabled:opacity-60">

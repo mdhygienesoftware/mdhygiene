@@ -1,11 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { formatINR } from "@/lib/format";
 
 export default function ProductCard({ product }: { product: Product }) {
-  const prices = product.variants.map((v) => v.net_price).filter((p): p is number => p !== null);
-  const minPrice = prices.length ? Math.min(...prices) : null;
   const sizes = Array.from(new Set(product.variants.map((v) => v.size_label)));
 
   return (
@@ -34,10 +31,9 @@ export default function ProductCard({ product }: { product: Product }) {
           <span className="bg-[#FBF1F5] text-[#8C6A77] text-[12px] px-3 py-1 rounded-full">{sizes.join(" · ")}</span>
         </div>
         <div className="mt-auto flex items-end justify-between pt-2">
-          <div className="flex flex-col">
-            <span className="text-[11px] text-muted">Net price from</span>
-            <span className="text-xl font-extrabold text-navy">{minPrice !== null ? formatINR(minPrice) : "Enquire"}</span>
-          </div>
+          <span className="text-[12px] text-muted">
+            {product.variants.length} size{product.variants.length === 1 ? "" : "s"}
+          </span>
           <span className="text-blue font-semibold text-sm">View range →</span>
         </div>
       </div>

@@ -8,6 +8,9 @@ import Certifications from "@/components/Certifications";
 import Footer from "@/components/Footer";
 import { getBrands, getCertifications, getCompanyStats, getFeaturedProducts, getHeroSlides } from "@/lib/queries";
 
+// Always render against current data — admin edits must show up immediately.
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [slides, stats, brands, featured, certifications] = await Promise.all([
     getHeroSlides(),

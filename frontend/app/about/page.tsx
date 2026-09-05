@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import Certifications from "@/components/Certifications";
 import { getAboutContent, getCertifications, getContactInfo } from "@/lib/queries";
 
+// Always render against current data — admin edits must show up immediately.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "About — MDHygiene" };
 
 export default async function AboutPage() {

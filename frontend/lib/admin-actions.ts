@@ -85,15 +85,15 @@ export async function deleteProductAction(id: string) {
 
 export async function saveVariantAction(productId: string, variantId: string | null, formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
+  // Pricing (mrp/net_price) and stock_status are deliberately absent: they are no
+  // longer edited in the UI, and including them here would null out the existing
+  // price list on every save.
   const payload = {
     product_id: productId,
     size_label: String(formData.get("size_label") ?? "").trim(),
     pack_count: String(formData.get("pack_count") ?? "").trim() || null,
     case_qty: formData.get("case_qty") ? Number(formData.get("case_qty")) : null,
-    mrp: formData.get("mrp") ? Number(formData.get("mrp")) : null,
-    net_price: formData.get("net_price") ? Number(formData.get("net_price")) : null,
     sku: String(formData.get("sku") ?? "").trim() || null,
-    stock_status: String(formData.get("stock_status") ?? "in_stock"),
     sort_order: Number(formData.get("sort_order") ?? 0),
   };
   if (!payload.size_label) return { ok: false, error: "Size label is required." };

@@ -5,6 +5,9 @@ import Footer from "@/components/Footer";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getBrandBySlug, getProducts } from "@/lib/queries";
 
+// Always render against current data — admin edits must show up immediately.
+export const dynamic = "force-dynamic";
+
 export default async function BrandPage({ params }: { params: { slug: string } }) {
   const brand = await getBrandBySlug(params.slug);
   if (!brand) return notFound();

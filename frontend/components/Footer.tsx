@@ -10,7 +10,7 @@ export default async function Footer() {
         <div className="flex flex-col gap-3.5 max-w-[380px]">
           <span className="font-extrabold text-lg text-white">M.D. HYGIENE PVT. LTD.</span>
           <span className="text-sm leading-relaxed text-[#9DB4C8]">
-            Manufacturer of sanitary napkins, baby diapers &amp; adult diapers. Surat, Gujarat, India —
+            Manufacturer of sanitary napkins &amp; baby diapers. Surat, Gujarat, India —
             serving PAN India distributors and export markets since 2016.
           </span>
         </div>

@@ -13,6 +13,11 @@ export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    // Next's Data Cache would otherwise memoize these GETs indefinitely, so an
+    // edit made in /admin wouldn't show on the public site until a redeploy.
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
     cookies: {
       getAll() {
         return cookieStore.getAll();
