@@ -61,12 +61,14 @@ in the migration history and this README.
 
 | Section | What it does |
 |---|---|
-| Dashboard | Live counts: active products, new inquiries, pending orders, brands |
-| Products | Grouped into Our Brands / OEM, then one block per brand. Full CRUD + a nested editor for each size (pack, case qty, MRP, net price, SKU, stock status) |
+| Dashboard | Live counts: active products, new inquiries, OEM products, brands |
+| Products | One collapsible block per brand. Full CRUD + a nested editor for each size (pack, case qty, SKU). Pricing is not shown publicly, so it isn't edited here |
 | Brands | Full CRUD, logo upload, accent colour |
 | Hero & Media | Manage homepage carousel slides — upload **images or videos**, set headline/CTA/order/visibility |
 | Site Content | Edit stats, contact details, addresses, about copy and certifications without a redeploy |
+| OEM / Private Label | OEM ranges, kept separate from house brands |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
+| SEO & GEO | Search, local/geographic and AI-engine settings (see below) |
 
 ### SEO & GEO
 
@@ -126,8 +128,10 @@ inbox goes straight back to them.
 ### How enquiries work
 
 This is a wholesale/tender business, not retail, so the public site has **no cart and no
-checkout**. Distributors browse the catalog with MRP and net pricing visible, then send an
-enquiry through the contact form, which lands in Inquiries for the team to quote.
+checkout**. Distributors browse sizes and pack configurations, then send an enquiry through the
+contact form, which lands in Inquiries for the team to quote. Pricing is quoted per
+enquiry rather than published — the seeded MRP/net figures remain in the database,
+just not surfaced.
 
 There is no order-request screen: enquiries are the whole inbound funnel. The `orders`
 and `order_items` tables still exist in the database but are unused by the app — they're
