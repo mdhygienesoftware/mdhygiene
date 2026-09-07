@@ -104,3 +104,16 @@ export const getContactInfo = () => getSetting<ContactInfo>("contact");
 export const getAboutContent = () => getSetting<AboutContent>("about");
 export const getCertifications = () => getSetting<string[]>("certifications");
 export const getFooterTagline = () => getSetting<{ text: string }>("footer_tagline");
+
+/** Published team members for the public site, ordered as set in admin. */
+export async function getTeamMembers() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("team_members")
+    .select("*")
+    .eq("is_active", true)
+    .eq("show_on_website", true)
+    .order("sort_order")
+    .order("name");
+  return data ?? [];
+}

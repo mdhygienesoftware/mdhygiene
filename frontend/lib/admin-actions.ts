@@ -23,6 +23,8 @@ export async function saveBrandAction(id: string | null, formData: FormData): Pr
     logo_url: String(formData.get("logo_url") ?? "").trim() || null,
     accent_color: String(formData.get("accent_color") ?? "").trim() || null,
     sort_order: Number(formData.get("sort_order") ?? 0),
+    meta_title: String(formData.get("meta_title") ?? "").trim() || null,
+    meta_description: String(formData.get("meta_description") ?? "").trim() || null,
   };
   if (!payload.slug || !payload.name) return { ok: false, error: "Slug and name are required." };
 
@@ -187,4 +189,42 @@ export async function updateSeoSettingAction(key: string, value: unknown) {
   revalidatePath("/llms.txt");
   revalidatePath("/admin/seo");
   return { ok: true };
+}
+
+// ---------- Team members ----------
+
+export async function saveTeamMemberAction(id: string | null, formData: FormData): Promise<ActionResult> {
+  const supabase = await createClient();
+  const payload = {
+    name: String(formData.get("name") ?? "").trim(),
+    designation: String(formData.get("designation") ?? "").trim() || null,
+    department: String(formData.get("department") ?? "").trim() || null,
+    photo_url: String(formData.get("photo_url") ?? "").trim() || null,
+    email: String(formData.get("email") ?? "").trim() || null,
+    phone: String(formData.get("phone") ?? "").trim() || null,
+    bio: String(formData.get("bio") ?? "").trim() || null,
+    linkedin_url: String(formData.get("linkedin_url") ?? "").trim() || null,
+    location: String(formData.get("location") ?? "").trim() || null,
+    joined_year: String(formData.get("joined_year") ?? "").trim() || null,
+    is_active: formData.get("is_active") === "on",
+    show_on_website: formData.get("show_on_website") === "on",
+    sort_order: Number(formData.get("sort_order") ?? 0),
+  };
+  if (!payload.name) return { ok: false, error: "Name is required." };
+
+  const { error } = id
+    ? await supabase.from("team_members").update(payload).eq("id", id)
+    : await supabase.from("team_members").insert(payload);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/admin/members");
+  revalidatePath("/about");
+  redirect("/admin/members");
+}
+
+export async function deleteTeamMemberAction(id: string) {
+  const supabase = await createClient();
+  await supabase.from("team_members").delete().eq("id", id);
+  revalidatePath("/admin/members");
+  revalidatePath("/about");
 }

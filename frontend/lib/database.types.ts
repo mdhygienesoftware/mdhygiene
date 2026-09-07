@@ -346,6 +346,60 @@ export type Database = {
           },
         ];
       };
+      team_members: {
+        Row: {
+          bio: string | null
+          created_at: string
+          department: string | null
+          designation: string | null
+          email: string | null
+          id: string
+          is_active: boolean
+          joined_year: string | null
+          linkedin_url: string | null
+          location: string | null
+          name: string
+          phone: string | null
+          photo_url: string | null
+          show_on_website: boolean
+          sort_order: number
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          joined_year?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          name: string
+          phone?: string | null
+          photo_url?: string | null
+          show_on_website?: boolean
+          sort_order?: number
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          joined_year?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          name?: string
+          phone?: string | null
+          photo_url?: string | null
+          show_on_website?: boolean
+          sort_order?: number
+        }
+        Relationships: []
+      }
       seo_settings: {
         Row: { key: string; updated_at: string; value: Json }
         Insert: { key: string; updated_at?: string; value: Json }

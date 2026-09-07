@@ -67,6 +67,7 @@ in the migration history and this README.
 | Hero & Media | Manage homepage carousel slides — upload **images or videos**, set headline/CTA/order/visibility |
 | Site Content | Edit stats, contact details, addresses, about copy and certifications without a redeploy |
 | OEM / Private Label | OEM ranges, kept separate from house brands |
+| Members | Team roster grouped by department, with photo upload. Two flags: *currently employed* and *show on public website* — both must be on to appear on `/about`, so an internal roster can be kept without publishing everyone |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
 | SEO & GEO | Search, local/geographic and AI-engine settings (see below) |
 

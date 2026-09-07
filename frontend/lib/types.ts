@@ -5,6 +5,7 @@ export type Category = Tables<"product_categories">;
 export type ProductVariant = Tables<"product_variants">;
 export type HeroSlide = Tables<"hero_slides">;
 export type Inquiry = Tables<"distributor_inquiries">;
+export type TeamMember = Tables<"team_members">;
 
 export type Product = Tables<"products"> & {
   brand: Brand | null;
