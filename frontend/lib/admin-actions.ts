@@ -58,6 +58,9 @@ export async function saveProductAction(id: string | null, formData: FormData): 
     is_active: formData.get("is_active") === "on",
     is_featured: formData.get("is_featured") === "on",
     sort_order: Number(formData.get("sort_order") ?? 0),
+    meta_title: String(formData.get("meta_title") ?? "").trim() || null,
+    meta_description: String(formData.get("meta_description") ?? "").trim() || null,
+    og_image_url: String(formData.get("og_image_url") ?? "").trim() || null,
   };
   if (!payload.slug || !payload.name) return { ok: false, error: "Slug and name are required." };
 
@@ -165,4 +168,23 @@ export async function updateInquiryStatusAction(id: string, status: string) {
   const supabase = await createClient();
   await supabase.from("distributor_inquiries").update({ status }).eq("id", id);
   revalidatePath("/admin/inquiries");
+}
+
+// ---------- SEO & GEO ----------
+
+/** Persists one SEO settings block, then revalidates the public surfaces it feeds. */
+export async function updateSeoSettingAction(key: string, value: unknown) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("seo_settings")
+    .upsert({ key, value: value as never, updated_at: new Date().toISOString() });
+
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/", "layout");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/robots.txt");
+  revalidatePath("/llms.txt");
+  revalidatePath("/admin/seo");
+  return { ok: true };
 }

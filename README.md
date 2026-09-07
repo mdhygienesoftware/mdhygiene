@@ -68,6 +68,38 @@ in the migration history and this README.
 | Site Content | Edit stats, contact details, addresses, about copy and certifications without a redeploy |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
 
+### SEO & GEO
+
+Managed under **SEO & GEO** in the admin panel, with everything served from live data
+(no redeploy needed when you add products).
+
+| Surface | What it does |
+|---|---|
+| `/sitemap.xml` | Generated from active products + brands, so new products are discoverable automatically |
+| `/robots.txt` | Crawl rules, including per-crawler control for AI engines |
+| `/llms.txt` | A factual, structured summary for AI assistants (ChatGPT, Perplexity, Claude) |
+| JSON-LD | `Organization`, `LocalBusiness`, `Product`, `FAQPage`, `BreadcrumbList` |
+
+**Admin sections**
+
+- **General** — titles, descriptions, share image, canonical domain, keywords
+- **Local / GEO** — factory + corporate addresses, coordinates, opening hours, service
+  areas and export markets. These feed `LocalBusiness` schema, which drives
+  "manufacturer near me" and map results
+- **AI / Generative engines** — business summary, key facts and FAQs used by `/llms.txt`
+  and FAQ schema, plus a toggle for AI crawler access
+- **Analytics & verification** — Google Analytics / GTM IDs and Search Console verification
+- **Indexing** — robots rules and a master indexing switch
+
+Per-product SEO overrides (meta title, description, share image) live on each product's
+edit page and fall back to the product's own name/description when blank.
+
+**Before launch:** set **Canonical domain** to the live URL. Until then, canonical URLs
+and sitemap entries point at whatever host is serving the site.
+
+**Note on coordinates:** latitude/longitude are intentionally blank. Guessed coordinates
+hurt local ranking, so fill them from Google Maps (right-click the location) when ready.
+
 ### Enquiry email notifications
 
 When someone submits the contact form the enquiry is written to

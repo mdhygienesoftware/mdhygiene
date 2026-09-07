@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Schibsted_Grotesk, IBM_Plex_Mono } from "next/font/google";
+import { getSeoAnalytics, getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import "./globals.css";
 
 // Self-hosted by next/font — no render-blocking request to Google, no layout shift.
@@ -17,16 +19,69 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "M.D. Hygiene — Sanitary Napkin & Baby Diaper Manufacturer",
-  description:
-    "M.D. Hygiene Private Limited manufactures sanitary napkins and baby diapers in Surat, India — for distribution, private label / OEM, and government tender supply across India and export markets.",
-};
+/** Built from the SEO settings so titles/descriptions are editable in admin. */
+export async function generateMetadata(): Promise<Metadata> {
+  const [general, analytics] = await Promise.all([getSeoGeneral(), getSeoAnalytics()]);
+  const siteUrl = resolveSiteUrl(general.canonical_domain);
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: general.default_title,
+      template: general.title_template || "%s",
+    },
+    description: general.default_description,
+    keywords: general.keywords?.length ? general.keywords : undefined,
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      siteName: general.site_name,
+      title: general.default_title,
+      description: general.default_description,
+      url: siteUrl,
+      images: general.default_og_image ? [{ url: general.default_og_image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: general.default_title,
+      description: general.default_description,
+      images: general.default_og_image ? [general.default_og_image] : undefined,
+    },
+    verification: {
+      google: analytics.google_site_verification || undefined,
+      other: analytics.bing_site_verification
+        ? { "msvalidate.01": analytics.bing_site_verification }
+        : undefined,
+    },
+  };
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const analytics = await getSeoAnalytics();
+
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
-      <body className="font-sans text-navy antialiased">{children}</body>
+      <body className="font-sans text-navy antialiased">
+        {children}
+
+        {analytics.gtm_id && (
+          <Script id="gtm" strategy="afterInteractive">
+            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${analytics.gtm_id}');`}
+          </Script>
+        )}
+
+        {analytics.ga_measurement_id && !analytics.gtm_id && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${analytics.ga_measurement_id}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${analytics.ga_measurement_id}');`}
+            </Script>
+          </>
+        )}
+      </body>
     </html>
   );
 }

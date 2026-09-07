@@ -82,6 +82,17 @@ export default function ProductForm({
         </label>
       </div>
       <Field label="Sort order" name="sort_order" type="number" defaultValue={String(product?.sort_order ?? 0)} />
+      <fieldset className="border border-border rounded-xl p-4 flex flex-col gap-3 mt-1">
+        <legend className="text-sm font-bold text-navy px-2">SEO (optional)</legend>
+        <p className="text-xs text-muted-2">Leave blank to use the product name and description.</p>
+        <Field label="Meta title" name="meta_title" defaultValue={product?.meta_title ?? ""} />
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+          Meta description
+          <textarea name="meta_description" defaultValue={product?.meta_description ?? ""} rows={2} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal" />
+        </label>
+        <Field label="Share image URL (OG)" name="og_image_url" defaultValue={product?.og_image_url ?? ""} />
+      </fieldset>
+
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex items-center gap-3">
         <button type="submit" disabled={saving} className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors disabled:opacity-60">

@@ -5,16 +5,55 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import VariantTable from "@/components/VariantTable";
 import { getProductBySlug } from "@/lib/queries";
+import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
+import StructuredData, { breadcrumbSchema, productSchema } from "@/components/StructuredData";
+import type { Metadata } from "next";
 
 // Always render against current data — admin edits must show up immediately.
 export const dynamic = "force-dynamic";
+
+/** Per-product overrides set in admin win; otherwise fall back to product copy. */
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const [product, general] = await Promise.all([getProductBySlug(params.slug), getSeoGeneral()]);
+  if (!product) return {};
+
+  const title = product.meta_title?.trim() || product.name;
+  const description =
+    product.meta_description?.trim() ||
+    product.description?.trim() ||
+    general.default_description;
+  const image = product.og_image_url?.trim() || product.image_url || general.default_og_image;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `/products/${product.slug}`,
+      images: image ? [{ url: image }] : undefined,
+    },
+  };
+}
 
 export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
   const product = await getProductBySlug(params.slug);
   if (!product) return notFound();
 
+  const general = await getSeoGeneral();
+  const siteUrl = resolveSiteUrl(general.canonical_domain);
+
   return (
     <>
+      <StructuredData data={productSchema(product, product.brand?.name ?? null, siteUrl)} />
+      <StructuredData
+        data={breadcrumbSchema([
+          { name: "Home", url: `${siteUrl}/` },
+          { name: "Products", url: `${siteUrl}/products` },
+          { name: product.name, url: `${siteUrl}/products/${product.slug}` },
+        ])}
+      />
       <Header />
       <main className="px-6 md:px-14 py-14 flex flex-col gap-12">
         <div className="grid md:grid-cols-2 gap-10">

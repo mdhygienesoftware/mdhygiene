@@ -16,6 +16,8 @@ export type Database = {
       };
       brands: {
         Row: {
+          meta_description: string | null
+          meta_title: string | null
           accent_color: string | null;
           created_at: string;
           id: string;
@@ -26,6 +28,8 @@ export type Database = {
           tagline: string | null;
         };
         Insert: {
+          meta_description?: string | null
+          meta_title?: string | null
           accent_color?: string | null;
           created_at?: string;
           id?: string;
@@ -36,6 +40,8 @@ export type Database = {
           tagline?: string | null;
         };
         Update: {
+          meta_description?: string | null
+          meta_title?: string | null
           accent_color?: string | null;
           created_at?: string;
           id?: string;
@@ -267,6 +273,9 @@ export type Database = {
       };
       products: {
         Row: {
+          meta_description: string | null
+          meta_title: string | null
+          og_image_url: string | null
           badges: string[];
           brand_id: string | null;
           catalog_type: string;
@@ -283,6 +292,9 @@ export type Database = {
           sort_order: number;
         };
         Insert: {
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
           badges?: string[];
           brand_id?: string | null;
           catalog_type?: string;
@@ -299,6 +311,9 @@ export type Database = {
           sort_order?: number;
         };
         Update: {
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
           badges?: string[];
           brand_id?: string | null;
           catalog_type?: string;
@@ -331,6 +346,12 @@ export type Database = {
           },
         ];
       };
+      seo_settings: {
+        Row: { key: string; updated_at: string; value: Json }
+        Insert: { key: string; updated_at?: string; value: Json }
+        Update: { key?: string; updated_at?: string; value?: Json }
+        Relationships: []
+      }
       site_settings: {
         Row: { key: string; updated_at: string; value: Json };
         Insert: { key: string; updated_at?: string; value: Json };

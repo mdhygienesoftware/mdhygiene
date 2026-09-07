@@ -51,3 +51,62 @@ export type CatalogType = (typeof CATALOG_TYPES)[number]["value"];
 
 export const catalogTypeLabel = (value: string) =>
   CATALOG_TYPES.find((t) => t.value === value)?.label ?? value;
+
+// ---------- SEO & GEO ----------
+
+export interface SeoGeneral {
+  site_name: string;
+  title_template: string;
+  default_title: string;
+  default_description: string;
+  canonical_domain: string;
+  default_og_image: string;
+  keywords: string[];
+}
+
+export interface SeoAddress {
+  label: string;
+  street: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  latitude: string;
+  longitude: string;
+}
+
+export interface SeoLocal {
+  business_name: string;
+  founded_year: string;
+  factory: SeoAddress;
+  corporate: SeoAddress;
+  opening_hours: string;
+  service_areas: string[];
+  export_markets: string[];
+  google_maps_url: string;
+}
+
+export interface SeoFaq {
+  question: string;
+  answer: string;
+}
+
+export interface SeoAi {
+  allow_ai_crawlers: boolean;
+  summary: string;
+  key_facts: string[];
+  faqs: SeoFaq[];
+}
+
+export interface SeoAnalytics {
+  ga_measurement_id: string;
+  gtm_id: string;
+  google_site_verification: string;
+  bing_site_verification: string;
+}
+
+export interface SeoRobots {
+  allow_indexing: boolean;
+  disallow_paths: string[];
+  extra_rules: string;
+}
