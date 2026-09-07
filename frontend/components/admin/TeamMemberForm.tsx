@@ -25,6 +25,8 @@ export default function TeamMemberForm({ member }: { member?: TeamMember }) {
       <div className="grid md:grid-cols-2 gap-4">
         <Field label="Full name" name="name" defaultValue={member?.name} required />
         <Field label="Designation" name="designation" defaultValue={member?.designation ?? ""} placeholder="e.g. Production Manager" />
+        <Field label="Card URL slug" name="slug" defaultValue={member?.slug ?? ""} placeholder="firstname-lastname" />
+        <Field label="WhatsApp number" name="whatsapp" defaultValue={member?.whatsapp ?? ""} placeholder="+919999999999" />
       </div>
       <div className="grid md:grid-cols-2 gap-4">
         <Field label="Department" name="department" defaultValue={member?.department ?? ""} placeholder="e.g. Quality, Sales, Export" />
@@ -43,6 +45,11 @@ export default function TeamMemberForm({ member }: { member?: TeamMember }) {
       </div>
 
       <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+        Card intro
+        <textarea name="intro" defaultValue={member?.intro ?? ""} rows={2} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal resize-none" />
+        <span className="text-xs font-normal text-muted-2">Shown on their digital visiting card at /card/&lt;slug&gt;</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
         Bio
         <textarea
           name="bio"
@@ -58,6 +65,9 @@ export default function TeamMemberForm({ member }: { member?: TeamMember }) {
         </label>
         <label className="flex items-center gap-2 text-sm font-semibold text-navy">
           <input type="checkbox" name="show_on_website" defaultChecked={member?.show_on_website ?? true} /> Show on public website
+        </label>
+        <label className="flex items-center gap-2 text-sm font-semibold text-navy">
+          <input type="checkbox" name="card_enabled" defaultChecked={member?.card_enabled ?? true} /> Digital card enabled
         </label>
       </div>
       <p className="text-xs text-muted-2 -mt-2">

@@ -117,3 +117,34 @@ export async function getTeamMembers() {
     .order("name");
   return data ?? [];
 }
+
+/** One member's digital visiting card (the React port of the old PHP cards). */
+export async function getTeamMemberBySlug(slug: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("team_members")
+    .select("*")
+    .eq("slug", slug)
+    .eq("card_enabled", true)
+    .eq("is_active", true)
+    .maybeSingle();
+  return data;
+}
+
+/** Every member with a live card — used to list and pre-render them. */
+export async function getCardMembers() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("team_members")
+    .select("*")
+    .eq("card_enabled", true)
+    .eq("is_active", true)
+    .order("sort_order");
+  return data ?? [];
+}
+
+export async function getSocialLinks() {
+  const supabase = await createClient();
+  const { data } = await supabase.from("site_settings").select("value").eq("key", "social_links").maybeSingle();
+  return (data?.value ?? {}) as Record<string, string>;
+}

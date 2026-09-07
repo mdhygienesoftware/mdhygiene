@@ -348,6 +348,10 @@ export type Database = {
       };
       team_members: {
         Row: {
+          card_enabled: boolean
+          intro: string | null
+          slug: string | null
+          whatsapp: string | null
           bio: string | null
           created_at: string
           department: string | null
@@ -365,6 +369,10 @@ export type Database = {
           sort_order: number
         }
         Insert: {
+          card_enabled?: boolean
+          intro?: string | null
+          slug?: string | null
+          whatsapp?: string | null
           bio?: string | null
           created_at?: string
           department?: string | null
@@ -382,6 +390,10 @@ export type Database = {
           sort_order?: number
         }
         Update: {
+          card_enabled?: boolean
+          intro?: string | null
+          slug?: string | null
+          whatsapp?: string | null
           bio?: string | null
           created_at?: string
           department?: string | null

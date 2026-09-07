@@ -206,6 +206,10 @@ export async function saveTeamMemberAction(id: string | null, formData: FormData
     linkedin_url: String(formData.get("linkedin_url") ?? "").trim() || null,
     location: String(formData.get("location") ?? "").trim() || null,
     joined_year: String(formData.get("joined_year") ?? "").trim() || null,
+    slug: String(formData.get("slug") ?? "").trim() || null,
+    whatsapp: String(formData.get("whatsapp") ?? "").trim() || null,
+    intro: String(formData.get("intro") ?? "").trim() || null,
+    card_enabled: formData.get("card_enabled") === "on",
     is_active: formData.get("is_active") === "on",
     show_on_website: formData.get("show_on_website") === "on",
     sort_order: Number(formData.get("sort_order") ?? 0),
@@ -219,6 +223,7 @@ export async function saveTeamMemberAction(id: string | null, formData: FormData
 
   revalidatePath("/admin/members");
   revalidatePath("/about");
+  revalidatePath("/card", "layout");
   redirect("/admin/members");
 }
 

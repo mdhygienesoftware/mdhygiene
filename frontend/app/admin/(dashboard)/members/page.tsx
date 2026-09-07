@@ -59,6 +59,9 @@ export default async function AdminMembersPage() {
                         {m.is_active && !m.show_on_website && " · Hidden from site"}
                       </p>
                     </div>
+                    {m.slug && m.card_enabled && (
+                      <a href={`/card/${m.slug}`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-muted-2 hover:text-pink">Card ↗</a>
+                    )}
                     <Link href={`/admin/members/${m.id}`} className="text-sm font-semibold text-blue">Manage</Link>
                     <form action={deleteTeamMemberAction.bind(null, m.id)}>
                       <button type="submit" className="text-sm font-semibold text-red-600">Delete</button>

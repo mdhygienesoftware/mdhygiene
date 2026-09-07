@@ -11,3 +11,7 @@ coverage/
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Legacy PHP visiting-card site (imported into the app; contains live DB
+# credentials in card/card/data.php and db-config.php — must not be committed)
+/card/
