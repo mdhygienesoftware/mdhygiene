@@ -5,6 +5,15 @@
 html,
 body {
   background: #fbf6f2;
+  /* A single overflowing element shouldn't let the whole page pan sideways. */
+  overflow-x: hidden;
+}
+
+/* Let long addresses/emails wrap instead of forcing the page wide */
+@media (max-width: 640px) {
+  body {
+    word-break: break-word;
+  }
 }
 
 /* Hero copy entrance — used by the slide transition in HeroCarousel. */

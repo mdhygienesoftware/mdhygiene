@@ -40,10 +40,10 @@ export default async function BrandPage({ params }: { params: { slug: string } }
     <>
       <Header />
       <main>
-        <section className="px-6 md:px-14 py-14 flex items-center gap-6">
+        <section className="px-5 md:px-14 py-10 md:py-14 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
           {brand.logo_url && (
-            <div className="h-16">
-              <Image src={brand.logo_url} alt={brand.name} width={160} height={64} className="h-16 w-auto object-contain" />
+            <div className="h-12 md:h-16">
+              <Image src={brand.logo_url} alt={brand.name} width={160} height={64} className="h-12 md:h-16 w-auto object-contain" />
             </div>
           )}
           <div>

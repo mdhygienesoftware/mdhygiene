@@ -38,15 +38,15 @@ export default async function ProductsPage({
     <>
       <Header />
       <main>
-        <section className="px-6 md:px-14 py-14 flex flex-col gap-6">
+        <section className="px-5 md:px-14 py-10 md:py-14 flex flex-col gap-6">
           <div>
-            <h1 className="text-3xl md:text-[40px] font-extrabold text-navy">Product catalog</h1>
+            <h1 className="text-[28px] md:text-[40px] font-extrabold text-navy">Product catalog</h1>
             <p className="text-muted-2 mt-2 max-w-xl">
               Sanitary napkins and baby diapers manufactured in Surat — priced for distribution, private
               label, OEM and government tender supply.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-5 px-5 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <FilterChip href="/products" active={!isFiltered}>
               All products
             </FilterChip>
@@ -76,7 +76,7 @@ export default async function ProductsPage({
             {oem.length > 0 ? (
               <ProductShowcase products={oem} title="OEM / Private label" />
             ) : (
-              <section className="px-6 md:px-14 pb-16 md:pb-20">
+              <section className="px-5 md:px-14 pb-16 md:pb-20">
                 <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2 max-w-3xl">
                   <h2 className="text-xl font-extrabold text-navy">OEM / Private label</h2>
                   <p className="text-muted-2 text-[15px] leading-relaxed">
@@ -104,7 +104,7 @@ function FilterChip({ href, active, children }: { href: string; active: boolean;
   return (
     <Link
       href={href}
-      className={`text-sm font-semibold px-4 py-2 rounded-full border transition-colors ${
+      className={`shrink-0 text-sm font-semibold px-4 py-2 rounded-full border transition-colors ${
         active ? "bg-navy text-white border-navy" : "bg-white text-navy border-border hover:border-pink"
       }`}
     >

@@ -55,9 +55,9 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
         ])}
       />
       <Header />
-      <main className="px-6 md:px-14 py-14 flex flex-col gap-12">
-        <div className="grid md:grid-cols-2 gap-10">
-          <div className="relative rounded-2xl h-[340px] bg-[#F5E1EA] overflow-hidden">
+      <main className="px-5 md:px-14 py-10 md:py-14 flex flex-col gap-10 md:gap-12">
+        <div className="grid md:grid-cols-2 gap-7 md:gap-10">
+          <div className="relative rounded-2xl h-[240px] sm:h-[300px] md:h-[340px] bg-[#F5E1EA] overflow-hidden">
             {product.image_url && (
               <Image src={product.image_url} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             )}
@@ -83,11 +83,11 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                 ))}
               </ul>
             )}
-            <div className="flex gap-3 pt-2">
-              <Link href="/contact" className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Link href="/contact" className="text-center bg-navy text-white px-6 py-3.5 sm:py-3 rounded-lg font-semibold hover:bg-pink transition-colors">
                 Request a quote
               </Link>
-              <Link href="/products" className="border border-border px-6 py-3 rounded-lg font-semibold text-navy hover:border-pink transition-colors">
+              <Link href="/products" className="text-center border border-border px-6 py-3.5 sm:py-3 rounded-lg font-semibold text-navy hover:border-pink transition-colors">
                 Back to catalog
               </Link>
             </div>

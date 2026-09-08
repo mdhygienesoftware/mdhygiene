@@ -5,8 +5,8 @@ export default async function Footer() {
   const [contact, tagline] = await Promise.all([getContactInfo(), getFooterTagline()]);
 
   return (
-    <footer className="bg-navy px-6 md:px-14 py-14 flex flex-col gap-10">
-      <div className="flex flex-col md:flex-row justify-between gap-12">
+    <footer className="bg-navy px-5 md:px-14 py-12 md:py-14 flex flex-col gap-10">
+      <div className="flex flex-col md:flex-row justify-between gap-10 md:gap-12">
         <div className="flex flex-col gap-3.5 max-w-[380px]">
           <span className="font-extrabold text-lg text-white">M.D. HYGIENE PVT. LTD.</span>
           <span className="text-sm leading-relaxed text-[#9DB4C8]">
@@ -14,12 +14,12 @@ export default async function Footer() {
             serving PAN India distributors and export markets since 2016.
           </span>
         </div>
-        <div className="flex flex-wrap gap-12 md:gap-16">
-          <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8] max-w-[240px]">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-9 md:flex md:flex-wrap md:gap-16">
+          <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8] md:max-w-[240px]">
             <span className="text-white font-bold text-[13px] tracking-[0.1em]">FACTORY</span>
             <span>{contact?.factory_address}</span>
           </div>
-          <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8] max-w-[240px]">
+          <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8] md:max-w-[240px]">
             <span className="text-white font-bold text-[13px] tracking-[0.1em]">CORPORATE OFFICE</span>
             <span>{contact?.corporate_address}</span>
           </div>
