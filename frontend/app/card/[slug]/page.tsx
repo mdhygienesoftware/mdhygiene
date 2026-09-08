@@ -74,17 +74,34 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
         <div className="relative z-10 max-w-[440px] mx-auto flex flex-col gap-5">
           {/* Card */}
           <section className="relative bg-white rounded-[28px] shadow-[0_8px_40px_rgba(18,58,92,0.10)] overflow-hidden">
-            {/* Card surface: faint dot weave + a soft tint sinking to the base,
-                so the card reads as printed stock rather than flat white. */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-[0.55]"
-              style={{
-                backgroundImage:
-                  "radial-gradient(rgba(18,58,92,0.055) 1px, transparent 1px), linear-gradient(180deg, rgba(228,119,159,0.05) 0%, rgba(255,255,255,0) 42%, rgba(30,98,176,0.05) 100%)",
-                backgroundSize: "17px 17px, 100% 100%",
-              }}
-            />
+            {/* Card surface: brand tint corners, a soft diagonal sheen and a
+                fine weave — visible enough to read as designed stock rather
+                than plain white, but never competing with the content. */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(120% 90% at 0% 100%, rgba(228,119,159,0.16) 0%, transparent 55%), radial-gradient(110% 80% at 100% 88%, rgba(30,98,176,0.15) 0%, transparent 55%), linear-gradient(180deg, #ffffff 0%, #FDFBFA 55%, #F7FAFD 100%)",
+                }}
+              />
+              <div
+                className="absolute inset-0 opacity-[0.5]"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(rgba(18,58,92,0.07) 1px, transparent 1px)",
+                  backgroundSize: "16px 16px",
+                }}
+              />
+              {/* Diagonal sheen across the lower half */}
+              <div
+                className="absolute inset-x-0 bottom-0 h-2/3 opacity-[0.55]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0) 18px, rgba(18,58,92,0.028) 18px, rgba(18,58,92,0.028) 36px)",
+                }}
+              />
+            </div>
             <CardHeader />
 
             <div className="px-6 pb-7 -mt-16 relative z-10 flex flex-col items-center text-center gap-1">

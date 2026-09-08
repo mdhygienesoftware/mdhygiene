@@ -1,73 +1,52 @@
 import Image from "next/image";
 
 /**
- * Card masthead: a shifting brand gradient, rising bubbles, and the logo held
- * inside rotating accent rings, closed off by the wave curve used throughout
- * the printed catalogue so the digital card reads as the same family.
+ * Card masthead: brand gradient with slow layered waves (the motif used
+ * throughout the printed catalogue) and the logo in a clean static badge.
  */
 export default function CardHeader() {
-  // Staggered so the bubbles never pulse in unison.
-  const bubbles = [
-    { left: "8%", size: 26, delay: "0s", dur: "7s" },
-    { left: "22%", size: 14, delay: "1.6s", dur: "6s" },
-    { left: "38%", size: 20, delay: "3.1s", dur: "8s" },
-    { left: "68%", size: 16, delay: "0.8s", dur: "6.5s" },
-    { left: "82%", size: 24, delay: "2.4s", dur: "7.5s" },
-    { left: "92%", size: 12, delay: "4s", dur: "6s" },
-  ];
-
   return (
     <div className="relative h-[200px] overflow-hidden card-sheen">
-      {bubbles.map((b, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          className="card-bubble absolute bottom-8 rounded-full bg-white/25"
-          style={{
-            left: b.left,
-            width: b.size,
-            height: b.size,
-            animationDelay: b.delay,
-            animationDuration: b.dur,
-          }}
-        />
-      ))}
+      {/* Layered waves drifting at different rates — replaces the bubbles and
+          keeps the header in the same visual language as the print material. */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 520 200"
+        preserveAspectRatio="none"
+        className="card-wave absolute inset-0 w-[118%] h-full opacity-[0.22]"
+      >
+        <path d="M0,120 C120,80 200,150 300,115 C400,82 460,110 520,95 L520,200 L0,200 Z" fill="#ffffff" />
+      </svg>
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 520 200"
+        preserveAspectRatio="none"
+        className="card-wave absolute inset-0 w-[118%] h-full opacity-[0.16]"
+        style={{ animationDuration: "16s", animationDirection: "reverse" }}
+      >
+        <path d="M0,150 C90,120 190,175 290,140 C390,108 460,140 520,125 L520,200 L0,200 Z" fill="#E4779F" />
+      </svg>
+
+      {/* Soft corner light */}
+      <span
+        aria-hidden="true"
+        className="absolute -top-16 -right-10 w-56 h-56 rounded-full bg-white/15 blur-3xl"
+      />
 
       <div className="relative h-full flex items-center justify-center pb-6">
-        <div className="relative card-float w-[132px] h-[132px] flex items-center justify-center">
-          {/* Outer sweep: a conic gradient disc, masked by the white badge to
-              leave only a rotating ring visible. */}
-          <span
-            aria-hidden="true"
-            className="card-ring absolute inset-0 rounded-full"
-            style={{
-              background:
-                "conic-gradient(from 0deg, transparent 0deg, #E4779F 70deg, #ffffff 150deg, #1E62B0 240deg, transparent 330deg)",
-            }}
+        <div className="w-[112px] h-[112px] rounded-full bg-white ring-[3px] ring-white/70 shadow-[0_10px_28px_rgba(0,0,0,0.22)] flex items-center justify-center p-2.5">
+          <Image
+            src="/images/brand/mdh-logo.png"
+            alt="M.D. Hygiene"
+            width={112}
+            height={112}
+            priority
+            className="w-full h-full object-contain rounded-full"
           />
-          {/* Inner counter-rotating dotted ring for depth */}
-          <span
-            aria-hidden="true"
-            className="card-ring-slow absolute inset-[9px] rounded-full border-2 border-dashed border-white/45"
-          />
-          {/* Soft glow */}
-          <span aria-hidden="true" className="absolute inset-1 rounded-full bg-white/25 blur-md" />
-
-          {/* Logo badge */}
-          <div className="relative w-[104px] h-[104px] rounded-full bg-white shadow-[0_10px_28px_rgba(0,0,0,0.22)] flex items-center justify-center p-2.5">
-            <Image
-              src="/images/brand/mdh-logo.png"
-              alt="M.D. Hygiene"
-              width={104}
-              height={104}
-              priority
-              className="w-full h-full object-contain rounded-full"
-            />
-          </div>
         </div>
       </div>
 
-      {/* Catalogue-style wave, layered pink over white */}
+      {/* Catalogue-style wave closing the header */}
       <svg
         aria-hidden="true"
         viewBox="0 0 440 60"
