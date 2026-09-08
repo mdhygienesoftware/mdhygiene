@@ -1,0 +1,270 @@
+# Security audit — M.D. Hygiene platform
+
+**Audited:** 8 September 2026
+**Scope:** Next.js app (public site + `/admin`), Supabase project `gtpvibbeqlndkaezqniz`
+(Postgres, Auth, Storage), dependency tree, and the legacy PHP visiting-card site.
+
+Every finding below was **verified by probing the running system**, not inferred from
+reading code. Commands used are shown so each can be re-checked after remediation.
+
+---
+
+## Summary
+
+| Severity | Count | Findings |
+|---|---|---|
+| 🔴 Critical | 2 | C1 default admin password, C2 legacy PHP data leak |
+| 🟠 High | 3 | H1 dependency CVEs, H2 no enquiry rate limit, H3 open image proxy |
+| 🟡 Medium | 5 | M1 no security headers, M2 `is_admin()` exposed via RPC, M3 leaked-password protection off, M4 staff PII harvestable, M5 JSON-LD escaping |
+| 🔵 Low | 4 | L1 no admin MFA, L2 no audit log, L3 no dependency scanning in CI, L4 no storage path separation |
+
+### What is already correct
+
+These were tested and need **no action** — worth recording so they aren't "fixed" into
+regressions later:
+
+- **RLS is enabled on all 12 public tables**, each with policies.
+- **Anonymous reads of sensitive tables return empty**: `distributor_inquiries`,
+  `orders`, `order_items`, `admin_profiles` all returned `[]`.
+- **Anonymous writes are rejected on every table** — Postgres `42501`
+  (`new row violates row-level security policy`) on products, brands, team_members,
+  site_settings, seo_settings, hero_slides.
+- **Anonymous storage upload is rejected** (`authorization` header required).
+- **No service-role key anywhere in the repo** — the app uses only the anon key plus RLS,
+  so a leaked client bundle grants nothing beyond what RLS already allows.
+- **`.env.local` and the legacy `card/` folder are gitignored** — no secrets in git history.
+- **Contact form has a honeypot field** that silently drops bots.
+- **Uploads are validated**: 50 MB cap and a MIME allowlist that deliberately **excludes
+  SVG** (SVG on a public bucket is an XSS vector).
+
+---
+
+## Phase 0 — Do before going live (blocking)
+
+> These two are the only findings where someone can take over the admin panel or read
+> your customer data today. Neither needs code changes.
+
+### C1 · Default admin password is active and publicly documented 🔴
+
+The seeded password `ChangeMe123!` still works, and it is written in `README.md` line 56
+and in the migration history.
+
+**Evidence**
+```bash
+curl -X POST "$SUPABASE_URL/auth/v1/token?grant_type=password" \
+  -H "apikey: $ANON" -H "Content-Type: application/json" \
+  -d '{"email":"admin@mdhygiene.in","password":"ChangeMe123!"}'
+# -> HTTP 200 (login succeeds)
+```
+
+**Impact:** anyone who sees the repo, or guesses a documented default, gets full control
+of products, content, SEO, member records and every distributor enquiry.
+
+**Fix**
+1. Supabase Dashboard → Authentication → Users → `admin@mdhygiene.in` → reset password to
+   a strong unique passphrase stored in a password manager.
+2. Remove the credential block from `README.md`; replace with "credentials are held in
+   the team password manager".
+3. Consider renaming the account away from the guessable `admin@`.
+
+### C2 · Legacy PHP site leaks database credentials and all enquiry data 🔴
+
+`card/card/data.php` contains live MySQL credentials in plaintext
+(`ygiene_ene` / `59bL5p%BZKHR`) and renders **every contact-form and review submission**
+— name, email, phone, city, message — to anyone who loads the page. There is no login
+on it.
+
+**Impact:** full read of historic customer data, and database credentials for direct
+access, to anyone who finds the URL.
+
+**Fix**
+1. Take `data.php` (and `db-config.php`) offline on the hosting server now.
+2. Rotate that MySQL password.
+3. Check the host's access logs for prior hits on `data.php`.
+4. Migrate any enquiry history you still need, then decommission the PHP site — the React
+   cards at `/card/<code>` have replaced it.
+
+> The folder is gitignored, so it never entered this repo's history. This is about the
+> live server, which gitignore does not touch.
+
+---
+
+## Phase 1 — High priority (within the first week)
+
+### H1 · Two high-severity dependency CVEs 🟠
+
+```bash
+npm audit --omit=dev
+# next   — Unauthenticated disclosure of internal Server Function endpoints (GHSA-955p-x3mx-jcvp)
+# postcss — XSS via unescaped </style>, plus path traversal via sourceMappingURL
+# 2 high severity vulnerabilities
+```
+
+The Next.js advisory matters here specifically because **this app's every mutation is a
+Server Action**, which is what that CVE concerns.
+
+**Fix:** upgrade Next.js. `npm audit fix --force` proposes `next@16`, a major version —
+do it deliberately, not blindly:
+1. Branch, upgrade, run `npm run typecheck && npm run lint && npm run build`.
+2. Re-test admin login, a product save, an image upload and a form submit.
+3. Watch for App Router breaking changes (`params`/`searchParams` became async in 15).
+
+### H2 · No rate limit on public enquiry submissions 🟠
+
+**Evidence** — five rapid anonymous inserts, all accepted:
+```
+201 201 201 201 201
+```
+(test rows deleted afterwards)
+
+**Impact:** the `distributor_inquiries` table can be flooded, burying real leads and — once
+H1 of the email work is enabled — generating unlimited notification emails, which risks
+your sending reputation.
+
+**Fix (pick one, in order of preference)**
+1. Move the insert behind a Server Action that enforces a per-IP limit (e.g. 5/hour) via
+   Upstash Redis or a `rate_limits` table, and **revoke the anon `INSERT` grant** so
+   PostgREST can't be posted to directly.
+2. Add a CAPTCHA (Cloudflare Turnstile is free and unobtrusive) verified server-side.
+3. Minimum: a Postgres trigger rejecting more than N rows per email/IP per hour.
+
+### H3 · Open image proxy 🟠
+
+`next.config.mjs` sets `remotePatterns: [{ protocol: "https", hostname: "**" }]` — any
+host. Verified: an arbitrary third-party image was fetched and served through the app.
+
+```bash
+curl "…/_next/image?url=https%3A%2F%2F<any-external-host>%2Fimage.jpg&w=640&q=75"
+# -> 200, 11881 bytes
+```
+
+**Impact:** anyone can serve arbitrary images through your domain and bill the bandwidth
+and transformation cost to your Vercel account, and use your domain to launder image
+hosting.
+
+**Fix:** restrict to hosts you actually use:
+```js
+remotePatterns: [
+  { protocol: "https", hostname: "gtpvibbeqlndkaezqniz.supabase.co" },
+]
+```
+
+---
+
+## Phase 2 — Medium priority (before or shortly after launch)
+
+### M1 · No security headers 🟡
+
+`next.config.mjs` sets none. Missing: `Content-Security-Policy`,
+`Strict-Transport-Security`, `X-Frame-Options`, `X-Content-Type-Options`,
+`Referrer-Policy`, `Permissions-Policy`.
+
+**Impact:** clickjacking of the admin panel, MIME sniffing, referrer leakage, and no
+defence-in-depth against injected script.
+
+**Fix:** add a `headers()` block in `next.config.mjs`. Start CSP in `Report-Only` so a
+mistake doesn't take the site down, then enforce.
+
+### M2 · `is_admin()` is callable by anyone via RPC 🟡
+
+Supabase advisor: `public.is_admin()` is `SECURITY DEFINER` and executable by both `anon`
+and `authenticated` through `/rest/v1/rpc/is_admin`.
+
+**Impact:** low on its own — it returns only a boolean about the caller — but a
+`SECURITY DEFINER` function reachable by anonymous users is unnecessary attack surface.
+
+**Fix:** `revoke execute on function public.is_admin() from anon, authenticated;`
+RLS policies keep working, because policy evaluation is not subject to that grant.
+
+### M3 · Leaked-password protection disabled 🟡
+
+Supabase Auth is not checking new passwords against HaveIBeenPwned.
+
+**Fix:** Dashboard → Authentication → Policies → enable leaked password protection. Set a
+minimum length while you are there. Do this **before** fixing C1 so the new password is
+checked.
+
+### M4 · Staff contact details are bulk-harvestable 🟡
+
+`team_members` is publicly readable, and the API returns every employee's email, phone and
+WhatsApp number in one request:
+```bash
+curl ".../rest/v1/team_members?select=name,email,phone,whatsapp"
+# -> all 9 staff, with contact details
+```
+
+This is *partly by design* — the visiting cards must show contact details. The issue is
+**bulk** retrieval: one request yields the whole staff directory, ideal for spam lists.
+
+**Fix options**
+1. Serve card data through a Server Action / route handler keyed by card code, and remove
+   the blanket anon `SELECT` on the table.
+2. Or split contact columns into a separate table readable only by exact-code lookup.
+3. At minimum, confirm each employee consents to their mobile number being public.
+
+### M5 · JSON-LD is not escaped against `</script>` 🟡
+
+`StructuredData.tsx` renders `JSON.stringify(data)` into a `<script>` via
+`dangerouslySetInnerHTML`. `JSON.stringify` does **not** escape `</script>`, so a value
+containing that string would break out of the tag.
+
+**Impact:** low — the inputs are admin-authored SEO settings, so this is self-XSS by an
+already-privileged user rather than a public vector. Still trivially avoidable.
+
+**Fix:** `JSON.stringify(data).replace(/</g, "\\u003c")`.
+
+---
+
+## Phase 3 — Hardening (post-launch)
+
+- **L1 · No MFA on the admin account.** Enable TOTP in Supabase Auth. Highest-value
+  remaining control once C1 is done.
+- **L2 · No audit log.** No record of who changed a price, hid a product or deleted a
+  member. Add an `audit_log` table written by a trigger on the admin-writable tables.
+- **L3 · No dependency scanning in CI.** Add `npm audit --omit=dev --audit-level=high` to
+  `.github/workflows/ci.yml` so the next CVE surfaces on a PR, not in an audit.
+- **L4 · No path separation in the `media` bucket.** Everything is public-read under one
+  bucket. Fine today (product photos, logos, staff portraits are all meant to be public),
+  but if anything private is ever uploaded it will be public by default. Consider a
+  separate private bucket before that happens.
+
+---
+
+## Re-test checklist
+
+After each phase, re-run these. All should hold:
+
+```bash
+# RLS still blocks anonymous writes (expect 42501 on each)
+curl -X POST "$SUPABASE_URL/rest/v1/products" -H "apikey: $ANON" \
+  -H "Content-Type: application/json" -d '{"name":"x","slug":"x"}'
+
+# Sensitive tables still return [] to anon
+curl "$SUPABASE_URL/rest/v1/distributor_inquiries?select=*" -H "apikey: $ANON"
+
+# Default password no longer works (expect 400 after C1)
+curl -X POST "$SUPABASE_URL/auth/v1/token?grant_type=password" -H "apikey: $ANON" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@mdhygiene.in","password":"ChangeMe123!"}'
+
+# Dependencies clean (expect 0 high)
+npm audit --omit=dev --audit-level=high
+
+# Image proxy restricted (expect 400 for a non-allowlisted host after H3)
+curl -o /dev/null -w "%{http_code}" \
+  "https://<site>/_next/image?url=https%3A%2F%2Fexample.com%2Fa.jpg&w=640&q=75"
+
+# Supabase advisors clean
+# MCP: get_advisors(project_id, type="security")
+```
+
+---
+
+## Notes on method
+
+- Findings were produced by probing the live Supabase project with the **anon key** — the
+  same key a visitor's browser holds — so they reflect what an outside attacker can
+  actually reach.
+- Test rows created during probing (`SPAMTEST%` enquiries) were deleted; the table is back
+  to 0 rows.
+- No destructive testing was performed against production data.

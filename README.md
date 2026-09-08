@@ -21,8 +21,13 @@ through a Server Action whose Supabase session must map to an `admin_profiles` r
 ```
 MD/
   frontend/   the whole app (public site + /admin dashboard)
-  docs/       API.md (server actions + auth), ERD.md (schema + RLS)
+  docs/       API.md (server actions + auth), ERD.md (schema + RLS),
+              SECURITY-AUDIT.md (phased findings + re-test checklist)
 ```
+
+> **Before going live**, work through Phase 0 of [`docs/SECURITY-AUDIT.md`](docs/SECURITY-AUDIT.md) —
+> the seeded admin password below is still active, and the legacy PHP `data.php` page
+> publicly exposes past enquiry data and live MySQL credentials.
 
 ## Local development
 
