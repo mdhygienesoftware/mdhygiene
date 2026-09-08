@@ -69,7 +69,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
   return (
     <>
       <StructuredData data={personSchema} />
-      <main className="relative min-h-screen bg-gradient-to-b from-[#FDEFF4] via-cream to-[#F3F8FC] py-8 px-4">
+      <main className="relative min-h-screen py-8 px-4">
         <CardBackdrop />
         <div className="relative z-10 max-w-[440px] mx-auto flex flex-col gap-5">
           {/* Card */}
