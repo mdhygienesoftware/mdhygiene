@@ -1,8 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Certifications from "@/components/Certifications";
-import { getAboutContent, getCertifications, getContactInfo, getTeamMembers } from "@/lib/queries";
-import TeamSection from "@/components/TeamSection";
+import { getAboutContent, getCertifications, getContactInfo } from "@/lib/queries";
 
 // Always render against current data — admin edits must show up immediately.
 export const dynamic = "force-dynamic";
@@ -10,11 +9,10 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "About — MDHygiene" };
 
 export default async function AboutPage() {
-  const [about, certifications, contact, team] = await Promise.all([
+  const [about, certifications, contact] = await Promise.all([
     getAboutContent(),
     getCertifications(),
     getContactInfo(),
-    getTeamMembers(),
   ]);
 
   return (
@@ -41,7 +39,6 @@ export default async function AboutPage() {
           </div>
         </section>
       </main>
-      <TeamSection members={team} />
       <Footer />
     </>
   );

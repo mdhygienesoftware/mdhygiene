@@ -67,7 +67,7 @@ in the migration history and this README.
 | Hero & Media | Manage homepage carousel slides — upload **images or videos**, set headline/CTA/order/visibility |
 | Site Content | Edit stats, contact details, addresses, about copy and certifications without a redeploy |
 | OEM / Private Label | OEM ranges, kept separate from house brands |
-| Members | Team roster grouped by department, with photo upload. Two flags: *currently employed* and *show on public website* — both must be on to appear on `/about`, so an internal roster can be kept without publishing everyone |
+| Members | Team roster grouped by department, with photo upload. Each member gets a digital visiting card at `/card/<code>` (the React port of the old PHP cards), toggled by *digital card enabled*. There is no public team listing — `show on public website` is currently inert |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
 | SEO & GEO | Search, local/geographic and AI-engine settings (see below) |
 
