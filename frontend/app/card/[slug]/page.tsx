@@ -35,15 +35,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function DigitalCardPage({ params }: { params: { slug: string } }) {
-  const member = (await getTeamMemberBySlug(params.slug)) as TeamMember | null;
-  if (!member) return notFound();
-
-  const [contact, social, brands, general] = await Promise.all([
+  const [member, contact, social, brands, general] = await Promise.all([
+    getTeamMemberBySlug(params.slug) as Promise<TeamMember | null>,
     getContactInfo(),
     getSocialLinks(),
     getBrands(),
     getSeoGeneral(),
   ]);
+  if (!member) return notFound();
   const siteUrl = resolveSiteUrl(general.canonical_domain);
 
   // Person schema so the card is machine-readable too.

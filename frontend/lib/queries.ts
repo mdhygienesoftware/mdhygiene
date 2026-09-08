@@ -1,33 +1,40 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { AboutContent, Brand, Category, CompanyStats, ContactInfo, HeroSlide, Product } from "@/lib/types";
 
 /** Public content is fetched straight from Supabase with the anon key — RLS
  * (`is_active = true`) is the only filter that matters, so these never throw
- * on a missing/unreachable backend the way the old Express fetch layer did. */
+ * on a missing/unreachable backend the way the old Express fetch layer did.
+ *
+ * Each reader is wrapped in React's `cache()`, which dedupes identical calls
+ * within a single request. Detail pages fetch the same record in both
+ * generateMetadata and the page body, so without this every one of those pages
+ * makes the round trip twice. It does not cache across requests, so admin
+ * edits still appear immediately. */
 
-export async function getBrands(): Promise<Brand[]> {
+export const getBrands = cache(async (): Promise<Brand[]> => {
   const supabase = await createClient();
   const { data } = await supabase.from("brands").select("*").order("sort_order");
   return data ?? [];
-}
+});
 
-export async function getBrandBySlug(slug: string): Promise<Brand | null> {
+export const getBrandBySlug = cache(async (slug: string): Promise<Brand | null> => {
   const supabase = await createClient();
   const { data } = await supabase.from("brands").select("*").eq("slug", slug).maybeSingle();
   return data ?? null;
-}
+});
 
-export async function getCategories(): Promise<Category[]> {
+export const getCategories = cache(async (): Promise<Category[]> => {
   const supabase = await createClient();
   const { data } = await supabase.from("product_categories").select("*").order("name");
   return data ?? [];
-}
+});
 
-export async function getProducts(filter?: {
+export const getProducts = cache(async (filter?: {
   brandSlug?: string;
   categorySlug?: string;
   catalogType?: string;
-}): Promise<Product[]> {
+}): Promise<Product[]> => {
   const supabase = await createClient();
   let query = supabase
     .from("products")
@@ -54,9 +61,9 @@ export async function getProducts(filter?: {
 
   const { data } = await query;
   return (data as Product[] | null)?.map(sortVariants) ?? [];
-}
+});
 
-export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
+export const getFeaturedProducts = cache(async (limit = 4): Promise<Product[]> => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
@@ -66,9 +73,9 @@ export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
     .order("sort_order")
     .limit(limit);
   return (data as Product[] | null)?.map(sortVariants) ?? [];
-}
+});
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<Product | null> => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
@@ -77,13 +84,13 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     .eq("is_active", true)
     .maybeSingle();
   return data ? sortVariants(data as Product) : null;
-}
+});
 
 function sortVariants(product: Product): Product {
   return { ...product, variants: [...product.variants].sort((a, b) => a.sort_order - b.sort_order) };
 }
 
-export async function getHeroSlides(): Promise<HeroSlide[]> {
+export const getHeroSlides = cache(async (): Promise<HeroSlide[]> => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("hero_slides")
@@ -91,7 +98,7 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
     .eq("is_active", true)
     .order("sort_order");
   return data ?? [];
-}
+});
 
 async function getSetting<T>(key: string): Promise<T | null> {
   const supabase = await createClient();
@@ -106,7 +113,7 @@ export const getCertifications = () => getSetting<string[]>("certifications");
 export const getFooterTagline = () => getSetting<{ text: string }>("footer_tagline");
 
 /** One member's digital visiting card (the React port of the old PHP cards). */
-export async function getTeamMemberBySlug(slug: string) {
+export const getTeamMemberBySlug = cache(async (slug: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("team_members")
@@ -116,10 +123,10 @@ export async function getTeamMemberBySlug(slug: string) {
     .eq("is_active", true)
     .maybeSingle();
   return data;
-}
+});
 
 /** Every member with a live card — used to list and pre-render them. */
-export async function getCardMembers() {
+export const getCardMembers = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("team_members")
@@ -128,10 +135,10 @@ export async function getCardMembers() {
     .eq("is_active", true)
     .order("sort_order");
   return data ?? [];
-}
+});
 
-export async function getSocialLinks() {
+export const getSocialLinks = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase.from("site_settings").select("value").eq("key", "social_links").maybeSingle();
   return (data?.value ?? {}) as Record<string, string>;
-}
+});

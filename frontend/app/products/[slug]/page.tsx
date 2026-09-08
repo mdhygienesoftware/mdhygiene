@@ -38,10 +38,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const product = await getProductBySlug(params.slug);
+  // Fetched together rather than in series; both are already deduped against
+  // generateMetadata's calls by React cache().
+  const [product, general] = await Promise.all([getProductBySlug(params.slug), getSeoGeneral()]);
   if (!product) return notFound();
 
-  const general = await getSeoGeneral();
   const siteUrl = resolveSiteUrl(general.canonical_domain);
 
   return (

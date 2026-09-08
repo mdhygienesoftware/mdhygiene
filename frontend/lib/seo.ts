@@ -1,12 +1,13 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { SeoAi, SeoAnalytics, SeoGeneral, SeoLocal, SeoRobots } from "@/lib/types";
 
 /** Reads one SEO settings block, falling back to `fallback` when unset. */
-async function getSeoSetting<T>(key: string, fallback: T): Promise<T> {
+const getSeoSetting = cache(async <T,>(key: string, fallback: T): Promise<T> => {
   const supabase = await createClient();
   const { data } = await supabase.from("seo_settings").select("value").eq("key", key).maybeSingle();
   return ((data?.value as T) ?? fallback);
-}
+});
 
 export const getSeoGeneral = () =>
   getSeoSetting<SeoGeneral>("general", {

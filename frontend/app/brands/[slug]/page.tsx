@@ -32,9 +32,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BrandPage({ params }: { params: { slug: string } }) {
-  const brand = await getBrandBySlug(params.slug);
+  const [brand, products] = await Promise.all([
+    getBrandBySlug(params.slug),
+    getProducts({ brandSlug: params.slug }),
+  ]);
   if (!brand) return notFound();
-  const products = await getProducts({ brandSlug: params.slug });
 
   return (
     <>

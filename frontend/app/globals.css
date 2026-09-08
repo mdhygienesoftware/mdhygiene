@@ -16,6 +16,27 @@ body {
   }
 }
 
+/* Immediate tactile feedback: buttons/links depress on press rather than
+   waiting for navigation, which is what makes taps feel instant. */
+a, button, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+a:active, button:active, [role="button"]:active {
+  transform: scale(0.985);
+}
+a, button {
+  transition: transform 120ms ease;
+}
+
+/* backdrop-filter is expensive on mobile GPUs and shows up as scroll jank.
+   Halve the radius on small screens, where the effect reads the same anyway. */
+@media (max-width: 767px) {
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
 /* Hero copy entrance — used by the slide transition in HeroCarousel. */
 @keyframes heroIn {
   from {
