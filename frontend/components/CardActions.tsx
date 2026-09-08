@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SocialIcon from "@/components/SocialIcons";
 import type { TeamMember } from "@/lib/types";
 
 /**
@@ -69,16 +70,18 @@ export default function CardActions({ member }: { member: TeamMember }) {
         {member.email && (
           <a
             href={`mailto:${member.email}`}
-            className="bg-[#F2F6FA] hover:bg-navy hover:text-white text-navy rounded-xl py-3 font-semibold text-sm transition-colors"
+            className="bg-[#F2F6FA] hover:bg-navy hover:text-white text-navy rounded-xl py-3 font-semibold text-sm transition-colors flex items-center justify-center gap-2"
           >
+            <SocialIcon name="email" className="w-4 h-4" />
             Email
           </a>
         )}
         {tel && (
           <a
             href={`tel:${tel}`}
-            className="bg-[#F2F6FA] hover:bg-navy hover:text-white text-navy rounded-xl py-3 font-semibold text-sm transition-colors"
+            className="bg-[#F2F6FA] hover:bg-navy hover:text-white text-navy rounded-xl py-3 font-semibold text-sm transition-colors flex items-center justify-center gap-2"
           >
+            <SocialIcon name="phone" className="w-4 h-4" />
             Call
           </a>
         )}
@@ -89,8 +92,9 @@ export default function CardActions({ member }: { member: TeamMember }) {
           href={`https://wa.me/${wa.replace(/^\+/, "")}?text=${encodeURIComponent("I'm interested in your products")}`}
           target="_blank"
           rel="noreferrer noopener"
-          className="bg-[#25D366] hover:brightness-95 text-white rounded-xl py-3 font-semibold text-sm transition-all"
+          className="bg-[#25D366] hover:brightness-95 text-white rounded-xl py-3 font-semibold text-sm transition-all flex items-center justify-center gap-2"
         >
+          <SocialIcon name="whatsapp" className="w-4 h-4" />
           WhatsApp
         </a>
       )}

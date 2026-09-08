@@ -97,8 +97,8 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
               <p className="text-sm text-muted-2">M.D. Hygiene Pvt Ltd</p>
               {member.intro && <p className="text-sm text-muted-2 leading-relaxed mt-2">{member.intro}</p>}
 
-              {/* Social + direct contact icons */}
-              <div className="flex flex-wrap justify-center gap-2.5 mt-4">
+              {/* Social row only — email/call/WhatsApp live on their own buttons below. */}
+              <div className="flex justify-center gap-2.5 mt-4">
                 {socials.map((s) => (
                   <a
                     key={s.key}
@@ -113,38 +113,6 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
                     <SocialIcon name={s.key} />
                   </a>
                 ))}
-                {member.email && (
-                  <a
-                    href={`mailto:${member.email}`}
-                    aria-label="Email"
-                    title={member.email}
-                    className="w-11 h-11 rounded-full flex items-center justify-center text-white bg-[#E4779F] transition-transform hover:scale-110"
-                  >
-                    <SocialIcon name="email" />
-                  </a>
-                )}
-                {member.phone && (
-                  <a
-                    href={`tel:${member.phone.replace(/\s+/g, "")}`}
-                    aria-label="Call"
-                    title={member.phone}
-                    className="w-11 h-11 rounded-full flex items-center justify-center text-white bg-[#1E62B0] transition-transform hover:scale-110"
-                  >
-                    <SocialIcon name="phone" />
-                  </a>
-                )}
-                {member.whatsapp && (
-                  <a
-                    href={`https://wa.me/${member.whatsapp.replace(/[^\d]/g, "")}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label="WhatsApp"
-                    title="WhatsApp"
-                    className="w-11 h-11 rounded-full flex items-center justify-center text-white bg-[#25D366] transition-transform hover:scale-110"
-                  >
-                    <SocialIcon name="whatsapp" />
-                  </a>
-                )}
               </div>
 
               <CardActions member={member} />
