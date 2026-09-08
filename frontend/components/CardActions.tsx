@@ -15,34 +15,6 @@ export default function CardActions({ member }: { member: TeamMember }) {
   const tel = member.phone?.replace(/\s+/g, "") ?? "";
   const wa = member.whatsapp?.replace(/[^\d+]/g, "") ?? tel.replace(/[^\d+]/g, "");
 
-  function saveContact() {
-    const vcard = [
-      "BEGIN:VCARD",
-      "VERSION:3.0",
-      `N:${member.name.split(" ").slice(1).join(" ")};${member.name.split(" ")[0]};;;`,
-      `FN:${member.name}`,
-      "ORG:M.D. Hygiene Private Limited",
-      member.designation ? `TITLE:${member.designation}` : "",
-      member.phone ? `TEL;TYPE=CELL:${member.phone}` : "",
-      member.email ? `EMAIL;TYPE=WORK:${member.email}` : "",
-      "URL:https://www.mdhygiene.in/",
-      member.intro ? `NOTE:${member.intro}` : "",
-      "END:VCARD",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${member.slug ?? member.name.replace(/\s+/g, "-").toLowerCase()}.vcf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
   async function share() {
     const url = window.location.href;
     const data = { title: member.name, text: `${member.name} — M.D. Hygiene`, url };
@@ -99,13 +71,12 @@ export default function CardActions({ member }: { member: TeamMember }) {
         </a>
       )}
 
-      <button
-        type="button"
-        onClick={saveContact}
-        className="bg-navy hover:bg-pink text-white rounded-xl py-3 font-semibold text-sm transition-colors"
+      <a
+        href={`/card/${member.slug}/vcard`}
+        className="bg-navy hover:bg-pink text-white rounded-xl py-3 font-semibold text-sm transition-colors text-center"
       >
         Save to contacts
-      </button>
+      </a>
 
       <button
         type="button"
