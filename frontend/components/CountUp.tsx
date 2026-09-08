@@ -3,23 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Counts a stat up the first time it scrolls into view.
+ * Counts a stat up when it scrolls into view, and replays each time it comes
+ * back into view.
  *
  * Values are free text set in admin ("10+", "500+", "PAN India"), so only the
  * numeric part animates and any prefix/suffix is preserved. Values with no
  * digits render as-is.
  *
- * The real value is rendered on the server, so it is correct without JS and for
- * crawlers; the client only rewinds it to the start just before animating.
+ * The real value is server-rendered, so figures are correct without JS and for
+ * crawlers; the client only rewinds just before animating.
  */
 export default function CountUp({ value, className = "" }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const hasRun = useRef(false);
+  const frameRef = useRef(0);
   const [display, setDisplay] = useState(value);
 
   useEffect(() => {
-    // Only `value` is a dependency — parsing happens inside so no unstable
-    // object (a fresh regex match array) can retrigger this and restart the count.
+    // Parsed inside the effect so no unstable object can retrigger it.
     const match = value.match(/^(\D*)(\d[\d,]*)(.*)$/);
     const target = match ? Number(match[2].replace(/,/g, "")) : null;
 
@@ -39,34 +39,47 @@ export default function CountUp({ value, className = "" }: { value: string; clas
     }
 
     const el = ref.current;
-    if (!el || hasRun.current) return;
+    if (!el) return;
 
-    let frame = 0;
     let cancelled = false;
-    setDisplay(`${prefix}0${suffix}`);
+
+    const run = () => {
+      cancelAnimationFrame(frameRef.current);
+      const duration = 2000;
+      const start = performance.now();
+
+      const tick = (now: number) => {
+        if (cancelled) return;
+        const progress = Math.min(1, (now - start) / duration);
+        // easeInOutCubic — eases in and out, so there's no hard jump at the
+        // start and no abrupt stop, which reads far smoother than easeOutExpo.
+        const eased =
+          progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        setDisplay(`${prefix}${Math.round(target * eased).toLocaleString("en-IN")}${suffix}`);
+
+        if (progress < 1) {
+          frameRef.current = requestAnimationFrame(tick);
+        } else {
+          // Land on the authored string, not a reformatted approximation.
+          setDisplay(value);
+        }
+      };
+      frameRef.current = requestAnimationFrame(tick);
+    };
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (!entries[0]?.isIntersecting || hasRun.current) return;
-        hasRun.current = true;
-        observer.disconnect();
-
-        const duration = 1500;
-        const start = performance.now();
-        const tick = (now: number) => {
-          if (cancelled) return;
-          const progress = Math.min(1, (now - start) / duration);
-          // easeOutExpo — quick start, gentle settle
-          const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-          setDisplay(`${prefix}${Math.round(target * eased).toLocaleString("en-IN")}${suffix}`);
-          if (progress < 1) {
-            frame = requestAnimationFrame(tick);
-          } else {
-            // Land exactly on the authored value, not a rounded approximation.
-            setDisplay(value);
-          }
-        };
-        frame = requestAnimationFrame(tick);
+        const entry = entries[0];
+        if (!entry) return;
+        if (entry.isIntersecting) {
+          run();
+        } else if (entry.boundingClientRect.top > 0) {
+          // Rewind only when it leaves below the viewport, so scrolling back up
+          // replays it — but scrolling past upward doesn't blank the figure.
+          cancelAnimationFrame(frameRef.current);
+          setDisplay(`${prefix}0${suffix}`);
+        }
       },
       { threshold: 0.35 }
     );
@@ -76,7 +89,7 @@ export default function CountUp({ value, className = "" }: { value: string; clas
     return () => {
       cancelled = true;
       observer.disconnect();
-      cancelAnimationFrame(frame);
+      cancelAnimationFrame(frameRef.current);
     };
   }, [value]);
 

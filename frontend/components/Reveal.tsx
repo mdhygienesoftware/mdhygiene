@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Fades/slides children in the first time they scroll into view.
- * Falls back to visible immediately if IntersectionObserver is unavailable,
- * so content is never trapped behind a missing API.
+ * Fades/slides children in when they scroll into view, and resets once they
+ * leave, so the animation replays on every pass rather than only on first load.
+ *
+ * Falls back to permanently visible if IntersectionObserver is unavailable, so
+ * content can never be stranded invisible.
  */
 export default function Reveal({
   children,
@@ -28,13 +30,18 @@ export default function Reveal({
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
         if (entry.isIntersecting) {
           setShown(true);
-          observer.disconnect();
+        } else if (entry.boundingClientRect.top > 0) {
+          // Only reset when it leaves downward (below the viewport). Resetting
+          // on the way out the top would make content vanish as you scroll past.
+          setShown(false);
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -44,8 +51,8 @@ export default function Reveal({
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-out motion-reduce:transition-none ${
-        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+      className={`transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       } ${className}`}
     >
       {children}
