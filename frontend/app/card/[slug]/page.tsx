@@ -73,33 +73,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
         <CardBackdrop />
         <div className="relative z-10 max-w-[440px] mx-auto flex flex-col gap-5">
           {/* Card */}
-          <section className="relative bg-white rounded-[28px] shadow-[0_8px_40px_rgba(18,58,92,0.10)] overflow-hidden">
-            {/* Card surface: tinted brand corners, a visible dot weave and a
-                diagonal sheen. Values are intentionally strong enough to see —
-                earlier passes sat near 2% opacity and read as plain white. */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(115% 85% at 0% 100%, rgba(228,119,159,0.42) 0%, rgba(228,119,159,0.10) 42%, transparent 68%), radial-gradient(105% 80% at 100% 92%, rgba(30,98,176,0.34) 0%, rgba(30,98,176,0.08) 42%, transparent 68%), linear-gradient(180deg, #FFFFFF 0%, #FAF6F8 45%, #EEF4FA 100%)",
-                }}
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: "radial-gradient(rgba(18,58,92,0.16) 1.2px, transparent 1.2px)",
-                  backgroundSize: "15px 15px",
-                }}
-              />
-              <div
-                className="absolute inset-x-0 bottom-0 h-3/4"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(135deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0) 16px, rgba(18,58,92,0.06) 16px, rgba(18,58,92,0.06) 32px)",
-                }}
-              />
-            </div>
+          <section className="relative bg-white rounded-[28px] shadow-[0_10px_44px_rgba(18,58,92,0.14)] overflow-hidden">
             <CardHeader />
 
             <div className="px-6 pb-7 -mt-16 relative z-10 flex flex-col items-center text-center gap-1">
@@ -141,7 +115,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
           </section>
 
           {/* Company details */}
-          <section className="bg-white/95 backdrop-blur-sm border border-white rounded-2xl p-6 flex flex-col gap-3 shadow-[0_4px_20px_rgba(18,58,92,0.06)]">
+          <section className="bg-white border border-white/60 rounded-2xl p-6 flex flex-col gap-3 shadow-[0_4px_20px_rgba(18,58,92,0.06)]">
             <h2 className="font-extrabold text-navy">Company</h2>
             <dl className="text-sm flex flex-col gap-2.5">
               {contact?.corporate_address && (
@@ -169,7 +143,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
 
           {/* Brands */}
           {brands.length > 0 && (
-            <section className="bg-white/95 backdrop-blur-sm border border-white rounded-2xl p-6 flex flex-col gap-4 shadow-[0_4px_20px_rgba(18,58,92,0.06)]">
+            <section className="bg-white border border-white/60 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_4px_20px_rgba(18,58,92,0.06)]">
               <h2 className="font-extrabold text-navy">Our brands</h2>
               <div className="grid grid-cols-2 gap-3">
                 {brands.map((brand) => (
@@ -191,7 +165,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
           )}
 
           <div className="text-center pb-6">
-            <Link href="/" className="text-sm font-semibold text-muted-2 hover:text-pink transition-colors">
+            <Link href="/" className="text-sm font-semibold text-white/70 hover:text-white transition-colors">
               mdhygiene.in
             </Link>
           </div>
