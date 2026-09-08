@@ -71,17 +71,10 @@ export default function CardActions({ member }: { member: TeamMember }) {
         </a>
       )}
 
-      <a
-        href={`/card/${member.slug}/vcard`}
-        className="bg-navy hover:bg-pink text-white rounded-xl py-3 font-semibold text-sm transition-colors text-center"
-      >
-        Save to contacts
-      </a>
-
       <button
         type="button"
         onClick={share}
-        className="border border-border hover:border-pink text-navy rounded-xl py-3 font-semibold text-sm transition-colors"
+        className="bg-navy hover:bg-pink text-white rounded-xl py-3 font-semibold text-sm transition-colors"
       >
         {copied ? "Link copied ✓" : "Share this card"}
       </button>
