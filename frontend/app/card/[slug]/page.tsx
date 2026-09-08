@@ -73,10 +73,21 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
         <CardBackdrop />
         <div className="relative z-10 max-w-[440px] mx-auto flex flex-col gap-5">
           {/* Card */}
-          <section className="bg-white rounded-[28px] shadow-[0_8px_40px_rgba(18,58,92,0.10)] overflow-hidden">
+          <section className="relative bg-white rounded-[28px] shadow-[0_8px_40px_rgba(18,58,92,0.10)] overflow-hidden">
+            {/* Card surface: faint dot weave + a soft tint sinking to the base,
+                so the card reads as printed stock rather than flat white. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-[0.55]"
+              style={{
+                backgroundImage:
+                  "radial-gradient(rgba(18,58,92,0.055) 1px, transparent 1px), linear-gradient(180deg, rgba(228,119,159,0.05) 0%, rgba(255,255,255,0) 42%, rgba(30,98,176,0.05) 100%)",
+                backgroundSize: "17px 17px, 100% 100%",
+              }}
+            />
             <CardHeader />
 
-            <div className="px-6 pb-7 -mt-14 relative flex flex-col items-center text-center gap-1">
+            <div className="px-6 pb-7 -mt-16 relative z-10 flex flex-col items-center text-center gap-1">
               <div className="w-28 h-28 rounded-full ring-4 ring-white overflow-hidden bg-[#F5E1EA] relative shadow-md">
                 {member.photo_url ? (
                   <Image src={member.photo_url} alt={member.name} fill priority className="object-cover object-top" sizes="112px" />
@@ -115,7 +126,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
           </section>
 
           {/* Company details */}
-          <section className="bg-white rounded-2xl p-6 flex flex-col gap-3">
+          <section className="bg-white/95 backdrop-blur-sm border border-white rounded-2xl p-6 flex flex-col gap-3 shadow-[0_4px_20px_rgba(18,58,92,0.06)]">
             <h2 className="font-extrabold text-navy">Company</h2>
             <dl className="text-sm flex flex-col gap-2.5">
               {contact?.corporate_address && (
@@ -143,7 +154,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
 
           {/* Brands */}
           {brands.length > 0 && (
-            <section className="bg-white rounded-2xl p-6 flex flex-col gap-4">
+            <section className="bg-white/95 backdrop-blur-sm border border-white rounded-2xl p-6 flex flex-col gap-4 shadow-[0_4px_20px_rgba(18,58,92,0.06)]">
               <h2 className="font-extrabold text-navy">Our brands</h2>
               <div className="grid grid-cols-2 gap-3">
                 {brands.map((brand) => (

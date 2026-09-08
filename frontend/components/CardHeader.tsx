@@ -1,9 +1,9 @@
 import Image from "next/image";
 
 /**
- * Card masthead: a shifting brand gradient, rising bubbles, and the logo in a
- * haloed badge, closed off by the wave curve used throughout the printed
- * catalogue so the digital card reads as the same family.
+ * Card masthead: a shifting brand gradient, rising bubbles, and the logo held
+ * inside rotating accent rings, closed off by the wave curve used throughout
+ * the printed catalogue so the digital card reads as the same family.
  */
 export default function CardHeader() {
   // Staggered so the bubbles never pulse in unison.
@@ -17,8 +17,7 @@ export default function CardHeader() {
   ];
 
   return (
-    <div className="relative h-[190px] overflow-hidden card-sheen">
-      {/* Rising bubbles */}
+    <div className="relative h-[200px] overflow-hidden card-sheen">
       {bubbles.map((b, i) => (
         <span
           key={i}
@@ -34,14 +33,28 @@ export default function CardHeader() {
         />
       ))}
 
-      {/* Logo badge with a pulsing halo */}
-      <div className="relative h-full flex items-center justify-center">
-        <div className="relative card-float">
+      <div className="relative h-full flex items-center justify-center pb-6">
+        <div className="relative card-float w-[132px] h-[132px] flex items-center justify-center">
+          {/* Outer sweep: a conic gradient disc, masked by the white badge to
+              leave only a rotating ring visible. */}
           <span
             aria-hidden="true"
-            className="card-halo absolute inset-0 -m-3 rounded-full bg-white/40 blur-md"
+            className="card-ring absolute inset-0 rounded-full"
+            style={{
+              background:
+                "conic-gradient(from 0deg, transparent 0deg, #E4779F 70deg, #ffffff 150deg, #1E62B0 240deg, transparent 330deg)",
+            }}
           />
-          <div className="relative w-[104px] h-[104px] rounded-full bg-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] flex items-center justify-center p-2.5">
+          {/* Inner counter-rotating dotted ring for depth */}
+          <span
+            aria-hidden="true"
+            className="card-ring-slow absolute inset-[9px] rounded-full border-2 border-dashed border-white/45"
+          />
+          {/* Soft glow */}
+          <span aria-hidden="true" className="absolute inset-1 rounded-full bg-white/25 blur-md" />
+
+          {/* Logo badge */}
+          <div className="relative w-[104px] h-[104px] rounded-full bg-white shadow-[0_10px_28px_rgba(0,0,0,0.22)] flex items-center justify-center p-2.5">
             <Image
               src="/images/brand/mdh-logo.png"
               alt="M.D. Hygiene"

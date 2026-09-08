@@ -74,3 +74,15 @@ body {
 .card-halo  { animation: cardHalo 4s ease-in-out infinite; }
 .card-blob  { animation: blobDrift 18s ease-in-out infinite; }
 .card-bubble { animation: bubbleRise 7s ease-in infinite; }
+
+/* Rotating accent ring around the card logo */
+@keyframes ringSpin {
+  to { transform: rotate(360deg); }
+}
+.card-ring { animation: ringSpin 9s linear infinite; }
+
+/* Counter-rotates the notch so it reads as a ring, not a spinning disc */
+@keyframes ringSpinSlow {
+  to { transform: rotate(-360deg); }
+}
+.card-ring-slow { animation: ringSpinSlow 16s linear infinite; }
