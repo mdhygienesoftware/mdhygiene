@@ -7,6 +7,8 @@ import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import StructuredData from "@/components/StructuredData";
 import CardActions from "@/components/CardActions";
 import SocialIcon from "@/components/SocialIcons";
+import CardHeader from "@/components/CardHeader";
+import CardBackdrop from "@/components/CardBackdrop";
 import type { TeamMember } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -67,21 +69,14 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
   return (
     <>
       <StructuredData data={personSchema} />
-      <main className="min-h-screen bg-gradient-to-b from-[#FDEFF4] via-cream to-[#F3F8FC] py-8 px-4">
-        <div className="max-w-[440px] mx-auto flex flex-col gap-5">
+      <main className="relative min-h-screen bg-gradient-to-b from-[#FDEFF4] via-cream to-[#F3F8FC] py-8 px-4">
+        <CardBackdrop />
+        <div className="relative z-10 max-w-[440px] mx-auto flex flex-col gap-5">
           {/* Card */}
           <section className="bg-white rounded-[28px] shadow-[0_8px_40px_rgba(18,58,92,0.10)] overflow-hidden">
-            <div className="bg-navy px-6 pt-7 pb-16 flex justify-center">
-              <Image
-                src="/images/brand/mdh-logo.png"
-                alt="M.D. Hygiene"
-                width={120}
-                height={44}
-                className="h-11 w-auto object-contain brightness-0 invert"
-              />
-            </div>
+            <CardHeader />
 
-            <div className="px-6 pb-7 -mt-12 flex flex-col items-center text-center gap-1">
+            <div className="px-6 pb-7 -mt-14 relative flex flex-col items-center text-center gap-1">
               <div className="w-28 h-28 rounded-full ring-4 ring-white overflow-hidden bg-[#F5E1EA] relative shadow-md">
                 {member.photo_url ? (
                   <Image src={member.photo_url} alt={member.name} fill priority className="object-cover object-top" sizes="112px" />

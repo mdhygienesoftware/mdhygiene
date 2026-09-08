@@ -28,3 +28,49 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ---------- Visiting-card motion ----------
+   Echoes the printed catalogue's flowing pink/blue waves. All of it is
+   disabled by the prefers-reduced-motion block above. */
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+@keyframes cardHalo {
+  0%, 100% { transform: scale(1);    opacity: .55; }
+  50%      { transform: scale(1.12); opacity: .2; }
+}
+
+/* Slow drift for the blurred background blobs */
+@keyframes blobDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(22px, -18px) scale(1.06); }
+  66%      { transform: translate(-16px, 14px) scale(.96); }
+}
+
+/* Gently shifting brand gradient behind the header */
+@keyframes sheen {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Bubbles rising through the header */
+@keyframes bubbleRise {
+  0%   { transform: translateY(12px) scale(.9); opacity: 0; }
+  25%  { opacity: .5; }
+  100% { transform: translateY(-70px) scale(1.15); opacity: 0; }
+}
+
+.card-sheen {
+  background: linear-gradient(115deg, #0E2A4A 0%, #1E62B0 35%, #123A5C 60%, #E4779F 100%);
+  background-size: 260% 260%;
+  animation: sheen 14s ease-in-out infinite;
+}
+
+.card-float { animation: cardFloat 5s ease-in-out infinite; }
+.card-halo  { animation: cardHalo 4s ease-in-out infinite; }
+.card-blob  { animation: blobDrift 18s ease-in-out infinite; }
+.card-bubble { animation: bubbleRise 7s ease-in infinite; }
