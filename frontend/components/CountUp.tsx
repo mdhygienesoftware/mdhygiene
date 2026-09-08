@@ -16,6 +16,9 @@ import { useEffect, useRef, useState } from "react";
 export default function CountUp({ value, className = "" }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const frameRef = useRef(0);
+  // Guards against a wheel-scroll re-crossing the threshold and restarting the
+  // count mid-flight, which made it look far slower on desktop than on mobile.
+  const activeRef = useRef(false);
   const [display, setDisplay] = useState(value);
 
   useEffect(() => {
@@ -44,8 +47,10 @@ export default function CountUp({ value, className = "" }: { value: string; clas
     let cancelled = false;
 
     const run = () => {
+      if (activeRef.current) return;
+      activeRef.current = true;
       cancelAnimationFrame(frameRef.current);
-      const duration = 300;
+      const duration = 700;
       const start = performance.now();
 
       const tick = (now: number) => {
@@ -63,6 +68,7 @@ export default function CountUp({ value, className = "" }: { value: string; clas
         } else {
           // Land on the authored string, not a reformatted approximation.
           setDisplay(value);
+          activeRef.current = false;
         }
       };
       frameRef.current = requestAnimationFrame(tick);
@@ -78,6 +84,7 @@ export default function CountUp({ value, className = "" }: { value: string; clas
           // Rewind only when it leaves below the viewport, so scrolling back up
           // replays it — but scrolling past upward doesn't blank the figure.
           cancelAnimationFrame(frameRef.current);
+          activeRef.current = false;
           setDisplay(`${prefix}0${suffix}`);
         }
       },
@@ -88,6 +95,7 @@ export default function CountUp({ value, className = "" }: { value: string; clas
 
     return () => {
       cancelled = true;
+      activeRef.current = false;
       observer.disconnect();
       cancelAnimationFrame(frameRef.current);
     };
