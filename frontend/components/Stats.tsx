@@ -1,3 +1,5 @@
+import CountUp from "@/components/CountUp";
+import Reveal from "@/components/Reveal";
 import type { CompanyStats } from "@/lib/types";
 
 export default function Stats({ stats }: { stats: CompanyStats | null }) {
@@ -11,13 +13,19 @@ export default function Stats({ stats }: { stats: CompanyStats | null }) {
   return (
     <section className="grid grid-cols-2 md:grid-cols-4 bg-white border-y border-border">
       {items.map((stat, i) => (
-        <div
+        <Reveal
           key={stat.label}
-          className={`px-6 md:px-8 py-7 flex flex-col gap-1 ${i < items.length - 1 ? "md:border-r border-[#F5EBE4]" : ""}`}
+          delay={i * 90}
+          className={`px-5 md:px-8 py-6 md:py-7 ${i < items.length - 1 ? "md:border-r border-[#F5EBE4]" : ""}`}
         >
-          <span className={`text-3xl md:text-[34px] font-extrabold ${stat.color}`}>{stat.value}</span>
-          <span className="text-sm text-muted">{stat.label}</span>
-        </div>
+          <div className="flex flex-col gap-1">
+            <CountUp
+              value={stat.value}
+              className={`text-[28px] md:text-[34px] font-extrabold tabular-nums ${stat.color}`}
+            />
+            <span className="text-[13px] md:text-sm text-muted">{stat.label}</span>
+          </div>
+        </Reveal>
       ))}
     </section>
   );

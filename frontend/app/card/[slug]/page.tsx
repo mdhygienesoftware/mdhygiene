@@ -6,6 +6,7 @@ import { getBrands, getContactInfo, getSocialLinks, getTeamMemberBySlug } from "
 import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import StructuredData from "@/components/StructuredData";
 import CardActions from "@/components/CardActions";
+import SocialIcon from "@/components/SocialIcons";
 import type { TeamMember } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -57,10 +58,10 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
   };
 
   const socials = [
-    { key: "facebook", label: "Facebook", href: social.facebook },
-    { key: "instagram", label: "Instagram", href: social.instagram },
-    { key: "youtube", label: "YouTube", href: social.youtube },
-    { key: "twitter", label: "X / Twitter", href: social.twitter },
+    { key: "facebook", label: "Facebook", href: social.facebook, color: "#1877F2" },
+    { key: "instagram", label: "Instagram", href: social.instagram, color: "#E4405F" },
+    { key: "youtube", label: "YouTube", href: social.youtube, color: "#FF0000" },
+    { key: "twitter", label: "X / Twitter", href: social.twitter, color: "#0F1419" },
   ].filter((s) => Boolean(s.href));
 
   return (
@@ -83,7 +84,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
             <div className="px-6 pb-7 -mt-12 flex flex-col items-center text-center gap-1">
               <div className="w-28 h-28 rounded-full ring-4 ring-white overflow-hidden bg-[#F5E1EA] relative shadow-md">
                 {member.photo_url ? (
-                  <Image src={member.photo_url} alt={member.name} fill className="object-cover" sizes="112px" />
+                  <Image src={member.photo_url} alt={member.name} fill priority className="object-cover object-top" sizes="112px" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-4xl font-extrabold text-pink/60">
                     {member.name.charAt(0)}
@@ -96,22 +97,55 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
               <p className="text-sm text-muted-2">M.D. Hygiene Pvt Ltd</p>
               {member.intro && <p className="text-sm text-muted-2 leading-relaxed mt-2">{member.intro}</p>}
 
-              {socials.length > 0 && (
-                <div className="flex gap-2.5 mt-4">
-                  {socials.map((s) => (
-                    <a
-                      key={s.key}
-                      href={s.href}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label={s.label}
-                      className="w-10 h-10 rounded-full bg-[#F2F6FA] hover:bg-pink hover:text-white text-navy flex items-center justify-center text-xs font-bold transition-colors"
-                    >
-                      {s.label.charAt(0)}
-                    </a>
-                  ))}
-                </div>
-              )}
+              {/* Social + direct contact icons */}
+              <div className="flex flex-wrap justify-center gap-2.5 mt-4">
+                {socials.map((s) => (
+                  <a
+                    key={s.key}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={s.label}
+                    title={s.label}
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-white transition-transform hover:scale-110"
+                    style={{ background: s.color }}
+                  >
+                    <SocialIcon name={s.key} />
+                  </a>
+                ))}
+                {member.email && (
+                  <a
+                    href={`mailto:${member.email}`}
+                    aria-label="Email"
+                    title={member.email}
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-white bg-[#E4779F] transition-transform hover:scale-110"
+                  >
+                    <SocialIcon name="email" />
+                  </a>
+                )}
+                {member.phone && (
+                  <a
+                    href={`tel:${member.phone.replace(/\s+/g, "")}`}
+                    aria-label="Call"
+                    title={member.phone}
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-white bg-[#1E62B0] transition-transform hover:scale-110"
+                  >
+                    <SocialIcon name="phone" />
+                  </a>
+                )}
+                {member.whatsapp && (
+                  <a
+                    href={`https://wa.me/${member.whatsapp.replace(/[^\d]/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="WhatsApp"
+                    title="WhatsApp"
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-white bg-[#25D366] transition-transform hover:scale-110"
+                  >
+                    <SocialIcon name="whatsapp" />
+                  </a>
+                )}
+              </div>
 
               <CardActions member={member} />
             </div>

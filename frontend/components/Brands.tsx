@@ -1,35 +1,57 @@
 import Image from "next/image";
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 import type { Brand } from "@/lib/types";
 
 export default function Brands({ brands }: { brands: Brand[] }) {
   if (!brands.length) return null;
 
   return (
-    <section id="brands" className="px-6 md:px-14 py-16 md:py-20 flex flex-col gap-9">
-      <div className="flex flex-col gap-2">
-        <span className="text-[13px] font-bold tracking-[0.14em] text-pink">OUR BRANDS</span>
-        <h2 className="text-3xl md:text-[36px] font-extrabold text-navy">Trusted on shelves across India</h2>
-      </div>
-      <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {brands.map((brand) => (
-          <Link
-            key={brand.slug}
-            href={`/brands/${brand.slug}`}
-            className="bg-white border border-border rounded-2xl p-7 flex flex-col gap-4 items-start hover:shadow-md transition-shadow"
-          >
-            <div className="h-14 flex items-center">
-              {brand.logo_url ? (
-                <Image src={brand.logo_url} alt={brand.name} width={140} height={56} className="h-14 w-auto object-contain" />
-              ) : (
-                <span className="text-[26px] font-extrabold italic" style={{ color: brand.accent_color ?? "#123A5C" }}>
-                  {brand.name}
-                </span>
-              )}
-            </div>
-            <span className="text-base font-bold text-navy">{brand.name}</span>
-            <span className="text-[14px] leading-relaxed text-muted-2">{brand.tagline}</span>
-          </Link>
+    <section id="brands" className="px-5 md:px-14 py-14 md:py-20 flex flex-col gap-9">
+      <Reveal>
+        <div className="flex flex-col gap-2">
+          <span className="text-[13px] font-bold tracking-[0.14em] text-pink">OUR BRANDS</span>
+          <h2 className="text-[26px] md:text-[36px] font-extrabold text-navy">Trusted on shelves across India</h2>
+        </div>
+      </Reveal>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+        {brands.map((brand, i) => (
+          <Reveal key={brand.slug} delay={i * 110} className="h-full">
+            <Link
+              href={`/brands/${brand.slug}`}
+              style={{ ["--brand-accent" as string]: brand.accent_color ?? "#E4779F" }}
+              className="group relative h-full bg-white border border-border rounded-2xl p-6 md:p-7 flex flex-col gap-4 items-start overflow-hidden
+                         transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(18,58,92,0.12)] hover:border-[var(--brand-accent)]"
+            >
+              {/* Accent wash that grows on hover */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
+                style={{ background: brand.accent_color ?? "#E4779F" }}
+              />
+              <div className="h-14 flex items-center">
+                {brand.logo_url ? (
+                  <Image
+                    src={brand.logo_url}
+                    alt={brand.name}
+                    width={140}
+                    height={56}
+                    className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <span className="text-[26px] font-extrabold italic" style={{ color: brand.accent_color ?? "#123A5C" }}>
+                    {brand.name}
+                  </span>
+                )}
+              </div>
+              <span className="text-base font-bold text-navy">{brand.name}</span>
+              <span className="text-[14px] leading-relaxed text-muted-2">{brand.tagline}</span>
+              <span className="mt-auto pt-1 text-sm font-semibold text-blue opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                View range →
+              </span>
+            </Link>
+          </Reveal>
         ))}
       </div>
     </section>

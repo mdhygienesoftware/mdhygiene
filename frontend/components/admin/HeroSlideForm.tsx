@@ -48,7 +48,21 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
         <Field label="CTA link" name="cta_href" defaultValue={slide?.cta_href ?? ""} />
       </div>
       <div className="grid md:grid-cols-2 gap-4 items-center">
+        <div className="grid md:grid-cols-2 gap-4">
         <Field label="Sort order" name="sort_order" type="number" defaultValue={String(slide?.sort_order ?? 0)} />
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+          Display time (seconds)
+          <input
+            type="number"
+            name="duration_seconds"
+            min={2}
+            max={60}
+            defaultValue={String(slide?.duration_seconds ?? 6)}
+            className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal"
+          />
+          <span className="text-xs font-normal text-muted-2">How long this slide shows before the next one (2–60).</span>
+        </label>
+      </div>
         <label className="flex items-center gap-2 text-sm font-semibold text-navy">
           <input type="checkbox" name="is_active" defaultChecked={slide?.is_active ?? true} /> Active
         </label>

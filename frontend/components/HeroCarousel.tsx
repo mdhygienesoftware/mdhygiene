@@ -8,11 +8,13 @@ import type { HeroSlide } from "@/lib/types";
 export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [active, setActive] = useState(0);
 
+  // Each slide carries its own display time, set per slide in admin.
   useEffect(() => {
     if (slides.length < 2) return;
-    const id = setInterval(() => setActive((i) => (i + 1) % slides.length), 6000);
-    return () => clearInterval(id);
-  }, [slides.length]);
+    const seconds = slides[active]?.duration_seconds ?? 6;
+    const id = setTimeout(() => setActive((i) => (i + 1) % slides.length), Math.max(2, seconds) * 1000);
+    return () => clearTimeout(id);
+  }, [active, slides]);
 
   if (!slides.length) return null;
   const slide = slides[active];

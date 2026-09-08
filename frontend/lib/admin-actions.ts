@@ -134,6 +134,7 @@ export async function saveHeroSlideAction(id: string | null, formData: FormData)
     cta_label: String(formData.get("cta_label") ?? "").trim() || null,
     cta_href: String(formData.get("cta_href") ?? "").trim() || null,
     sort_order: Number(formData.get("sort_order") ?? 0),
+    duration_seconds: Math.min(60, Math.max(2, Number(formData.get("duration_seconds") ?? 6))),
     is_active: formData.get("is_active") === "on",
   };
   if (!payload.media_url || !payload.headline) return { ok: false, error: "Media and headline are required." };

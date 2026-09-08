@@ -94,6 +94,7 @@ export type Database = {
       };
       hero_slides: {
         Row: {
+          duration_seconds: number
           created_at: string;
           cta_href: string | null;
           cta_label: string | null;
@@ -108,6 +109,7 @@ export type Database = {
           subheading: string | null;
         };
         Insert: {
+          duration_seconds?: number
           created_at?: string;
           cta_href?: string | null;
           cta_label?: string | null;
@@ -122,6 +124,7 @@ export type Database = {
           subheading?: string | null;
         };
         Update: {
+          duration_seconds?: number
           created_at?: string;
           cta_href?: string | null;
           cta_label?: string | null;
