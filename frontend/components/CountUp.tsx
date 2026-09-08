@@ -45,7 +45,7 @@ export default function CountUp({ value, className = "" }: { value: string; clas
 
     const run = () => {
       cancelAnimationFrame(frameRef.current);
-      const duration = 2000;
+      const duration = 1300;
       const start = performance.now();
 
       const tick = (now: number) => {
