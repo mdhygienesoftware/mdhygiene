@@ -1,3 +1,5 @@
+import Reveal from "@/components/Reveal";
+
 const SEGMENTS = [
   {
     n: "01",
@@ -18,20 +20,24 @@ const SEGMENTS = [
 
 export default function PartnerSegments() {
   return (
-    <section className="px-6 md:px-14 py-16 md:py-20 bg-cream-2 flex flex-col gap-9">
-      <div className="flex flex-col gap-2">
-        <span className="text-[13px] font-bold tracking-[0.14em] text-pink">WORK WITH US</span>
-        <h2 className="text-3xl md:text-[36px] font-extrabold text-navy">
-          One factory. Three ways to partner.
-        </h2>
-      </div>
-      <div className="grid md:grid-cols-3 gap-6">
-        {SEGMENTS.map((s) => (
-          <div key={s.n} className="bg-white rounded-2xl p-8 flex flex-col gap-3">
-            <span className="text-[13px] font-mono text-pink">{s.n}</span>
-            <h3 className="text-xl font-bold text-navy">{s.title}</h3>
-            <p className="text-[15px] leading-relaxed text-muted-2">{s.body}</p>
-          </div>
+    <section className="px-5 md:px-14 py-14 md:py-20 bg-cream-2 flex flex-col gap-9">
+      <Reveal>
+        <div className="flex flex-col gap-2">
+          <span className="text-[13px] font-bold tracking-[0.14em] text-pink">WORK WITH US</span>
+          <h2 className="text-[26px] md:text-[36px] font-extrabold text-navy">
+            One factory. Three ways to partner.
+          </h2>
+        </div>
+      </Reveal>
+      <div className="grid md:grid-cols-3 gap-5 md:gap-6">
+        {SEGMENTS.map((s, i) => (
+          <Reveal key={s.n} delay={i * 130} className="h-full">
+            <div className="group h-full bg-white rounded-2xl p-7 md:p-8 flex flex-col gap-3 border border-transparent transition-all duration-300 hover:-translate-y-1 hover:border-pink/40 hover:shadow-[0_12px_30px_rgba(18,58,92,0.10)]">
+              <span className="text-[13px] font-mono text-pink">{s.n}</span>
+              <h3 className="text-xl font-bold text-navy">{s.title}</h3>
+              <p className="text-[15px] leading-relaxed text-muted-2">{s.body}</p>
+            </div>
+          </Reveal>
         ))}
       </div>
     </section>
