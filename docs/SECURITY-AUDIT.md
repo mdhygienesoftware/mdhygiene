@@ -33,6 +33,11 @@ regressions later:
 - **No service-role key anywhere in the repo** — the app uses only the anon key plus RLS,
   so a leaked client bundle grants nothing beyond what RLS already allows.
 - **`.env.local` and the legacy `card/` folder are gitignored** — no secrets in git history.
+- **Single admin session is enforced** (added 9 Sep). Supabase's built-in setting is
+  Pro-only and this project is on Free, so sign-in records its session id on the
+  admin row and the admin layout signs out any session that no longer matches.
+  Verified: a second sign-in displaces the first, and the update policy is scoped
+  to the caller's own row.
 - **Contact form has a honeypot field** that silently drops bots.
 - **Uploads are validated**: 50 MB cap and a MIME allowlist that deliberately **excludes
   SVG** (SVG on a public bucket is an XSS vector).

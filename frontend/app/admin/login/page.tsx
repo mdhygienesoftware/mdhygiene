@@ -1,11 +1,18 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { adminSignInAction } from "@/lib/actions";
 
 export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [superseded, setSuperseded] = useState(false);
+
+  // Read straight from the URL rather than useSearchParams(), which would
+  // require a Suspense boundary and fails the production build without one.
+  useEffect(() => {
+    setSuperseded(new URLSearchParams(window.location.search).get("reason") === "session-superseded");
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,6 +31,12 @@ export default function AdminLoginPage() {
       <form onSubmit={handleSubmit} className="bg-white border border-border rounded-2xl p-10 w-full max-w-sm flex flex-col gap-4 shadow-sm">
         <h1 className="text-2xl font-extrabold text-navy">Admin sign in</h1>
         <p className="text-sm text-muted-2">M.D. Hygiene content &amp; order management.</p>
+        {superseded && (
+          <p className="text-sm bg-[#FDF6F9] border border-[#E7D9E0] text-navy rounded-lg px-4 py-3">
+            You were signed out because this account signed in on another device. Only one
+            session can be active at a time.
+          </p>
+        )}
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
           Email
           <input name="email" type="email" required className="border border-border rounded-lg px-4 py-3 font-normal" />

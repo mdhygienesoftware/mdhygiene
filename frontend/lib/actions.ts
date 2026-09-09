@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sendInquiryNotification } from "@/lib/email";
+import { claimSession, sessionIdFromToken } from "@/lib/session";
 
 export interface ActionResult {
   ok: boolean;
@@ -47,8 +48,15 @@ export async function adminSignInAction(formData: FormData): Promise<ActionResul
   if (!email || !password) return { ok: false, error: "Enter your email and password." };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { ok: false, error: "Invalid email or password." };
+
+  // Claim this as the one active session — any other signed-in device is
+  // dropped on its next request.
+  const sessionId = sessionIdFromToken(data.session?.access_token);
+  if (sessionId && data.user) {
+    await claimSession(supabase, data.user.id, sessionId);
+  }
 
   redirect("/admin");
 }

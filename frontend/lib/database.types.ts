@@ -9,9 +9,9 @@ export type Database = {
   public: {
     Tables: {
       admin_profiles: {
-        Row: { created_at: string; full_name: string | null; id: string };
-        Insert: { created_at?: string; full_name?: string | null; id: string };
-        Update: { created_at?: string; full_name?: string | null; id?: string };
+        Row: { active_session_id: string | null; session_started_at: string | null; created_at: string; full_name: string | null; id: string };
+        Insert: { active_session_id?: string | null; session_started_at?: string | null; created_at?: string; full_name?: string | null; id: string };
+        Update: { active_session_id?: string | null; session_started_at?: string | null; created_at?: string; full_name?: string | null; id?: string };
         Relationships: [];
       };
       brands: {

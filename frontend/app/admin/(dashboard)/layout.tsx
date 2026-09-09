@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { adminSignOutAction } from "@/lib/actions";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import { sessionIsCurrent } from "@/lib/session";
 
 const NAV = [
   { href: "/admin", label: "Dashboard" },
@@ -25,10 +26,28 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // middleware.ts already redirects unauthenticated visitors; this guards the
   // (rare) case of a signed-in-but-not-admin auth user.
   if (!user) redirect("/admin/login");
-  const { data: profile } = await supabase.from("admin_profiles").select("id").eq("id", user.id).maybeSingle();
+  const { data: profile } = await supabase
+    .from("admin_profiles")
+    .select("id, active_session_id")
+    .eq("id", user.id)
+    .maybeSingle();
   if (!profile) {
     await supabase.auth.signOut();
     redirect("/admin/login");
+  }
+
+  // Single session: a newer sign-in elsewhere displaces this one. Checked from
+  // the same row already fetched above, so it costs no extra round trip.
+  const { data: sessionData } = await supabase.auth.getSession();
+  const ok = await sessionIsCurrent(
+    supabase,
+    user.id,
+    sessionData.session?.access_token,
+    profile.active_session_id,
+  );
+  if (!ok) {
+    await supabase.auth.signOut();
+    redirect("/admin/login?reason=session-superseded");
   }
 
   return (
