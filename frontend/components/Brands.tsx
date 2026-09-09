@@ -30,14 +30,14 @@ export default function Brands({ brands }: { brands: Brand[] }) {
                 className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                 style={{ background: brand.accent_color ?? "#E4779F" }}
               />
-              <div className="h-14 flex items-center">
+              <div className="h-16 w-full flex items-center justify-center">
                 {brand.logo_url ? (
                   <Image
                     src={brand.logo_url}
                     alt={brand.name}
-                    width={140}
-                    height={56}
-                    className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    width={340}
+                    height={140}
+                    className="max-h-12 md:max-h-14 w-auto max-w-[180px] object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
                   <span className="text-[26px] font-extrabold italic" style={{ color: brand.accent_color ?? "#123A5C" }}>

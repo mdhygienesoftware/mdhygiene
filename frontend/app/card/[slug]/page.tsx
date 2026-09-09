@@ -152,7 +152,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
                     className="border border-border rounded-xl p-3 flex items-center justify-center h-16 hover:border-pink transition-colors"
                   >
                     {brand.logo_url ? (
-                      <Image src={brand.logo_url} alt={brand.name} width={90} height={36} className="max-h-9 w-auto object-contain" />
+                      <Image src={brand.logo_url} alt={brand.name} width={220} height={90} className="max-h-9 w-auto max-w-[110px] object-contain" />
                     ) : (
                       <span className="font-bold text-navy text-sm">{brand.name}</span>
                     )}

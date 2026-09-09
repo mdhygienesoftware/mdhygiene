@@ -49,7 +49,7 @@ export default function BrandProductsAccordion({
               style={{ borderLeft: `4px solid ${accent}` }}
             >
               {brand?.logo_url ? (
-                <Image src={brand.logo_url} alt={brand.name} width={96} height={40} className="h-10 w-auto object-contain" />
+                <Image src={brand.logo_url} alt={brand.name} width={200} height={80} className="h-10 w-auto max-w-[130px] object-contain" />
               ) : (
                 <span className="h-10 flex items-center font-extrabold text-navy">{brand?.name ?? "Unassigned"}</span>
               )}

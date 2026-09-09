@@ -18,7 +18,7 @@ export default async function AdminBrandsPage() {
       <div className="bg-white border border-border rounded-2xl overflow-hidden">
         {(brands ?? []).map((brand) => (
           <div key={brand.id} className="flex items-center gap-4 px-6 py-4 border-b border-border last:border-0">
-            {brand.logo_url && <Image src={brand.logo_url} alt={brand.name} width={48} height={48} className="w-12 h-12 object-contain" />}
+            {brand.logo_url && <Image src={brand.logo_url} alt={brand.name} width={200} height={80} className="w-20 h-10 object-contain" />}
             <div className="flex-1">
               <p className="font-bold text-navy">{brand.name}</p>
               <p className="text-sm text-muted-2">{brand.tagline}</p>
