@@ -282,6 +282,13 @@ curl -o /dev/null -w "%{http_code}" \
 
 ---
 
+## Re-running this audit
+
+A ready-to-use prompt lives in the main [`README.md`](../README.md#re-running-the-security-audit)
+under **Re-running the security audit**. Paste it into an agent with shell and Supabase
+access from the repo root; it reproduces this document's structure and enforces the
+evidence-first rules below.
+
 ## Notes on method
 
 - Findings were produced by probing the live Supabase project with the **anon key** — the

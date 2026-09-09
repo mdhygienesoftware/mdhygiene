@@ -25,9 +25,11 @@ MD/
               SECURITY-AUDIT.md (phased findings + re-test checklist)
 ```
 
-> **Before going live**, work through Phase 0 of [`docs/SECURITY-AUDIT.md`](docs/SECURITY-AUDIT.md) —
-> the seeded admin password below is still active, and the legacy PHP `data.php` page
-> publicly exposes past enquiry data and live MySQL credentials.
+> **Before going live**, work through Phase 0 of [`docs/SECURITY-AUDIT.md`](docs/SECURITY-AUDIT.md).
+> The blocking item is that the seeded admin password below still authenticates and is
+> printed in this file. The legacy PHP `data.php` holds live MySQL credentials and should
+> be rotated, though it is *not* currently reachable — that claim was corrected in the
+> audit after probing showed the host soft-404s.
 
 ## Local development
 
@@ -194,6 +196,65 @@ Catalogue imagery (brand marks, packshots, hero photos) lives in the public Supa
 Storage bucket `media` under `seed/`; admin uploads go to `uploads/`. Records store the
 full public URL, so `next/image` serves them via `remotePatterns` in `next.config.mjs`.
 The only bundled static image is the company logo in the header.
+
+## Re-running the security audit
+
+`docs/SECURITY-AUDIT.md` is a point-in-time snapshot. Re-run it after any phase of
+remediation, before launch, and whenever dependencies or RLS policies change.
+
+Paste the prompt below into Claude Code (or any agent with shell + Supabase access) from
+the repo root. It is written to force **evidence over inspection** — the previous audit
+downgraded a "critical" finding precisely because probing showed the page wasn't actually
+reachable, which reading the code alone would never have caught.
+
+````
+Perform a security audit of this repository and its live infrastructure, then update
+docs/SECURITY-AUDIT.md.
+
+STACK
+- Next.js 14 App Router. Every mutation is a Server Action; there is no separate API.
+- Supabase project gtpvibbeqlndkaezqniz: Postgres + RLS, GoTrue auth, Storage.
+- The app holds only the anon key. RLS is the entire authorization boundary.
+- Admin access = a row in admin_profiles matching auth.uid().
+
+RULES
+1. Verify every finding by probing the running system. Do not report anything you have
+   only inferred from reading code, and say so explicitly when something is unverified.
+2. Probe using the ANON key, since that is what a visitor's browser holds.
+3. Before rating anything Critical, confirm it is actually reachable. Check whether the
+   host soft-404s (returns 200 with the homepage for missing paths) before concluding a
+   URL is live.
+4. Clean up any test rows you create, and confirm the cleanup.
+5. Do not run destructive tests against production data.
+
+CHECK AT MINIMUM
+- RLS: enabled + policies on every public table. Then actually attempt, as anon:
+  read distributor_inquiries / orders / order_items / admin_profiles; insert into
+  products, brands, site_settings, seo_settings, team_members, hero_slides;
+  upload to storage. Record the exact response codes.
+- Auth: does the documented default password still authenticate? Is leaked-password
+  protection on? Is MFA available on the admin account?
+- Supabase advisors: run get_advisors(type="security") and include what it reports.
+- Dependencies: npm audit --omit=dev --audit-level=high.
+- Public write surfaces: is the enquiry form rate-limited? Try several rapid submissions.
+- next.config.mjs: image remotePatterns (an open image proxy is abusable), and whether
+  any security headers are set.
+- Secrets: anything sensitive tracked in git, a service-role key anywhere in the repo,
+  credentials in documentation.
+- XSS: every dangerouslySetInnerHTML, and whether JSON-LD escapes </script>.
+- PII: what a single anonymous API request can harvest in bulk (e.g. staff contact rows).
+
+OUTPUT
+Update docs/SECURITY-AUDIT.md, preserving its structure:
+- Severity summary table.
+- A "What is already correct" section — record verified-good controls so they don't get
+  regressed later.
+- A "What is currently exposed" table: each surface and who can reach it.
+- Findings grouped into Phase 0 (blocking) / 1 (high) / 2 (medium) / 3 (hardening), each
+  with evidence, impact, and a concrete fix.
+- A re-test checklist of commands.
+State the audit date, and mark any correction to a previous finding explicitly.
+````
 
 ## Known issues / follow-ups
 
