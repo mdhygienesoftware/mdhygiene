@@ -13,8 +13,8 @@ reading code. Commands used are shown so each can be re-checked after remediatio
 
 | Severity | Count | Findings |
 |---|---|---|
-| 🔴 Critical | 2 | C1 default admin password, C2 legacy PHP data leak |
-| 🟠 High | 3 | H1 dependency CVEs, H2 no enquiry rate limit, H3 open image proxy |
+| 🔴 Critical | 1 | C1 default admin password |
+| 🟠 High | 4 | C2 legacy DB credentials, H1 dependency CVEs, H2 no enquiry rate limit, H3 open image proxy |
 | 🟡 Medium | 5 | M1 no security headers, M2 `is_admin()` exposed via RPC, M3 leaked-password protection off, M4 staff PII harvestable, M5 JSON-LD escaping |
 | 🔵 Low | 4 | L1 no admin MFA, L2 no audit log, L3 no dependency scanning in CI, L4 no storage path separation |
 
@@ -36,6 +36,21 @@ regressions later:
 - **Contact form has a honeypot field** that silently drops bots.
 - **Uploads are validated**: 50 MB cap and a MIME allowlist that deliberately **excludes
   SVG** (SVG on a public bucket is an XSS vector).
+
+---
+
+## What is currently exposed (verified 9 Sep 2026)
+
+| Surface | Reachable by | Notes |
+|---|---|---|
+| `localhost:3000` (site + `/admin`) | **Anyone on the same Wi-Fi** | Dev server binds `0.0.0.0`, so it answers on `http://192.168.29.154:3000`, including `/admin`. Not reachable from the public internet — verified: connecting to the public IP on port 3000 times out. |
+| Supabase REST API | **Anyone on the internet** | By design. The anon key ships in the browser bundle and cannot be secret. RLS is what protects it, and RLS was verified working. |
+| Supabase Storage `media` bucket | **Anyone on the internet** | Public-read bucket: product photos, brand logos, staff portraits. All intended to be public. |
+| `mdhygiene.in` (legacy PHP) | **Anyone on the internet** | The old site is live. `data.php` is *not* reachable there — the host soft-404s to the homepage. |
+
+**In short:** the new site is not on the public internet yet. Its database is, but only
+through RLS-guarded reads. The main present-day exposure is that anyone sharing your
+Wi-Fi can open the admin panel and sign in with the default password.
 
 ---
 
@@ -67,20 +82,27 @@ of products, content, SEO, member records and every distributor enquiry.
    the team password manager".
 3. Consider renaming the account away from the guessable `admin@`.
 
-### C2 · Legacy PHP site leaks database credentials and all enquiry data 🔴
+### C2 · Legacy PHP file contains live database credentials 🟠 *(downgraded — see correction)*
+
+> **Correction (9 Sep 2026):** this was originally rated Critical on the assumption the
+> page was live. It is **not** currently reachable. `https://www.mdhygiene.in/card/card/data.php`
+> returns the site homepage — the server soft-404s, serving the same 16,213-byte homepage
+> for any missing path (verified against deliberately invalid URLs). So no data is being
+> exposed at that address today. The credentials in the file are still real, so this
+> remains worth acting on, but it is not an active leak.
 
 `card/card/data.php` contains live MySQL credentials in plaintext
-(`ygiene_ene` / `59bL5p%BZKHR`) and renders **every contact-form and review submission**
-— name, email, phone, city, message — to anyone who loads the page. There is no login
-on it.
+(`ygiene_ene` / `59bL5p%BZKHR`), and if deployed would render **every contact-form and
+review submission** — name, email, phone, city, message — with no login.
 
-**Impact:** full read of historic customer data, and database credentials for direct
-access, to anyone who finds the URL.
+**Impact if deployed:** full read of historic customer data, plus credentials for direct
+database access. Currently not deployed at the expected path.
 
 **Fix**
-1. Take `data.php` (and `db-config.php`) offline on the hosting server now.
-2. Rotate that MySQL password.
-3. Check the host's access logs for prior hits on `data.php`.
+1. Confirm `data.php` / `db-config.php` aren't deployed under some other path on the host.
+2. Rotate that MySQL password regardless — it is written in plaintext in a folder that was
+   shared around, so treat it as compromised.
+3. Check the host's access logs for any historic hits on `data.php`.
 4. Migrate any enquiry history you still need, then decommission the PHP site — the React
    cards at `/card/<code>` have replaced it.
 
