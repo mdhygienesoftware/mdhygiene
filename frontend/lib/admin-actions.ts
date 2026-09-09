@@ -77,7 +77,7 @@ export async function saveProductAction(id: string | null, formData: FormData): 
   }
 
   revalidatePath("/admin/products");
-  revalidatePath("/products");
+  revalidatePath("/", "layout");
   redirect(`/admin/products/${productId}`);
 }
 
@@ -85,7 +85,7 @@ export async function deleteProductAction(id: string) {
   const supabase = await createClient();
   await supabase.from("products").delete().eq("id", id);
   revalidatePath("/admin/products");
-  revalidatePath("/products");
+  revalidatePath("/", "layout");
 }
 
 export async function saveVariantAction(productId: string, variantId: string | null, formData: FormData): Promise<ActionResult> {
@@ -109,7 +109,7 @@ export async function saveVariantAction(productId: string, variantId: string | n
   if (error) return { ok: false, error: error.message };
 
   revalidatePath(`/admin/products/${productId}`);
-  revalidatePath("/products");
+  revalidatePath("/", "layout");
   return { ok: true };
 }
 
@@ -117,7 +117,7 @@ export async function deleteVariantAction(productId: string, variantId: string) 
   const supabase = await createClient();
   await supabase.from("product_variants").delete().eq("id", variantId);
   revalidatePath(`/admin/products/${productId}`);
-  revalidatePath("/products");
+  revalidatePath("/", "layout");
 }
 
 // ---------- Hero slides ----------
@@ -143,7 +143,7 @@ export async function saveHeroSlideAction(id: string | null, formData: FormData)
   if (error) return { ok: false, error: error.message };
 
   revalidatePath("/admin/hero");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   redirect("/admin/hero");
 }
 
@@ -151,7 +151,7 @@ export async function deleteHeroSlideAction(id: string) {
   const supabase = await createClient();
   await supabase.from("hero_slides").delete().eq("id", id);
   revalidatePath("/admin/hero");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
 // ---------- Site settings ----------
@@ -223,8 +223,7 @@ export async function saveTeamMemberAction(id: string | null, formData: FormData
   if (error) return { ok: false, error: error.message };
 
   revalidatePath("/admin/members");
-  revalidatePath("/about");
-  revalidatePath("/card", "layout");
+  revalidatePath("/", "layout");
   redirect("/admin/members");
 }
 
@@ -232,5 +231,5 @@ export async function deleteTeamMemberAction(id: string) {
   const supabase = await createClient();
   await supabase.from("team_members").delete().eq("id", id);
   revalidatePath("/admin/members");
-  revalidatePath("/about");
+  revalidatePath("/", "layout");
 }
