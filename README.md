@@ -31,6 +31,17 @@ MD/
 
 ## Local development
 
+**Easiest way:** double-click **`start-website.bat`** in the project root. It clears the
+build cache (OneDrive corrupts it), installs dependencies on first run, and starts the
+site. Keep the window open while you work — closing it stops the site.
+
+```
+Website:     http://localhost:3000
+Admin panel: http://localhost:3000/admin
+```
+
+**Manual way:**
+
 ```bash
 cd frontend
 cp .env.example .env.local     # fill in the two Supabase values
