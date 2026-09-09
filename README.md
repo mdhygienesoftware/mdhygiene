@@ -258,13 +258,18 @@ State the audit date, and mark any correction to a previous finding explicitly.
 
 ## Known issues / follow-ups
 
-- **Next.js advisory GHSA-955p-x3mx-jcvp** (medium): Server Action IDs can be enumerated
-  by unauthenticated users. Only patched in Next 15.5.21+, which is a breaking upgrade
-  (`params`/`searchParams` become Promises). Impact here is limited because every action
-  re-authorizes through RLS rather than relying on unguessable action IDs — but plan the
-  Next 15/16 upgrade.
+- **Next.js is on a version with a CRITICAL advisory chain** — `npm audit --omit=dev`
+  reports 1 critical + 1 high. The chain includes unauthenticated RCE on Windows-hosted
+  servers, unauthenticated RCE in the Image Optimization API via AVIF, SSRF in Server
+  Actions, and cache poisoning. Fixing means `next@16`, a major upgrade
+  (`params`/`searchParams` become Promises). **This is the top engineering priority** —
+  see Phase 1 of [`docs/SECURITY-AUDIT.md`](docs/SECURITY-AUDIT.md).
+  Two advisories in that chain are partially mitigated already: `images.remotePatterns`
+  is now pinned to the Supabase bucket rather than `**`, and AVIF is disabled.
 - Supabase Auth "leaked password protection" is off; enable it in
-  Authentication → Policies once real admin accounts exist.
-- No automated tests yet. The highest-value first targets are `submitOrderAction`
-  (snapshot correctness) and the RLS policies (an anon client must not read
-  `orders`/`distributor_inquiries`).
+  Authentication → Policies before rotating the admin password, so the new one is checked.
+- No automated tests yet. Highest-value first targets are the RLS policies (an anon
+  client must not read `distributor_inquiries`, and must not write to any table) and
+  `submitInquiryAction` — including that a mail failure still saves the enquiry.
+- The `orders` / `order_items` tables exist but no code touches them; the cart was
+  removed. Drop them if an ordering flow is definitely not coming back.

@@ -13,8 +13,8 @@ reading code. Commands used are shown so each can be re-checked after remediatio
 
 | Severity | Count | Findings |
 |---|---|---|
-| 🔴 Critical | 1 | C1 default admin password |
-| 🟠 High | 4 | C2 legacy DB credentials, H1 dependency CVEs, H2 no enquiry rate limit, H3 open image proxy |
+| 🔴 Critical | 2 | C1 default admin password, **H1 Next.js RCE chain** (escalated 9 Sep) |
+| 🟠 High | 2 | C2 legacy DB credentials, H2 no enquiry rate limit  ·  *(H3 open image proxy — **fixed** 9 Sep)* |
 | 🟡 Medium | 5 | M1 no security headers, M2 `is_admin()` exposed via RPC, M3 leaked-password protection off, M4 staff PII harvestable, M5 JSON-LD escaping |
 | 🔵 Low | 4 | L1 no admin MFA, L2 no audit log, L3 no dependency scanning in CI, L4 no storage path separation |
 
@@ -113,23 +113,41 @@ database access. Currently not deployed at the expected path.
 
 ## Phase 1 — High priority (within the first week)
 
-### H1 · Two high-severity dependency CVEs 🟠
+### H1 · Next.js advisory chain, now CRITICAL 🔴 *(escalated 9 Sep 2026)*
+
+> **Escalation:** on 8 Sep this was 2 high-severity advisories. Re-running the audit on
+> 9 Sep returns **1 critical + 1 high**, with substantially worse advisories published
+> against the installed version. Re-check this often — it moved in a day.
 
 ```bash
 npm audit --omit=dev
-# next   — Unauthenticated disclosure of internal Server Function endpoints (GHSA-955p-x3mx-jcvp)
-# postcss — XSS via unescaped </style>, plus path traversal via sourceMappingURL
-# 2 high severity vulnerabilities
+# next  9.3.4-canary.0 - 16.3.0-preview.10   Severity: CRITICAL
+# postcss <=8.5.22                            Severity: high
+# 2 vulnerabilities (1 high, 1 critical)
 ```
 
-The Next.js advisory matters here specifically because **this app's every mutation is a
-Server Action**, which is what that CVE concerns.
+The chain against the installed Next version includes:
 
-**Fix:** upgrade Next.js. `npm audit fix --force` proposes `next@16`, a major version —
-do it deliberately, not blindly:
-1. Branch, upgrade, run `npm run typecheck && npm run lint && npm run build`.
-2. Re-test admin login, a product save, an image upload and a form submit.
-3. Watch for App Router breaking changes (`params`/`searchParams` became async in 15).
+| Advisory | Why it matters here |
+|---|---|
+| `GHSA-p293-qw3h-jr36` | **Unauthenticated RCE on Windows-hosted servers** — the dev server runs on Windows and binds `0.0.0.0` |
+| `GHSA-2xp9-vwfh-vxw4` | **Unauthenticated RCE in the Image Optimization API via AVIF** |
+| `GHSA-9g9p-9gw9-jx7f` | DoS via Image Optimizer `remotePatterns` — this app had `hostname: "**"` |
+| `GHSA-89xv-2m56-2m9x` | SSRF in Server Actions — every mutation here is a Server Action |
+| `GHSA-955p-x3mx-jcvp` | Unauthenticated disclosure of internal Server Function endpoints |
+| `GHSA-wfc6-r584-vfw7` | Cache poisoning in RSC responses |
+
+**Partial mitigations applied 9 Sep** (they reduce exposure; they are not the fix):
+- `images.remotePatterns` pinned to the Supabase bucket instead of `**`, closing the
+  open proxy and the `remotePatterns` DoS vector. Verified: an arbitrary external host
+  now returns `400`, our own bucket still returns `200`.
+- `images.formats` set to `["image/webp"]`, so AVIF is never decoded.
+
+**The actual fix:** upgrade Next.js.
+1. Branch, `npm i next@latest`, run `npm run typecheck && npm run lint && npm run build`.
+2. Expect `params`/`searchParams` to become Promises (Next 15+) — every dynamic page and
+   `generateMetadata` in this repo takes them.
+3. Re-test admin login, a product save, an image upload, and a form submit.
 
 ### H2 · No rate limit on public enquiry submissions 🟠
 
@@ -150,7 +168,7 @@ your sending reputation.
 2. Add a CAPTCHA (Cloudflare Turnstile is free and unobtrusive) verified server-side.
 3. Minimum: a Postgres trigger rejecting more than N rows per email/IP per hour.
 
-### H3 · Open image proxy 🟠
+### H3 · Open image proxy ✅ *(fixed 9 Sep 2026)*
 
 `next.config.mjs` sets `remotePatterns: [{ protocol: "https", hostname: "**" }]` — any
 host. Verified: an arbitrary third-party image was fetched and served through the app.
@@ -164,12 +182,11 @@ curl "…/_next/image?url=https%3A%2F%2F<any-external-host>%2Fimage.jpg&w=640&q=
 and transformation cost to your Vercel account, and use your domain to launder image
 hosting.
 
-**Fix:** restrict to hosts you actually use:
-```js
-remotePatterns: [
-  { protocol: "https", hostname: "gtpvibbeqlndkaezqniz.supabase.co" },
-]
-```
+**Fixed.** `next.config.mjs` now pins `remotePatterns` to the Supabase bucket path and
+disables AVIF. Verified after the change: an arbitrary external host returns `400`, the
+Supabase bucket returns `200`, and the site still renders its images.
+
+This also removes the configuration named in `GHSA-9g9p-9gw9-jx7f` (see H1).
 
 ---
 
