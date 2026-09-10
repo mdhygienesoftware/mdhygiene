@@ -9,7 +9,8 @@ const NAV_LINKS = [
   { href: "/products", label: "Products" },
   { href: "/products#brands", label: "Brands" },
   { href: "/products?type=oem", label: "OEM / Private Label" },
-  { href: "/about#certifications", label: "Certifications" },
+  { href: "/certifications", label: "Certifications" },
+  { href: "/careers", label: "Careers" },
 ];
 
 export default async function Header() {

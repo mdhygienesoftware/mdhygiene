@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { certificationSlug } from "@/lib/certifications";
 
 export default function Certifications({ certifications }: { certifications: string[] }) {
   return (
@@ -19,12 +20,16 @@ export default function Certifications({ certifications }: { certifications: str
       <div className="flex gap-3 items-center flex-wrap md:max-w-xl md:justify-end">
         {certifications.map((cert, i) => (
           <Reveal key={cert} delay={i * 70}>
-            <span className="inline-block border border-[#E7D9E0] bg-[#FDF6F9] rounded-lg px-4 md:px-[18px] py-2.5 md:py-3 text-[13px] font-bold text-navy whitespace-nowrap transition-transform duration-200 hover:-translate-y-0.5 hover:border-pink">
+            {/* Each badge opens its own entry on the certifications page. */}
+            <Link
+              href={`/certifications#${certificationSlug(cert)}`}
+              className="inline-block border border-[#E7D9E0] bg-[#FDF6F9] rounded-lg px-4 md:px-[18px] py-2.5 md:py-3 text-[13px] font-bold text-navy whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:border-pink hover:text-pink"
+            >
               {cert}
-            </span>
+            </Link>
           </Reveal>
         ))}
-        <Link href="/about#certifications" className="text-blue font-semibold text-[15px] whitespace-nowrap">
+        <Link href="/certifications" className="text-blue font-semibold text-[15px] whitespace-nowrap">
           Learn more →
         </Link>
       </div>

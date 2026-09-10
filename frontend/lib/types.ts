@@ -34,6 +34,28 @@ export interface AboutContent {
   mission: string;
 }
 
+export interface JobOpening {
+  /** Stable id so a listing can be linked to and applied for by name. */
+  id: string;
+  title: string;
+  location: string;
+  /** "Full-time", "Contract", "Internship" — free text, set in admin. */
+  employment_type: string;
+  experience: string;
+  description: string;
+  is_open: boolean;
+}
+
+export interface CareersContent {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  cta_label: string;
+  perks: string[];
+  openings: JobOpening[];
+  closing_note: string;
+}
+
 export const INQUIRY_TYPES = [
   { value: "distribution", label: "Distribution" },
   { value: "private_label", label: "Private Label / OEM" },

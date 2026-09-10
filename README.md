@@ -86,6 +86,7 @@ in the migration history and this README.
 | Hero & Media | Manage homepage carousel slides — upload **images or videos**, set headline/CTA/order/visibility |
 | Site Content | Edit stats, contact details, addresses, about copy and certifications without a redeploy |
 | OEM / Private Label | OEM ranges, kept separate from house brands |
+| Careers | Careers copy for the homepage band, plus the list of open roles shown at `/careers`. Applications arrive under Inquiries, with the role in the company field |
 | Members | Team roster grouped by department, with photo upload. Each member gets a digital visiting card at `/card/<code>` (the React port of the old PHP cards), toggled by *digital card enabled*. There is no public team listing — `show on public website` is currently inert |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
 | SEO & GEO | Search, local/geographic and AI-engine settings (see below) |
@@ -99,6 +100,8 @@ Managed under **SEO & GEO** in the admin panel, with everything served from live
 |---|---|
 | `/sitemap.xml` | Generated from active products + brands, so new products are discoverable automatically |
 | `/robots.txt` | Crawl rules, including per-crawler control for AI engines |
+| `/certifications` | One entry per certification mark in site content, explaining what it covers |
+| `/careers` | Open roles plus an application form |
 | `/llms.txt` | A factual, structured summary for AI assistants (ChatGPT, Perplexity, Claude) |
 | JSON-LD | `Organization`, `LocalBusiness`, `Product`, `FAQPage`, `BreadcrumbList` |
 

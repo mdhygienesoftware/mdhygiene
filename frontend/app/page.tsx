@@ -5,8 +5,9 @@ import Brands from "@/components/Brands";
 import ProductShowcase from "@/components/ProductShowcase";
 import PartnerSegments from "@/components/PartnerSegments";
 import Certifications from "@/components/Certifications";
+import CareersStrip from "@/components/CareersStrip";
 import Footer from "@/components/Footer";
-import { getBrands, getCertifications, getCompanyStats, getContactInfo, getFeaturedProducts, getHeroSlides } from "@/lib/queries";
+import { getBrands, getCareers, getCertifications, getCompanyStats, getContactInfo, getFeaturedProducts, getHeroSlides } from "@/lib/queries";
 import { getSeoAi, getSeoGeneral, getSeoLocal, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } from "@/components/StructuredData";
 
@@ -14,13 +15,14 @@ import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } fr
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [slides, stats, brands, featured, certifications, contact, general, local, ai] = await Promise.all([
+  const [slides, stats, brands, featured, certifications, contact, careers, general, local, ai] = await Promise.all([
     getHeroSlides(),
     getCompanyStats(),
     getBrands(),
     getFeaturedProducts(8),
     getCertifications(),
     getContactInfo(),
+    getCareers(),
     getSeoGeneral(),
     getSeoLocal(),
     getSeoAi(),
@@ -42,6 +44,7 @@ export default async function HomePage() {
         <Brands brands={brands} />
         <ProductShowcase products={featured} title="Featured products" />
         <PartnerSegments />
+        <CareersStrip careers={careers} />
         <Certifications certifications={certifications ?? []} />
       </main>
       <Footer />

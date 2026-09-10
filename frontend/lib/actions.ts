@@ -42,6 +42,66 @@ export async function submitInquiryAction(formData: FormData): Promise<ActionRes
   return { ok: true };
 }
 
+/**
+ * A job application from /careers.
+ *
+ * Applications land in the same table as distributor enquiries — it is the only
+ * table the public can write to, and standing up a separate one would need a
+ * migration this project can't apply from here. The company_name column carries
+ * the role instead, so applications are obvious at a glance in Admin →
+ * Inquiries and can be filtered out of the distributor pipeline.
+ */
+export async function submitApplicationAction(formData: FormData): Promise<ActionResult> {
+  // Honeypot — real users never fill this hidden field in.
+  if (String(formData.get("website") ?? "").length > 0) {
+    return { ok: true };
+  }
+
+  const name = String(formData.get("contact_name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const role = String(formData.get("role") ?? "").trim() || "Open application";
+  const location = String(formData.get("region") ?? "").trim();
+  const experience = String(formData.get("experience") ?? "").trim();
+  const resumeUrl = String(formData.get("resume_url") ?? "").trim();
+  const note = String(formData.get("message") ?? "").trim();
+
+  if (!name || !email || !phone || !note) {
+    return { ok: false, error: "Please fill in all required fields." };
+  }
+
+  // Everything the role-specific fields captured, kept in the message so no
+  // detail is lost to a table that was designed for a different form.
+  const message = [
+    `Applying for: ${role}`,
+    experience ? `Experience: ${experience}` : null,
+    resumeUrl ? `Resume / profile: ${resumeUrl}` : null,
+    "",
+    note,
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
+
+  const payload = {
+    company_name: `Job application · ${role}`,
+    contact_name: name,
+    email,
+    phone,
+    region: location || null,
+    inquiry_type: "general",
+    message,
+  };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("distributor_inquiries").insert(payload);
+  if (error) return { ok: false, error: "Something went wrong — please try again." };
+
+  // Saved first, notified second: a mail outage must not lose the application.
+  await sendInquiryNotification(payload);
+
+  return { ok: true };
+}
+
 export async function adminSignInAction(formData: FormData): Promise<ActionResult> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");

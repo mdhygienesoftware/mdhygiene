@@ -30,7 +30,9 @@ export default async function Footer() {
           </div>
           <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8]">
             <span className="text-white font-bold text-[13px] tracking-[0.1em]">COMPANY</span>
-            <Link href="/about" className="hover:text-white transition-colors">About &amp; Certifications</Link>
+            <Link href="/about" className="hover:text-white transition-colors">About</Link>
+            <Link href="/certifications" className="hover:text-white transition-colors">Certifications</Link>
+            <Link href="/careers" className="hover:text-white transition-colors">Careers</Link>
             <Link href="/products" className="hover:text-white transition-colors">Products</Link>
             <Link href="/contact" className="hover:text-white transition-colors">Get a Quote</Link>
           </div>
