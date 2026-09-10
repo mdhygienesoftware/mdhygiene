@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { saveHeroSlideAction } from "@/lib/admin-actions";
 import MediaUploader from "@/components/admin/MediaUploader";
 import type { HeroSlide } from "@/lib/types";
+import { isRedirectError } from "@/lib/is-redirect";
 
 export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
   const [mediaType, setMediaType] = useState(slide?.media_type ?? "image");
@@ -14,9 +15,18 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
     e.preventDefault();
     setSaving(true);
     setError(null);
-    const result = await saveHeroSlideAction(slide?.id ?? null, new FormData(e.currentTarget));
-    if (result && !result.ok) {
-      setError(result.error ?? "Failed to save.");
+    try {
+      const result = await saveHeroSlideAction(slide?.id ?? null, new FormData(e.currentTarget));
+      if (result && !result.ok) {
+        setError(result.error ?? "Failed to save.");
+        setSaving(false);
+      }
+    } catch (err) {
+      // A successful save signals itself by throwing a redirect — let it pass.
+      if (isRedirectError(err)) throw err;
+      // Anything else (network drop, expired session, a failed media import)
+      // must surface, or the button sticks on "Saving…" with no explanation.
+      setError(err instanceof Error ? err.message : "Couldn't save. Check your connection and try again.");
       setSaving(false);
     }
   }

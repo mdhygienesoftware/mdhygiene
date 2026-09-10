@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { saveTeamMemberAction } from "@/lib/admin-actions";
 import MediaUploader from "@/components/admin/MediaUploader";
 import type { TeamMember } from "@/lib/types";
+import { isRedirectError } from "@/lib/is-redirect";
 
 export default function TeamMemberForm({ member }: { member?: TeamMember }) {
   const [error, setError] = useState<string | null>(null);
@@ -13,9 +14,18 @@ export default function TeamMemberForm({ member }: { member?: TeamMember }) {
     e.preventDefault();
     setSaving(true);
     setError(null);
-    const result = await saveTeamMemberAction(member?.id ?? null, new FormData(e.currentTarget));
-    if (result && !result.ok) {
-      setError(result.error ?? "Failed to save.");
+    try {
+      const result = await saveTeamMemberAction(member?.id ?? null, new FormData(e.currentTarget));
+      if (result && !result.ok) {
+        setError(result.error ?? "Failed to save.");
+        setSaving(false);
+      }
+    } catch (err) {
+      // A successful save signals itself by throwing a redirect — let it pass.
+      if (isRedirectError(err)) throw err;
+      // Anything else (network drop, expired session, a failed media import)
+      // must surface, or the button sticks on "Saving…" with no explanation.
+      setError(err instanceof Error ? err.message : "Couldn't save. Check your connection and try again.");
       setSaving(false);
     }
   }
