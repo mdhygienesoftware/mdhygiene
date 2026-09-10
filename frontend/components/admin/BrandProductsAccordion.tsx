@@ -6,6 +6,7 @@ import { useState } from "react";
 import { deleteProductAction } from "@/lib/admin-actions";
 import type { Brand } from "@/lib/types";
 import { isRenderableImage } from "@/lib/image";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 export interface AccordionProduct {
   id: string;
@@ -82,11 +83,7 @@ export default function BrandProductsAccordion({
                       <Link href={`/admin/products/${p.id}`} className="text-sm font-semibold text-blue">
                         Manage
                       </Link>
-                      <form action={deleteProductAction.bind(null, p.id)}>
-                        <button type="submit" className="text-sm font-semibold text-red-600">
-                          Delete
-                        </button>
-                      </form>
+                      <DeleteButton action={deleteProductAction.bind(null, p.id)} what={p.name} />
                     </div>
                   ))
                 )}

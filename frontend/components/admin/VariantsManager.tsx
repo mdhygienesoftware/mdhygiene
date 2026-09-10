@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { deleteVariantAction, saveVariantAction } from "@/lib/admin-actions";
 import type { ProductVariant } from "@/lib/types";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 export default function VariantsManager({ productId, variants }: { productId: string; variants: ProductVariant[] }) {
   const [showNew, setShowNew] = useState(false);
@@ -49,9 +50,7 @@ function VariantRow({ productId, variant }: { productId: string; variant: Produc
       <td className="px-3 py-2 text-muted-2">{variant.sku}</td>
       <td className="px-3 py-2 flex gap-3">
         <button onClick={() => setEditing(true)} className="text-blue font-semibold">Edit</button>
-        <form action={deleteVariantAction.bind(null, productId, variant.id)}>
-          <button type="submit" className="text-red-600 font-semibold">Delete</button>
-        </form>
+        <DeleteButton action={deleteVariantAction.bind(null, productId, variant.id)} what={variant.size_label} />
       </td>
     </tr>
   );

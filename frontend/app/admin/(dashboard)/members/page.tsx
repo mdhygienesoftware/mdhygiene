@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { deleteTeamMemberAction } from "@/lib/admin-actions";
 import type { TeamMember } from "@/lib/types";
 import { isRenderableImage } from "@/lib/image";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -64,9 +65,7 @@ export default async function AdminMembersPage() {
                       <a href={`/card/${m.slug}`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-muted-2 hover:text-pink">Card ↗</a>
                     )}
                     <Link href={`/admin/members/${m.id}`} className="text-sm font-semibold text-blue">Manage</Link>
-                    <form action={deleteTeamMemberAction.bind(null, m.id)}>
-                      <button type="submit" className="text-sm font-semibold text-red-600">Delete</button>
-                    </form>
+                    <DeleteButton action={deleteTeamMemberAction.bind(null, m.id)} what={m.name} />
                   </div>
                 ))}
             </div>

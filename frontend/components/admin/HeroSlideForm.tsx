@@ -4,10 +4,33 @@ import { FormEvent, useState } from "react";
 import { saveHeroSlideAction } from "@/lib/admin-actions";
 import MediaUploader from "@/components/admin/MediaUploader";
 import type { HeroSlide } from "@/lib/types";
+import SlidePreview from "@/components/admin/SlidePreview";
 import { isRedirectError } from "@/lib/is-redirect";
 
 export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
   const [mediaType, setMediaType] = useState(slide?.media_type ?? "image");
+  // Read straight off the form on every input, so the preview reflects the
+  // current values without turning each field into controlled state.
+  const [preview, setPreview] = useState<Partial<HeroSlide>>({
+    media_url: slide?.media_url ?? "",
+    media_type: slide?.media_type ?? "image",
+    eyebrow: slide?.eyebrow ?? "",
+    headline: slide?.headline ?? "",
+    subheading: slide?.subheading ?? "",
+    cta_label: slide?.cta_label ?? "",
+  });
+
+  function syncPreview(form: HTMLFormElement) {
+    const f = new FormData(form);
+    setPreview({
+      media_url: String(f.get("media_url") ?? ""),
+      media_type: String(f.get("media_type") ?? "image"),
+      eyebrow: String(f.get("eyebrow") ?? ""),
+      headline: String(f.get("headline") ?? ""),
+      subheading: String(f.get("subheading") ?? ""),
+      cta_label: String(f.get("cta_label") ?? ""),
+    });
+  }
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -32,7 +55,12 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-4 max-w-xl">
+    <form
+      onSubmit={handleSubmit}
+      onInput={(e) => syncPreview(e.currentTarget)}
+      onChange={(e) => syncPreview(e.currentTarget)}
+      className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-4 max-w-xl"
+    >
       <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
         Slide media
         <select name="media_type" value={mediaType} onChange={(e) => setMediaType(e.target.value)} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal">
@@ -45,6 +73,7 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
         name="media_url"
         defaultValue={slide?.media_url}
         kind={mediaType === "video" ? "video" : "image"}
+        onValueChange={(media_url) => setPreview((p) => ({ ...p, media_url }))}
       />
       {mediaType === "video" && <MediaUploader label="Poster image (shown while video loads)" name="poster_url" defaultValue={slide?.poster_url} />}
       <Field label="Eyebrow" name="eyebrow" defaultValue={slide?.eyebrow ?? ""} />
@@ -75,6 +104,8 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
           <input type="checkbox" name="is_active" defaultChecked={slide?.is_active ?? true} /> Active
         </label>
       </div>
+      <SlidePreview slide={preview} />
+
       {error && (
         <p role="alert" className="text-sm font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
           {error}

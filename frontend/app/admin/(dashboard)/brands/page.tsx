@@ -3,6 +3,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { deleteBrandAction } from "@/lib/admin-actions";
 import { isRenderableImage } from "@/lib/image";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 export default async function AdminBrandsPage() {
   const supabase = await createClient();
@@ -25,9 +26,7 @@ export default async function AdminBrandsPage() {
               <p className="text-sm text-muted-2">{brand.tagline}</p>
             </div>
             <Link href={`/admin/brands/${brand.id}`} className="text-sm font-semibold text-blue">Edit</Link>
-            <form action={deleteBrandAction.bind(null, brand.id)}>
-              <button type="submit" className="text-sm font-semibold text-red-600">Delete</button>
-            </form>
+            <DeleteButton action={deleteBrandAction.bind(null, brand.id)} what={brand.name} />
           </div>
         ))}
       </div>

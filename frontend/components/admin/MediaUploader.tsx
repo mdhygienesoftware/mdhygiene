@@ -21,17 +21,29 @@ export default function MediaUploader({
   defaultValue,
   accept,
   kind = "image",
+  onValueChange,
 }: {
   label: string;
   name: string;
   defaultValue?: string | null;
   accept?: string;
   kind?: "image" | "video";
+  /**
+   * Called whenever the URL changes, including after an upload or import.
+   * Those set the value from code, which fires no DOM event, so a parent
+   * watching the form would otherwise never hear about them.
+   */
+  onValueChange?: (url: string) => void;
 }) {
   const [url, setUrl] = useState(defaultValue ?? "");
   const [importing, setImporting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function apply(next: string) {
+    setUrl(next);
+    onValueChange?.(next);
+  }
 
   /** Copies a link from elsewhere into our own bucket, then uses our URL. */
   async function handleImport() {
@@ -39,7 +51,7 @@ export default function MediaUploader({
     setError(null);
     const result = await importMediaFromUrlAction(url, kind === "video" ? "video" : "image");
     if (result.ok && result.url) {
-      setUrl(result.url);
+      apply(result.url);
     } else {
       setError(result.error ?? "Couldn't import that link.");
     }
@@ -80,7 +92,7 @@ export default function MediaUploader({
     }
 
     const { data } = supabase.storage.from("media").getPublicUrl(path);
-    setUrl(data.publicUrl);
+    apply(data.publicUrl);
     setUploading(false);
   }
 
@@ -115,7 +127,7 @@ export default function MediaUploader({
           type="text"
           name={name}
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e) => apply(e.target.value)}
           placeholder="Upload above, or paste an image link and press Import"
           className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm"
         />
