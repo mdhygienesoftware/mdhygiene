@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getVisitorStats } from "@/lib/visitors";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
+  const visitors = await getVisitorStats();
   const [{ count: products }, { count: newInquiries }, { count: oemProducts }, { count: brands }] = await Promise.all([
     supabase.from("products").select("id", { count: "exact", head: true }).eq("is_active", true).eq("catalog_type", "own_brand"),
     supabase.from("distributor_inquiries").select("id", { count: "exact", head: true }).eq("status", "new"),
@@ -11,6 +15,7 @@ export default async function AdminDashboardPage() {
   ]);
 
   const cards = [
+    { label: "Visitors today", value: visitors.visitorsToday, href: "/admin/visitors" },
     { label: "Active products", value: products ?? 0, href: "/admin/products" },
     { label: "New inquiries", value: newInquiries ?? 0, href: "/admin/inquiries" },
     { label: "OEM products", value: oemProducts ?? 0, href: "/admin/oem" },

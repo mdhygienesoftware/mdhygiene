@@ -79,7 +79,8 @@ in the migration history and this README.
 
 | Section | What it does |
 |---|---|
-| Dashboard | Live counts: active products, new inquiries, OEM products, brands |
+| Dashboard | Live counts: visitors today, active products, new inquiries, OEM products, brands |
+| Visitors | Traffic on the public site — views and unique visitors for today and the last 7 days, a 14-day chart, most visited pages, referrers, device split and the latest visits. Requires the `page_views` table (see below) |
 | Products | One collapsible block per brand. Full CRUD + a nested editor for each size (pack, case qty, SKU). Pricing is not shown publicly, so it isn't edited here |
 | Brands | Full CRUD, logo upload, accent colour |
 | Hero & Media | Manage homepage carousel slides — upload **images or videos**, set headline/CTA/order/visibility |
@@ -178,6 +179,21 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
 
 Then deploy — `npm run build` must pass, which also type-checks the whole app.
+
+### Visitor tracking
+
+The **Visitors** section reads a `page_views` table. Create it once by running
+`supabase/migrations/20260910_page_views.sql` in the Supabase SQL editor — until then the
+section shows the SQL and setup instructions instead of stats.
+
+Views are recorded by `components/VisitorTracker.tsx` (a `sendBeacon` on every navigation)
+through `app/api/track/route.ts`, which drops known crawlers and anything under `/admin`.
+
+No IP address or user agent is stored. Each row holds a `visitor_hash`: a salted SHA-256
+of IP + user agent, re-salted daily, which counts distinct people without retaining
+anything that identifies one. Set `ANALYTICS_SALT` in the environment to keep unique
+counts stable across restarts — leave it unset and each restart begins a fresh salt,
+which inflates the unique-visitor count for the rest of that day.
 
 ## Database changes
 

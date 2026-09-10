@@ -59,7 +59,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
       ))}
 
       {/* Frosted panel behind the copy — blurs the image only on the left. */}
-      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[54%] lg:w-[48%] backdrop-blur-xl bg-white/60 [mask-image:linear-gradient(to_top,black_85%,transparent_100%)] md:[mask-image:linear-gradient(to_right,black_72%,transparent_100%)]" />
+      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[60%] lg:w-[56%] backdrop-blur-xl bg-white/60 [mask-image:linear-gradient(to_top,black_85%,transparent_100%)] md:[mask-image:linear-gradient(to_right,black_85%,transparent_100%)]" />
 
       <div className="relative w-full px-5 pt-24 pb-10 md:px-14 md:py-16">
         <div className="max-w-[560px] md:max-w-[min(560px,42vw)] flex flex-col gap-6">
@@ -71,9 +71,12 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               {slide.eyebrow}
             </span>
           )}
+          {/* Schibsted Grotesk reports 0.98em above the baseline and 0.26em below
+              it, so a line-height under ~1.15 lets a descender ("g", "y") run
+              into the ascenders of the line beneath. */}
           <h1
             key={`${slide.id}-headline`}
-            className="text-[32px] sm:text-4xl md:text-[54px] leading-[1.07] font-extrabold text-navy text-balance animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
+            className="text-[32px] sm:text-4xl md:text-[52px] leading-[1.18] font-extrabold text-navy text-balance animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
           >
             {slide.headline}
           </h1>

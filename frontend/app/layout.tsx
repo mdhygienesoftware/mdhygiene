@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Schibsted_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import { getSeoAnalytics, getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
+import VisitorTracker from "@/components/VisitorTracker";
 import "./globals.css";
 
 // Self-hosted by next/font — no render-blocking request to Google, no layout shift.
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body className="font-sans text-navy antialiased">
+        <VisitorTracker />
         {children}
 
         {analytics.gtm_id && (

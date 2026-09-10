@@ -14,6 +14,12 @@ export type Database = {
         Update: { active_session_id?: string | null; session_started_at?: string | null; created_at?: string; full_name?: string | null; id?: string };
         Relationships: [];
       };
+      page_views: {
+        Row: { id: number; path: string; referrer: string | null; visitor_hash: string; device: string | null; created_at: string };
+        Insert: { id?: never; path: string; referrer?: string | null; visitor_hash: string; device?: string | null; created_at?: string };
+        Update: { id?: never; path?: string; referrer?: string | null; visitor_hash?: string; device?: string | null; created_at?: string };
+        Relationships: [];
+      };
       brands: {
         Row: {
           meta_description: string | null

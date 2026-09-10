@@ -43,7 +43,7 @@ export default function SlidePreview({ slide }: { slide: Partial<HeroSlide> }) {
               {eyebrow}
             </span>
           )}
-          <p className="text-[15px] leading-tight font-extrabold text-navy line-clamp-2">
+          <p className="text-[15px] leading-[1.18] font-extrabold text-navy line-clamp-2">
             {headline || "Headline"}
           </p>
           {subheading && <p className="text-[8px] leading-snug text-[#44566B] line-clamp-2">{subheading}</p>}
