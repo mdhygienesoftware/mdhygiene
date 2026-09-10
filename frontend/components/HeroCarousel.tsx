@@ -61,10 +61,10 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
       {/* Frosted panel behind the copy — blurs the image only on the left.
           43% wide with the mask going transparent at 70% of that: solid across
           the first 30% of the frame, leaving the photo clean for the other 70%. */}
-      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[43%] backdrop-blur-xl bg-white/60 [mask-image:linear-gradient(to_top,black_85%,transparent_100%)] md:[mask-image:linear-gradient(to_right,black_70%,transparent_100%)]" />
+      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[36%] backdrop-blur-xl bg-white/60 [mask-image:linear-gradient(to_top,black_85%,transparent_100%)] md:[mask-image:linear-gradient(to_right,black_78%,transparent_100%)]" />
 
       <div className="relative w-full px-5 pt-24 pb-10 md:px-10 lg:px-14 md:py-16">
-        <div className="max-w-[560px] md:max-w-[min(560px,26vw)] flex flex-col gap-7">
+        <div className="max-w-[560px] md:max-w-[min(560px,23vw)] flex flex-col gap-8">
           {slide.eyebrow && (
             <span
               key={`${slide.id}-eyebrow`}
@@ -74,11 +74,13 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             </span>
           )}
           {/* Schibsted Grotesk reports 0.98em above the baseline and 0.26em below
-              it, so a line-height under ~1.15 lets a descender ("g", "y") run
-              into the ascenders of the line beneath. */}
+              it, so anything under ~1.15 line-height lets a descender ("g", "y")
+              touch the line beneath. 1.4 leaves the lines clearly separate.
+              The size is tied to the viewport because the column is a share of
+              it — a fixed size overflows on a narrow desktop. */}
           <h1
             key={`${slide.id}-headline`}
-            className="text-[32px] sm:text-4xl md:text-[clamp(26px,3.2vw,46px)] leading-[1.3] font-extrabold text-navy text-balance [hyphens:auto] animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
+            className="text-[32px] sm:text-4xl md:text-[clamp(22px,2.9vw,42px)] leading-[1.4] font-extrabold text-navy text-balance [hyphens:auto] animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
           >
             {slide.headline}
           </h1>
