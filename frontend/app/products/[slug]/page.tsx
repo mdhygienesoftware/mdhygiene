@@ -8,6 +8,7 @@ import { getProductBySlug } from "@/lib/queries";
 import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { breadcrumbSchema, productSchema } from "@/components/StructuredData";
 import type { Metadata } from "next";
+import { isRenderableImage } from "@/lib/image";
 
 // Always render against current data — admin edits must show up immediately.
 export const dynamic = "force-dynamic";
@@ -59,7 +60,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
       <main className="px-5 md:px-14 py-10 md:py-14 flex flex-col gap-10 md:gap-12">
         <div className="grid md:grid-cols-2 gap-7 md:gap-10">
           <div className="relative rounded-2xl h-[240px] sm:h-[300px] md:h-[340px] bg-[#F5E1EA] overflow-hidden">
-            {product.image_url && (
+            {isRenderableImage(product.image_url) && (
               <Image src={product.image_url} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             )}
           </div>

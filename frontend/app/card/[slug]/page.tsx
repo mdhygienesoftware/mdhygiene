@@ -10,6 +10,7 @@ import SocialIcon from "@/components/SocialIcons";
 import CardHeader from "@/components/CardHeader";
 import CardBackdrop from "@/components/CardBackdrop";
 import type { TeamMember } from "@/lib/types";
+import { isRenderableImage } from "@/lib/image";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +78,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
 
             <div className="px-6 pb-7 -mt-16 relative z-10 flex flex-col items-center text-center gap-1">
               <div className="w-28 h-28 rounded-full ring-4 ring-white overflow-hidden bg-[#F5E1EA] relative shadow-md">
-                {member.photo_url ? (
+                {isRenderableImage(member.photo_url) ? (
                   <Image src={member.photo_url} alt={member.name} fill priority className="object-cover object-top" sizes="112px" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-4xl font-extrabold text-pink/60">
@@ -151,7 +152,7 @@ export default async function DigitalCardPage({ params }: { params: { slug: stri
                     href={`/brands/${brand.slug}`}
                     className="border border-border rounded-xl p-3 flex items-center justify-center h-16 hover:border-pink transition-colors"
                   >
-                    {brand.logo_url ? (
+                    {isRenderableImage(brand.logo_url) ? (
                       <Image src={brand.logo_url} alt={brand.name} width={220} height={90} className="max-h-9 w-auto max-w-[110px] object-contain" />
                     ) : (
                       <span className="font-bold text-navy text-sm">{brand.name}</span>

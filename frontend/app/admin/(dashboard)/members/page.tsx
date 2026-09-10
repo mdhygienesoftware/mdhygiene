@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { deleteTeamMemberAction } from "@/lib/admin-actions";
 import type { TeamMember } from "@/lib/types";
+import { isRenderableImage } from "@/lib/image";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +48,7 @@ export default async function AdminMembersPage() {
                 .map((m) => (
                   <div key={m.id} className="flex items-center gap-4 px-6 py-3.5 border-b border-border last:border-0">
                     <div className="w-11 h-11 rounded-full bg-[#F5E1EA] overflow-hidden shrink-0 relative">
-                      {m.photo_url && (
+                      {isRenderableImage(m.photo_url) && (
                         <Image src={m.photo_url} alt={m.name} fill className="object-cover" sizes="44px" />
                       )}
                     </div>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import type { Brand } from "@/lib/types";
+import { isRenderableImage } from "@/lib/image";
 
 export default function Brands({ brands }: { brands: Brand[] }) {
   if (!brands.length) return null;
@@ -31,7 +32,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
                 style={{ background: brand.accent_color ?? "#E4779F" }}
               />
               <div className="h-16 w-full flex items-center justify-center">
-                {brand.logo_url ? (
+                {isRenderableImage(brand.logo_url) ? (
                   <Image
                     src={brand.logo_url}
                     alt={brand.name}

@@ -6,6 +6,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 import { getBrandBySlug, getProducts } from "@/lib/queries";
 import { getSeoGeneral } from "@/lib/seo";
 import type { Metadata } from "next";
+import { isRenderableImage } from "@/lib/image";
 
 // Always render against current data — admin edits must show up immediately.
 export const dynamic = "force-dynamic";
@@ -43,7 +44,7 @@ export default async function BrandPage({ params }: { params: { slug: string } }
       <Header />
       <main>
         <section className="px-5 md:px-14 py-10 md:py-14 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-          {brand.logo_url && (
+          {isRenderableImage(brand.logo_url) && (
             <div className="h-12 md:h-16 flex items-center">
               <Image src={brand.logo_url} alt={brand.name} width={400} height={160} className="max-h-12 md:max-h-16 w-auto max-w-[230px] md:max-w-[300px] object-contain" />
             </div>

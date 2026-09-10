@@ -4,12 +4,25 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/actions";
+import { isRenderableImage } from "@/lib/image";
 
 function textArrayFromForm(formData: FormData, key: string): string[] {
   return String(formData.get(key) ?? "")
     .split("\n")
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+
+/**
+ * Media must live in our own Storage bucket. Pasting a link to an image found
+ * elsewhere on the web does not work: the optimizer only serves allow-listed
+ * hosts, and an unservable URL used to crash the page rendering it.
+ */
+function mediaUrlError(url: string | null, label: string): string | null {
+  if (!url) return null;
+  if (isRenderableImage(url)) return null;
+  return `That ${label} link can't be used. Use the Upload button to add the file — pasted links from Google or other sites aren't supported.`;
 }
 
 // ---------- Brands ----------
@@ -27,6 +40,8 @@ export async function saveBrandAction(id: string | null, formData: FormData): Pr
     meta_description: String(formData.get("meta_description") ?? "").trim() || null,
   };
   if (!payload.slug || !payload.name) return { ok: false, error: "Slug and name are required." };
+  const logoErr = mediaUrlError(payload.logo_url, "logo");
+  if (logoErr) return { ok: false, error: logoErr };
 
   const { error } = id ? await supabase.from("brands").update(payload).eq("id", id) : await supabase.from("brands").insert(payload);
   if (error) return { ok: false, error: error.message };
@@ -65,6 +80,8 @@ export async function saveProductAction(id: string | null, formData: FormData): 
     og_image_url: String(formData.get("og_image_url") ?? "").trim() || null,
   };
   if (!payload.slug || !payload.name) return { ok: false, error: "Slug and name are required." };
+  const imgErr = mediaUrlError(payload.image_url, "image") ?? mediaUrlError(payload.og_image_url, "share image");
+  if (imgErr) return { ok: false, error: imgErr };
 
   let productId = id;
   if (id) {
@@ -138,6 +155,8 @@ export async function saveHeroSlideAction(id: string | null, formData: FormData)
     is_active: formData.get("is_active") === "on",
   };
   if (!payload.media_url || !payload.headline) return { ok: false, error: "Media and headline are required." };
+  const mediaErr = mediaUrlError(payload.media_url, "media") ?? mediaUrlError(payload.poster_url, "poster");
+  if (mediaErr) return { ok: false, error: mediaErr };
 
   const { error } = id ? await supabase.from("hero_slides").update(payload).eq("id", id) : await supabase.from("hero_slides").insert(payload);
   if (error) return { ok: false, error: error.message };
@@ -216,6 +235,8 @@ export async function saveTeamMemberAction(id: string | null, formData: FormData
     sort_order: Number(formData.get("sort_order") ?? 0),
   };
   if (!payload.name) return { ok: false, error: "Name is required." };
+  const photoErr = mediaUrlError(payload.photo_url, "photo");
+  if (photoErr) return { ok: false, error: photoErr };
 
   const { error } = id
     ? await supabase.from("team_members").update(payload).eq("id", id)

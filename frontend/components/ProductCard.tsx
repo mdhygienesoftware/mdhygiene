@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
+import { isRenderableImage } from "@/lib/image";
 
 export default function ProductCard({ product }: { product: Product }) {
   const sizes = Array.from(new Set(product.variants.map((v) => v.size_label)));
@@ -11,7 +12,7 @@ export default function ProductCard({ product }: { product: Product }) {
       className="rounded-2xl overflow-hidden border border-border bg-white flex flex-col hover:shadow-lg transition-shadow"
     >
       <div className="relative h-[220px] bg-[#F5E1EA]">
-        {product.image_url && (
+        {isRenderableImage(product.image_url) && (
           <Image src={product.image_url} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
         )}
         {product.badges?.[0] && (

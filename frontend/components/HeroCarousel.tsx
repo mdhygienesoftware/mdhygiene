@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { HeroSlide } from "@/lib/types";
+import { isRenderableImage } from "@/lib/image";
 
 export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [active, setActive] = useState(0);
@@ -30,7 +31,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             i === active ? "opacity-100 translate-x-0 scale-100" : "opacity-0 -translate-x-6 scale-105"
           }`}
         >
-          {s.media_type === "video" ? (
+          {s.media_type === "video" && isRenderableImage(s.media_url) ? (
             <video
               src={s.media_url}
               poster={s.poster_url ?? undefined}
@@ -40,7 +41,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               loop
               playsInline
             />
-          ) : (
+          ) : isRenderableImage(s.media_url) ? (
             <Image
               src={s.media_url}
               alt={s.headline}
@@ -49,6 +50,10 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               priority={i === 0}
               sizes="100vw"
             />
+          ) : (
+            // Unsupported or broken media: keep the slide readable rather than
+            // letting next/image throw and take the whole homepage down.
+            <div className="w-full h-full bg-gradient-to-br from-[#FDEFF4] via-cream to-[#F3F8FC]" />
           )}
         </div>
       ))}

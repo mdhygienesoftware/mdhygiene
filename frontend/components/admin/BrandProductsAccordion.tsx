@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { deleteProductAction } from "@/lib/admin-actions";
 import type { Brand } from "@/lib/types";
+import { isRenderableImage } from "@/lib/image";
 
 export interface AccordionProduct {
   id: string;
@@ -48,7 +49,7 @@ export default function BrandProductsAccordion({
               className="w-full flex items-center gap-4 px-6 py-4 text-left hover:bg-[#FBF9F6] transition-colors"
               style={{ borderLeft: `4px solid ${accent}` }}
             >
-              {brand?.logo_url ? (
+              {isRenderableImage(brand?.logo_url) ? (
                 <Image src={brand.logo_url} alt={brand.name} width={200} height={80} className="h-10 w-auto max-w-[130px] object-contain" />
               ) : (
                 <span className="h-10 flex items-center font-extrabold text-navy">{brand?.name ?? "Unassigned"}</span>
