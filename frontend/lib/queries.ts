@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { isRenderableImage } from "@/lib/image";
 import type { AboutContent, Brand, Category, CompanyStats, ContactInfo, HeroSlide, Product } from "@/lib/types";
 
 /** Public content is fetched straight from Supabase with the anon key — RLS
@@ -97,7 +98,11 @@ export const getHeroSlides = cache(async (): Promise<HeroSlide[]> => {
     .select("*")
     .eq("is_active", true)
     .order("sort_order");
-  return data ?? [];
+
+  // A slide whose media we can't serve would render as an empty panel with just
+  // its headline, so it's skipped on the public site. It still appears in the
+  // admin list, where the media can be corrected.
+  return (data ?? []).filter((slide) => isRenderableImage(slide.media_url));
 });
 
 async function getSetting<T>(key: string): Promise<T | null> {
