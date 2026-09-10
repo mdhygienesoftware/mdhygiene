@@ -47,8 +47,7 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
         <Field label="CTA label" name="cta_label" defaultValue={slide?.cta_label ?? ""} />
         <Field label="CTA link" name="cta_href" defaultValue={slide?.cta_href ?? ""} />
       </div>
-      <div className="grid md:grid-cols-2 gap-4 items-center">
-        <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 gap-4 items-start">
         <Field label="Sort order" name="sort_order" type="number" defaultValue={String(slide?.sort_order ?? 0)} />
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
           Display time (seconds)
@@ -60,14 +59,17 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
             defaultValue={String(slide?.duration_seconds ?? 6)}
             className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal"
           />
-          <span className="text-xs font-normal text-muted-2">How long this slide shows before the next one (2–60).</span>
+          <span className="text-xs font-normal text-muted-2">2–60 seconds.</span>
         </label>
-      </div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-navy">
+        <label className="flex items-center gap-2 text-sm font-semibold text-navy md:pt-8">
           <input type="checkbox" name="is_active" defaultChecked={slide?.is_active ?? true} /> Active
         </label>
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+          {error}
+        </p>
+      )}
       <button type="submit" disabled={saving} className="self-start bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink transition-colors disabled:opacity-60">
         {saving ? "Saving…" : "Save slide"}
       </button>
