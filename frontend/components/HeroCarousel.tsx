@@ -58,11 +58,13 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         </div>
       ))}
 
-      {/* Frosted panel behind the copy — blurs the image only on the left. */}
-      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[60%] lg:w-[56%] backdrop-blur-xl bg-white/60 [mask-image:linear-gradient(to_top,black_85%,transparent_100%)] md:[mask-image:linear-gradient(to_right,black_85%,transparent_100%)]" />
+      {/* Frosted panel behind the copy — blurs the image only on the left.
+          43% wide with the mask going transparent at 70% of that: solid across
+          the first 30% of the frame, leaving the photo clean for the other 70%. */}
+      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[43%] backdrop-blur-xl bg-white/60 [mask-image:linear-gradient(to_top,black_85%,transparent_100%)] md:[mask-image:linear-gradient(to_right,black_70%,transparent_100%)]" />
 
-      <div className="relative w-full px-5 pt-24 pb-10 md:px-14 md:py-16">
-        <div className="max-w-[560px] md:max-w-[min(560px,42vw)] flex flex-col gap-6">
+      <div className="relative w-full px-5 pt-24 pb-10 md:px-10 lg:px-14 md:py-16">
+        <div className="max-w-[560px] md:max-w-[min(560px,26vw)] flex flex-col gap-7">
           {slide.eyebrow && (
             <span
               key={`${slide.id}-eyebrow`}
@@ -76,14 +78,14 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               into the ascenders of the line beneath. */}
           <h1
             key={`${slide.id}-headline`}
-            className="text-[32px] sm:text-4xl md:text-[52px] leading-[1.18] font-extrabold text-navy text-balance animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
+            className="text-[32px] sm:text-4xl md:text-[clamp(26px,3.2vw,46px)] leading-[1.3] font-extrabold text-navy text-balance [hyphens:auto] animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
           >
             {slide.headline}
           </h1>
           {slide.subheading && (
             <p
               key={`${slide.id}-sub`}
-              className="text-[15px] sm:text-base md:text-lg leading-relaxed text-[#44566B] max-w-[500px] animate-[heroIn_700ms_ease-out_both] [animation-delay:160ms]"
+              className="text-[15px] sm:text-base md:text-[15px] lg:text-base leading-relaxed text-[#44566B] max-w-[500px] animate-[heroIn_700ms_ease-out_both] [animation-delay:160ms]"
             >
               {slide.subheading}
             </p>
