@@ -63,31 +63,22 @@ export default async function AdminVisitorsPage() {
   }
 
   const peak = Math.max(1, ...stats.daily.map((d) => d.views));
-  const cards = [
-    { label: "Views today", value: stats.viewsToday },
-    { label: "Visitors today", value: stats.visitorsToday },
-    { label: "Views · 7 days", value: stats.views7d },
-    { label: "Visitors · 7 days", value: stats.visitors7d },
-  ];
 
   return (
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-extrabold text-navy">Visitors</h1>
         <p className="text-sm text-muted-2 mt-1">
-          Live traffic on the public site. <span className="font-semibold">Views</span> counts pages opened;{" "}
-          <span className="font-semibold">visitors</span> counts different people. Admin pages and known bots
-          are left out.
+          Live traffic on the public site. Admin pages and known bots are left out.
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {cards.map((c) => (
-          <div key={c.label} className="bg-white border border-border rounded-2xl p-6 flex flex-col gap-1">
-            <span className="text-3xl font-extrabold text-navy">{c.value}</span>
-            <span className="text-sm text-muted-2">{c.label}</span>
-          </div>
-        ))}
+      {/* One panel per period, both figures inside it. Four separate cards read
+          as duplicates: at low traffic "views" and "people" carry the same
+          number, and the labels differed by a single word. */}
+      <div className="grid sm:grid-cols-2 gap-5">
+        <PeriodCard title="Today" views={stats.viewsToday} people={stats.visitorsToday} />
+        <PeriodCard title="Last 7 days" views={stats.views7d} people={stats.visitors7d} />
       </div>
 
       <section className="bg-white border border-border rounded-2xl p-6 flex flex-col gap-4">
@@ -99,14 +90,14 @@ export default async function AdminVisitorsPage() {
                 <div
                   className="w-full rounded-t bg-blue/80 group-hover:bg-pink transition-colors min-h-[2px]"
                   style={{ height: `${Math.round((d.views / peak) * 100)}%` }}
-                  title={`${d.date}: ${d.views} views, ${d.visitors} visitors`}
+                  title={`${d.date}: ${d.views} pages opened by ${d.visitors} people`}
                 />
               </div>
               <span className="text-[10px] text-muted-2 tabular-nums">{d.date.slice(8)}</span>
             </div>
           ))}
         </div>
-        <p className="text-xs text-muted-2">Bar height is page views. Hover a bar for the exact numbers.</p>
+        <p className="text-xs text-muted-2">Bar height is pages opened. Hover a bar for the exact numbers.</p>
       </section>
 
       <div className="grid md:grid-cols-2 gap-5">
@@ -170,6 +161,28 @@ export default async function AdminVisitorsPage() {
           </ul>
         )}
       </section>
+    </div>
+  );
+}
+
+/**
+ * One period, both numbers. "Pages opened" and "different people" spell out
+ * what separates them — "views" vs "visitors" did not, and they usually match.
+ */
+function PeriodCard({ title, views, people }: { title: string; views: number; people: number }) {
+  return (
+    <div className="bg-white border border-border rounded-2xl p-6 flex flex-col gap-4">
+      <span className="text-[12px] font-bold tracking-[0.12em] text-pink">{title.toUpperCase()}</span>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-3xl font-extrabold text-navy tabular-nums">{views}</span>
+          <span className="text-sm text-muted-2">pages opened</span>
+        </div>
+        <div className="flex flex-col gap-0.5 border-l border-border pl-4">
+          <span className="text-3xl font-extrabold text-navy tabular-nums">{people}</span>
+          <span className="text-sm text-muted-2">different people</span>
+        </div>
+      </div>
     </div>
   );
 }
