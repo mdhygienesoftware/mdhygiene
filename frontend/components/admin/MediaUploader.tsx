@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { importMediaFromUrlAction } from "@/lib/media-import";
 
 const MAX_BYTES = 50 * 1024 * 1024; // matches the media bucket's file_size_limit
 
@@ -28,8 +29,22 @@ export default function MediaUploader({
   kind?: "image" | "video";
 }) {
   const [url, setUrl] = useState(defaultValue ?? "");
+  const [importing, setImporting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /** Copies a link from elsewhere into our own bucket, then uses our URL. */
+  async function handleImport() {
+    setImporting(true);
+    setError(null);
+    const result = await importMediaFromUrlAction(url, kind === "video" ? "video" : "image");
+    if (result.ok && result.url) {
+      setUrl(result.url);
+    } else {
+      setError(result.error ?? "Couldn't import that link.");
+    }
+    setImporting(false);
+  }
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -95,17 +110,30 @@ export default function MediaUploader({
         {uploading && <span className="text-xs text-muted">Uploading…</span>}
       </div>
 
-      <input
-        type="text"
-        name={name}
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="Upload above, or paste a URL"
-        className="border border-border rounded-lg px-4 py-2.5 text-sm"
-      />
+      <div className="flex gap-2">
+        <input
+          type="text"
+          name={name}
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Upload above, or paste an image link and press Import"
+          className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm"
+        />
+        <button
+          type="button"
+          onClick={handleImport}
+          disabled={importing || uploading || !url.trim() || url.includes("supabase.co")}
+          className="shrink-0 bg-navy text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-pink transition-colors disabled:opacity-40"
+          title="Copy a picture from another site into your own media library"
+        >
+          {importing ? "Importing…" : "Import"}
+        </button>
+      </div>
 
       <p className="text-xs text-muted">
-        {kind === "video" ? "MP4, WebM or MOV" : "JPG, PNG, WebP, AVIF or GIF"} · up to 50 MB
+        {kind === "video" ? "MP4, WebM or MOV" : "JPG, PNG, WebP, AVIF or GIF"} · up to 50 MB.
+        Pasting a link from another site? Press <span className="font-semibold">Import</span> to copy it
+        into your media library — links can&apos;t be used directly.
       </p>
       {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
