@@ -44,8 +44,8 @@ export default async function HomePage() {
         <Brands brands={brands} />
         <ProductShowcase products={featured} title="Featured products" />
         <PartnerSegments />
-        <CareersStrip careers={careers} />
         <Certifications certifications={certifications ?? []} />
+        <CareersStrip careers={careers} />
       </main>
       <Footer />
     </>

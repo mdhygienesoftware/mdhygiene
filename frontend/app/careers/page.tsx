@@ -27,6 +27,23 @@ export default async function CareersPage() {
           <p className="text-muted-2 leading-relaxed whitespace-pre-line">{careers.body}</p>
         </section>
 
+        {careers.perks.length > 0 && (
+          <section className="px-5 md:px-14 pb-10 md:pb-14">
+            <ul className="grid md:grid-cols-3 gap-4 md:gap-5">
+              {careers.perks.map((perk, i) => (
+                <Reveal key={perk} delay={i * 100} className="h-full">
+                  <li className="h-full bg-white border border-border rounded-2xl px-6 py-5 flex items-start gap-3">
+                    <span aria-hidden className="text-pink font-bold leading-6">
+                      →
+                    </span>
+                    <span className="text-[15px] leading-6 text-navy">{perk}</span>
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="px-5 md:px-14 pb-12 md:pb-16 flex flex-col gap-5 md:gap-6">
           <h2 className="text-[22px] md:text-[28px] font-extrabold text-navy">
             {open.length > 0 ? "Open positions" : "No positions listed right now"}

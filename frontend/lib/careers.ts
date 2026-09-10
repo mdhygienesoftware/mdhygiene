@@ -10,13 +10,13 @@ import type { CareersContent } from "@/lib/types";
  */
 export const DEFAULT_CAREERS: CareersContent = {
   eyebrow: "CAREERS",
-  heading: "Build your career in hygiene manufacturing",
-  body: "We run our own factory, our own brands and our own distribution — so the work here is the real thing, not a slice of it. Production, quality, sales and design all sit under one roof in Gujarat, and people who join tend to grow across them.",
+  heading: "Grow with a team of 100+",
+  body: "Production, quality, sales and export roles at our Surat facility.",
   cta_label: "View openings",
   perks: [
-    "Manufacturing, quality, sales and design under one roof",
-    "500+ distributor network to sell into",
-    "Growth into new lines as capacity expands",
+    "Production, quality, sales and design under one roof",
+    "A 500+ distributor network to sell into",
+    "Room to grow across lines as capacity expands",
   ],
   openings: [],
   closing_note:

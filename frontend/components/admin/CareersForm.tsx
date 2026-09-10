@@ -73,7 +73,8 @@ export default function CareersForm({ careers }: { careers: CareersContent }) {
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-extrabold text-navy">Careers section</h2>
           <p className="text-sm text-muted-2">
-            Shown on the homepage and at the top of <span className="font-semibold">/careers</span>.
+            The heading, intro and button label appear in the homepage band; all of it appears at the
+            top of <span className="font-semibold">/careers</span>.
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
@@ -83,7 +84,7 @@ export default function CareersForm({ careers }: { careers: CareersContent }) {
         <Field label="Heading" name="heading" defaultValue={careers.heading} required />
         <Area label="Intro paragraph" name="body" defaultValue={careers.body} rows={4} />
         <Area
-          label="Reasons to join (one per line)"
+          label="Reasons to join (one per line) — shown on /careers"
           name="perks"
           defaultValue={careers.perks.join("\n")}
           rows={4}
