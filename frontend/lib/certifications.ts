@@ -32,7 +32,17 @@ export type Certification = {
   what: string;
   why: string;
   featured: boolean;
+  /** Scan of the certificate itself, in the public media bucket. */
+  previewUrl: string;
 };
+
+const PREVIEW_BASE =
+  "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/certificates";
+
+/** Preview image for a certificate, uploaded as <id>.jpg. */
+function preview(id: string): string {
+  return `${PREVIEW_BASE}/${id}.jpg`;
+}
 
 export const CERTIFICATIONS: Certification[] = [
   {
@@ -47,6 +57,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2027-10-28",
     what: "India's national standards body licenses the manufacturer to carry the Standard Mark on a product tested against a published Indian Standard — here IS 5405, the specification for sanitary napkins.",
     why: "For government and institutional tenders this is usually the first requirement on the list: it shows the product has been tested against a national specification, not an in-house one.",
+    previewUrl: preview("bis"),
     featured: true,
   },
   {
@@ -63,6 +74,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2028-03-12",
     what: "The quality management standard written specifically for medical devices. It goes beyond general quality management into design control, risk management, traceability, sterile and clean-room conditions where relevant, and post-market surveillance.",
     why: "It is the most demanding quality system a hygiene manufacturer can hold, and it covers design as well as manufacture — which matters if you are asking us to develop a product rather than just produce one.",
+    previewUrl: preview("iso-13485"),
     featured: true,
   },
   {
@@ -78,6 +90,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2027-05-30",
     what: "Good Manufacturing Practice assessed against the World Health Organization's framework: premises and equipment, personnel hygiene, material handling, process control, cleaning validation and batch records.",
     why: "It is the difference between a product that happens to pass a test and a process built to produce the same result every batch — which is what matters when you are ordering by the container load.",
+    previewUrl: preview("who-gmp"),
     featured: true,
   },
   {
@@ -94,6 +107,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2027-05-26",
     what: "An assessment that the technical file for the products conforms to the essential health and safety requirements of the European directives named above.",
     why: "It is what makes the range exportable into European markets, and it shows the technical file, testing and labelling behind each product are documented to EU expectations.",
+    previewUrl: preview("ce"),
     featured: true,
   },
   {
@@ -110,6 +124,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2028-12-15",
     what: "The international standard for quality management systems: documented processes, defined responsibilities, control of non-conforming product, corrective action and continual improvement, verified by independent audit.",
     why: "The most widely recognised proof of a working quality system, and a common prequalification requirement in tenders and export contracts.",
+    previewUrl: preview("iso-9001"),
     featured: false,
   },
   {
@@ -126,6 +141,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2028-07-01",
     what: "The environmental management standard: identifying the environmental impact of the operation, setting objectives against it, and controlling waste, emissions and resource use under audit.",
     why: "Buyers with their own sustainability reporting increasingly need their suppliers to hold it, and public-sector tenders are beginning to score it.",
+    previewUrl: preview("iso-14001"),
     featured: false,
   },
   {
@@ -142,6 +158,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2027-05-26",
     what: "The standard for managing information security: how commercial, design and customer data is classified, accessed, retained and protected, with risks assessed and controls audited.",
     why: "Relevant to private-label clients in particular — your formulations, artwork, volumes and pricing sit with us, and this is the audited system that governs how they are handled.",
+    previewUrl: preview("iso-27001"),
     featured: false,
   },
   {
@@ -157,6 +174,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2029-01-19",
     what: "The specification a plastic has to meet to be called compostable — covering disintegration, biodegradation and the absence of harmful residue in the compost that results.",
     why: "Disposable hygiene is under growing scrutiny for what it leaves behind. This is the recognised way to substantiate a compostability claim rather than assert it.",
+    previewUrl: preview("iso-17088"),
     featured: false,
   },
   {
@@ -173,6 +191,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2029-07-05",
     what: "The test method behind a composting claim: it measures how completely a material breaks down under controlled composting conditions, by tracking the carbon dioxide evolved.",
     why: "It is the measurement that a compostability specification such as ISO 17088 relies on, so the two are usually asked for together.",
+    previewUrl: preview("iso-14855"),
     featured: false,
   },
   {
@@ -189,6 +208,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2029-07-05",
     what: "An independent assessment by QVA that the manufacturing system meets this standard across the scope listed above.",
     why: "Part of the documentation pack we supply to buyers and tender committees on request.",
+    previewUrl: preview("iso-9845"),
     featured: false,
   },
   {
@@ -205,6 +225,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2029-07-05",
     what: "An independent assessment by QVA that the manufacturing system meets this standard across the scope listed above.",
     why: "Part of the documentation pack we supply to buyers and tender committees on request.",
+    previewUrl: preview("iso-9833"),
     featured: false,
   },
   {
@@ -221,6 +242,7 @@ export const CERTIFICATIONS: Certification[] = [
     validUntilIso: "2026-05-31",
     what: "The earlier edition of the compostable-plastics specification, superseded by the 2021 certificate above.",
     why: "Kept on record; the current ISO 17088:2021 certificate is the one in force.",
+    previewUrl: preview("iso-17088-2008"),
     featured: false,
   },
 ];

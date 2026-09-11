@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -103,28 +104,52 @@ function CertificationCard({ cert }: { cert: Certification }) {
   return (
     <article
       id={cert.id}
-      className="bg-white border border-border rounded-2xl p-7 md:p-9 flex flex-col gap-5 scroll-mt-24"
+      className="bg-white border border-border rounded-2xl p-7 md:p-9 flex flex-col md:flex-row gap-7 md:gap-9 scroll-mt-24"
     >
-      <div className="flex flex-col gap-1">
-        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <h3 className="text-xl md:text-2xl font-extrabold text-navy">{cert.name}</h3>
-          <span className="text-sm text-muted-2">{cert.fullName}</span>
+      {/* Scan of the certificate. Opens full size in a new tab, so a buyer can
+          read the numbers off the document rather than take our word for it. */}
+      <a
+        href={cert.previewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group shrink-0 self-start w-full max-w-[220px] md:w-[200px] mx-auto md:mx-0"
+      >
+        <span className="block relative aspect-[1000/1350] overflow-hidden rounded-xl border border-border bg-[#F7F3EF] transition-shadow duration-200 group-hover:shadow-[0_10px_28px_rgba(18,58,92,0.14)]">
+          <Image
+            src={cert.previewUrl}
+            alt={`${cert.name} certificate for M.D. Hygiene`}
+            fill
+            sizes="220px"
+            className="object-cover object-top"
+          />
+        </span>
+        <span className="mt-2 block text-center md:text-left text-[13px] font-semibold text-blue group-hover:text-pink transition-colors">
+          View certificate →
+        </span>
+      </a>
+
+      <div className="flex-1 flex flex-col gap-5 min-w-0">
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h3 className="text-xl md:text-2xl font-extrabold text-navy">{cert.name}</h3>
+            <span className="text-sm text-muted-2">{cert.fullName}</span>
+          </div>
+          {cert.standard && <span className="text-[13px] font-semibold text-blue">{cert.standard}</span>}
         </div>
-        {cert.standard && <span className="text-[13px] font-semibold text-blue">{cert.standard}</span>}
-      </div>
 
-      <div className="flex flex-col gap-3">
-        <Line label="WHAT IT IS" body={cert.what} />
-        <Line label="WHY IT MATTERS TO YOU" body={cert.why} />
-      </div>
+        <div className="flex flex-col gap-3">
+          <Line label="WHAT IT IS" body={cert.what} />
+          <Line label="WHY IT MATTERS TO YOU" body={cert.why} />
+        </div>
 
-      <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-3 border-t border-border pt-5">
-        <Fact term="Issued by" value={cert.issuer} />
-        <Fact term="Certificate no." value={cert.certificateNumber} mono />
-        <Fact term="Scope" value={cert.scope} wide />
-        {cert.issued && <Fact term="Issued" value={cert.issued} />}
-        <Fact term="Valid until" value={cert.validUntil} />
-      </dl>
+        <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-3 border-t border-border pt-5">
+          <Fact term="Issued by" value={cert.issuer} />
+          <Fact term="Certificate no." value={cert.certificateNumber} mono />
+          <Fact term="Scope" value={cert.scope} wide />
+          {cert.issued && <Fact term="Issued" value={cert.issued} />}
+          <Fact term="Valid until" value={cert.validUntil} />
+        </dl>
+      </div>
     </article>
   );
 }
