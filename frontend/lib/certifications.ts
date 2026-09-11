@@ -1,97 +1,227 @@
 /**
- * Reference notes for the certification marks listed in site content.
+ * M.D. Hygiene's certifications, transcribed from the certificates themselves.
  *
- * The settings record holds only the mark's name ("CE", "HACCP"), which is
- * enough for a badge but not for a page. These entries explain what each mark
- * is and why a buyer should care, and are matched to the stored names loosely
- * so "GMP Certified" and "GMP" both find their entry.
+ * Certificate numbers, issuing bodies, scopes and dates are copied from the
+ * documents — nothing here is inferred. The "what / why" lines describe what
+ * the standard covers generally; they never claim a scope the certificate
+ * doesn't grant.
  *
- * They describe what the mark itself means, never which specific licence or
- * scope M.D. Hygiene holds — that varies by product and renewal date and
- * belongs on the certificate, not in code.
+ * `featured` marks the handful shown on the homepage band. Everything else is
+ * on /certifications.
+ *
+ * When a certificate is renewed, update `validUntil` and `validUntilIso` here.
+ * Anything past its date drops off the public pages on its own — see
+ * activeCertifications().
  */
 
-export type CertificationNote = {
-  /** Display name, used when it differs from what's stored in settings. */
+export type Certification = {
+  /** URL fragment; also how the homepage badge links to its entry. */
+  id: string;
+  /** Badge text. */
   name: string;
-  /** Expanded name or issuing body. */
   fullName: string;
+  /** The standard or directive assessed against, where the certificate names one. */
+  standard?: string;
+  issuer: string;
+  certificateNumber: string;
+  scope: string;
+  issued?: string;
+  validUntil: string;
+  /** Same date, sortable — drives the expiry filter. */
+  validUntilIso: string;
   what: string;
   why: string;
+  featured: boolean;
 };
 
-const NOTES: { match: RegExp; note: CertificationNote }[] = [
+export const CERTIFICATIONS: Certification[] = [
   {
-    match: /\bbis\b|bureau of indian/i,
-    note: {
-      name: "BIS",
-      fullName: "Bureau of Indian Standards",
-      what: "India's national standards body. It publishes the Indian Standards that consumer products are tested against and licenses manufacturers to mark goods that conform to them.",
-      why: "For institutional and government buyers, a BIS licence is often the baseline requirement in a tender — it shows the product has been tested against a published national specification rather than an in-house one.",
-    },
+    id: "bis",
+    name: "BIS",
+    fullName: "Bureau of Indian Standards licence",
+    standard: "IS 5405:2019 — Sanitary Napkins",
+    issuer: "Bureau of Indian Standards, Surat Branch Office",
+    certificateNumber: "CM/L-7200133594",
+    scope: "Sanitary napkins",
+    validUntil: "28 October 2027",
+    validUntilIso: "2027-10-28",
+    what: "India's national standards body licenses the manufacturer to carry the Standard Mark on a product tested against a published Indian Standard — here IS 5405, the specification for sanitary napkins.",
+    why: "For government and institutional tenders this is usually the first requirement on the list: it shows the product has been tested against a national specification, not an in-house one.",
+    featured: true,
   },
   {
-    match: /\bce\b/i,
-    note: {
-      name: "CE",
-      fullName: "Conformité Européenne",
-      what: "The conformity marking required for goods placed on the market in the European Economic Area. It is the manufacturer's declaration that the product meets the applicable EU health, safety and environmental requirements.",
-      why: "It is what makes a product exportable into European markets, and it signals that the technical file, testing and labelling behind the product are documented to EU expectations.",
-    },
+    id: "iso-13485",
+    name: "ISO 13485",
+    fullName: "Medical Device — Quality Management System",
+    standard: "ISO 13485:2016",
+    issuer: "BSCIC Certifications Pvt. Ltd. — accredited by NABCB (QM 030), IAF MLA member",
+    certificateNumber: "BN23942/22619",
+    scope:
+      "Design, manufacture and supply of sanitary pads, sanitary napkins and adult/baby diapers. Technical area: non-active medical devices, A.1.1.21",
+    issued: "13 March 2025",
+    validUntil: "12 March 2028",
+    validUntilIso: "2028-03-12",
+    what: "The quality management standard written specifically for medical devices. It goes beyond general quality management into design control, risk management, traceability, sterile and clean-room conditions where relevant, and post-market surveillance.",
+    why: "It is the most demanding quality system a hygiene manufacturer can hold, and it covers design as well as manufacture — which matters if you are asking us to develop a product rather than just produce one.",
+    featured: true,
   },
   {
-    match: /\bgmp\b|good manufacturing/i,
-    note: {
-      name: "GMP",
-      fullName: "Good Manufacturing Practice",
-      what: "A quality system covering how a factory is run: premises and equipment, personnel hygiene, material handling, process control, cleaning validation and batch record-keeping.",
-      why: "It is the difference between a product that happens to pass a test and a process built to produce the same result every batch — which is what matters when you are ordering by the container load.",
-    },
+    id: "who-gmp",
+    name: "WHO-GMP",
+    fullName: "Good Manufacturing Practice",
+    issuer: "IPQC — International Productivity and Quality Council",
+    certificateNumber: "2182/GMP/24",
+    scope:
+      "Cosmetic products, sanitary pads, baby and adult diapers, underpads, baby wet wipes, sanitary napkins, tampons and towels, and sanitary preparations for personal, veterinary and medical purposes",
+    issued: "31 May 2024",
+    validUntil: "30 May 2027",
+    validUntilIso: "2027-05-30",
+    what: "Good Manufacturing Practice assessed against the World Health Organization's framework: premises and equipment, personnel hygiene, material handling, process control, cleaning validation and batch records.",
+    why: "It is the difference between a product that happens to pass a test and a process built to produce the same result every batch — which is what matters when you are ordering by the container load.",
+    featured: true,
   },
   {
-    match: /haccp/i,
-    note: {
-      name: "HACCP",
-      fullName: "Hazard Analysis and Critical Control Points",
-      what: "A preventive system that maps every step of production, identifies where contamination could enter, and sets measurable control limits and monitoring at those points.",
-      why: "For absorbent hygiene products worn against skin, it demonstrates contamination risk is designed out of the line and monitored continuously, not caught by end-of-line inspection.",
-    },
+    id: "ce",
+    name: "CE",
+    fullName: "Certificate of Compliance — EU directives",
+    standard:
+      "Medical Device Directive 93/42/EEC as amended by 2007/47/EC, and PPE Directive 89/686/EEC",
+    issuer: "VRS Certifications Services Pvt. Ltd. — accredited by IAFCB",
+    certificateNumber: "7309/CE/R001",
+    scope: "Gloves, PPE kits, masks, baby diapers, sanitary pads, sanitary napkins and tissue papers",
+    issued: "27 May 2024",
+    validUntil: "26 May 2027",
+    validUntilIso: "2027-05-26",
+    what: "An assessment that the technical file for the products conforms to the essential health and safety requirements of the European directives named above.",
+    why: "It is what makes the range exportable into European markets, and it shows the technical file, testing and labelling behind each product are documented to EU expectations.",
+    featured: true,
   },
   {
-    match: /\biaf\b|international accreditation/i,
-    note: {
-      name: "IAF",
-      fullName: "International Accreditation Forum",
-      what: "The worldwide association of the bodies that accredit certification bodies. An IAF mark on a certificate indicates the organisation that issued it is itself accredited under a recognised scheme.",
-      why: "It is the check on the checker: it tells you the certificate came from an accredited body rather than an unrecognised one, and that it is accepted internationally.",
-    },
+    id: "iso-9001",
+    name: "ISO 9001",
+    fullName: "Quality Management System",
+    standard: "ISO 9001:2015",
+    issuer: "Eurocert Inspection Limited — UKAF",
+    certificateNumber: "2025121639",
+    scope:
+      "Manufacturing of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
+    issued: "16 December 2025",
+    validUntil: "15 December 2028",
+    validUntilIso: "2028-12-15",
+    what: "The international standard for quality management systems: documented processes, defined responsibilities, control of non-conforming product, corrective action and continual improvement, verified by independent audit.",
+    why: "The most widely recognised proof of a working quality system, and a common prequalification requirement in tenders and export contracts.",
+    featured: false,
   },
   {
-    match: /\biso\b/i,
-    note: {
-      name: "ISO",
-      fullName: "International Organization for Standardization",
-      what: "The body behind the international management-system standards, most commonly ISO 9001 for quality management — a documented system for controlling processes, non-conformities and continuous improvement.",
-      why: "It is the most widely recognised proof of a working quality system, and is frequently a prequalification requirement in tenders and export contracts.",
-    },
+    id: "iso-14001",
+    name: "ISO 14001",
+    fullName: "Environmental Management System",
+    standard: "ISO 14001:2015",
+    issuer: "QRO Certification LLP — EGAC, IAF MLA member",
+    certificateNumber: "305025070248E",
+    scope:
+      "Manufacturing of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
+    issued: "2 July 2025",
+    validUntil: "1 July 2028",
+    validUntilIso: "2028-07-01",
+    what: "The environmental management standard: identifying the environmental impact of the operation, setting objectives against it, and controlling waste, emissions and resource use under audit.",
+    why: "Buyers with their own sustainability reporting increasingly need their suppliers to hold it, and public-sector tenders are beginning to score it.",
+    featured: false,
   },
   {
-    match: /sgcci|southern gujarat chamber/i,
-    note: {
-      name: "SGCCI",
-      fullName: "The Southern Gujarat Chamber of Commerce & Industry",
-      what: "One of the region's established industry chambers, representing manufacturers across South Gujarat in trade, policy and export promotion.",
-      why: "Membership places the factory inside the region's formal industrial body — useful context for buyers verifying that they are dealing with an established manufacturer.",
-    },
+    id: "iso-27001",
+    name: "ISO/IEC 27001",
+    fullName: "Information Security Management System",
+    standard: "ISO/IEC 27001:2022",
+    issuer: "VRS Certifications Services Pvt. Ltd. — accredited by IAFCB",
+    certificateNumber: "2597SAFV2021",
+    scope:
+      "Manufacturing and trading of gloves, PPE kits, masks, baby diapers, sanitary pads, sanitary napkins and tissue papers",
+    issued: "27 May 2024",
+    validUntil: "26 May 2027",
+    validUntilIso: "2027-05-26",
+    what: "The standard for managing information security: how commercial, design and customer data is classified, accessed, retained and protected, with risks assessed and controls audited.",
+    why: "Relevant to private-label clients in particular — your formulations, artwork, volumes and pricing sit with us, and this is the audited system that governs how they are handled.",
+    featured: false,
   },
   {
-    match: /make in india/i,
-    note: {
-      name: "Make in India",
-      fullName: "Government of India manufacturing initiative",
-      what: "A national initiative promoting domestic manufacturing. It is a mark of origin and participation rather than a product-testing certification.",
-      why: "For government and institutional tenders that carry local-content requirements, domestic manufacture is often a condition of eligibility.",
-    },
+    id: "iso-17088",
+    name: "ISO 17088",
+    fullName: "Specifications for compostable plastics",
+    standard: "ISO 17088:2021 — Plastics, organic recycling",
+    issuer: "QVA Certification — accredited by UGAC",
+    certificateNumber: "MDHY-26-4870286",
+    scope: "Manufacturer and trader of sanitary napkins",
+    issued: "20 January 2026",
+    validUntil: "19 January 2029",
+    validUntilIso: "2029-01-19",
+    what: "The specification a plastic has to meet to be called compostable — covering disintegration, biodegradation and the absence of harmful residue in the compost that results.",
+    why: "Disposable hygiene is under growing scrutiny for what it leaves behind. This is the recognised way to substantiate a compostability claim rather than assert it.",
+    featured: false,
+  },
+  {
+    id: "iso-14855",
+    name: "ISO 14855-1",
+    fullName: "Aerobic biodegradability under controlled composting conditions",
+    standard: "ISO 14855-1:2012",
+    issuer: "QVA Certification — accredited by UGAC",
+    certificateNumber: "PYCA-26-4870689",
+    scope:
+      "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
+    issued: "6 July 2026",
+    validUntil: "5 July 2029",
+    validUntilIso: "2029-07-05",
+    what: "The test method behind a composting claim: it measures how completely a material breaks down under controlled composting conditions, by tracking the carbon dioxide evolved.",
+    why: "It is the measurement that a compostability specification such as ISO 17088 relies on, so the two are usually asked for together.",
+    featured: false,
+  },
+  {
+    id: "iso-9845",
+    name: "ISO 9845-1",
+    fullName: "Certificate of compliance — ISO 9845-1:2022",
+    standard: "ISO 9845-1:2022",
+    issuer: "QVA Certification — accredited by UGAC",
+    certificateNumber: "PYCA-26-4870690",
+    scope:
+      "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
+    issued: "6 July 2026",
+    validUntil: "5 July 2029",
+    validUntilIso: "2029-07-05",
+    what: "An independent assessment by QVA that the manufacturing system meets this standard across the scope listed above.",
+    why: "Part of the documentation pack we supply to buyers and tender committees on request.",
+    featured: false,
+  },
+  {
+    id: "iso-9833",
+    name: "ISO 9833",
+    fullName: "Certificate of compliance — ISO 9833:1993",
+    standard: "ISO 9833:1993",
+    issuer: "QVA Certification — accredited by UGAC",
+    certificateNumber: "PYCA-26-4870691",
+    scope:
+      "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
+    issued: "6 July 2026",
+    validUntil: "5 July 2029",
+    validUntilIso: "2029-07-05",
+    what: "An independent assessment by QVA that the manufacturing system meets this standard across the scope listed above.",
+    why: "Part of the documentation pack we supply to buyers and tender committees on request.",
+    featured: false,
+  },
+  {
+    id: "iso-17088-2008",
+    name: "ISO 17088:2008",
+    fullName: "Specifications for compostable plastics (superseded)",
+    standard: "ISO 17088:2008",
+    issuer: "Delta 300 Global Certification Solutions Pvt. Ltd.",
+    certificateNumber: "10240623",
+    scope:
+      "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
+    issued: "1 June 2023",
+    validUntil: "31 May 2026",
+    validUntilIso: "2026-05-31",
+    what: "The earlier edition of the compostable-plastics specification, superseded by the 2021 certificate above.",
+    why: "Kept on record; the current ISO 17088:2021 certificate is the one in force.",
+    featured: false,
   },
 ];
 
@@ -104,9 +234,35 @@ export function certificationSlug(name: string): string {
 }
 
 /**
- * The note for a stored certification name, or null when there isn't one.
- * Unmatched marks still render — with the name alone — rather than vanishing.
+ * Everything still in date.
+ *
+ * An expired certificate on a public page is worse than no certificate — a
+ * buyer who checks the date finds a claim that no longer holds — so they drop
+ * off by themselves rather than waiting for someone to notice.
  */
-export function certificationNote(stored: string): CertificationNote | null {
-  return NOTES.find((entry) => entry.match.test(stored))?.note ?? null;
+export function activeCertifications(now: Date = new Date()): Certification[] {
+  const today = now.toISOString().slice(0, 10);
+  return CERTIFICATIONS.filter((cert) => cert.validUntilIso >= today);
+}
+
+/** The handful shown on the homepage band. */
+export function featuredCertifications(now?: Date): Certification[] {
+  return activeCertifications(now).filter((cert) => cert.featured);
+}
+
+/**
+ * Matches a name stored in site settings ("GMP", "CE Certified") to a
+ * catalogue entry, so the admin list and the catalogue stay in step without
+ * having to be written identically.
+ */
+export function findCertification(stored: string): Certification | null {
+  const needle = stored.trim().toLowerCase();
+  if (!needle) return null;
+  return (
+    CERTIFICATIONS.find((cert) => cert.name.toLowerCase() === needle) ??
+    CERTIFICATIONS.find(
+      (cert) => needle.includes(cert.name.toLowerCase()) || cert.name.toLowerCase().includes(needle)
+    ) ??
+    null
+  );
 }

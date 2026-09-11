@@ -26,7 +26,7 @@ export default async function AboutPage() {
           <p className="text-navy font-semibold leading-relaxed">{about?.mission}</p>
         </section>
 
-        <Certifications certifications={certifications ?? []} />
+        <Certifications names={certifications} />
 
         <section className="px-5 md:px-14 py-10 md:py-14 grid md:grid-cols-2 gap-7 md:gap-8">
           <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2">

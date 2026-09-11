@@ -166,7 +166,12 @@ function CertificationsBlock({ initial }: { initial: string[] }) {
       }}
       className="bg-white border border-border rounded-2xl p-7 flex flex-col gap-4"
     >
-      <h2 className="text-lg font-extrabold text-navy">Certifications (one per line)</h2>
+      <h2 className="text-lg font-extrabold text-navy">Certifications on the homepage (one per line)</h2>
+      <p className="text-sm text-muted-2 -mt-2">
+        Which badges show in the homepage band — keep it to three or four. Every certification we hold
+        is listed in full on the <span className="font-semibold">/certifications</span> page regardless
+        of what is here.
+      </p>
       <TextArea label="" name="certifications" defaultValue={initial.join("\n")} rows={5} />
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex items-center gap-3">
