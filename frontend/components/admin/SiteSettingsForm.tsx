@@ -2,8 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { updateSiteSettingAction } from "@/lib/admin-actions";
-import type { AboutContent, CompanyStats, ContactInfo, SiteVideos } from "@/lib/types";
-import { youTubeId } from "@/lib/video";
+import type { AboutContent, CompanyStats, ContactInfo } from "@/lib/types";
 
 function SaveButton({ saving }: { saving: boolean }) {
   return (
@@ -19,21 +18,18 @@ export default function SiteSettingsForm({
   about,
   certifications,
   footerTagline,
-  videos,
 }: {
   stats: CompanyStats | null;
   contact: ContactInfo | null;
   about: AboutContent | null;
   certifications: string[] | null;
   footerTagline: string;
-  videos: SiteVideos;
 }) {
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
       <StatsBlock initial={stats} />
       <ContactBlock initial={contact} />
       <AboutBlock initial={about} />
-      <VideosBlock initial={videos} />
       <CertificationsBlock initial={certifications ?? []} />
       <FooterBlock initial={footerTagline} />
     </div>
@@ -151,118 +147,6 @@ function AboutBlock({ initial }: { initial: AboutContent | null }) {
         {saved && <span className="text-sm text-emerald-600">Saved ✓</span>}
       </div>
     </form>
-  );
-}
-
-/**
- * The two video bands, saved together under one settings key but edited
- * separately — the homepage and About page are meant to be able to show
- * different videos.
- */
-function VideosBlock({ initial }: { initial: SiteVideos }) {
-  const { saving, saved, error, run } = useSaveState();
-  const [homeUrl, setHomeUrl] = useState(initial.home.url);
-  const [aboutUrl, setAboutUrl] = useState(initial.about.url);
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const f = new FormData(e.currentTarget);
-        const read = (page: "home" | "about") => ({
-          url: String(f.get(`${page}_url`) ?? "").trim(),
-          eyebrow: String(f.get(`${page}_eyebrow`) ?? "").trim(),
-          heading: String(f.get(`${page}_heading`) ?? "").trim(),
-          caption: String(f.get(`${page}_caption`) ?? "").trim(),
-          is_active: f.get(`${page}_is_active`) === "on",
-        });
-        run(() => updateSiteSettingAction("videos", { home: read("home"), about: read("about") }));
-      }}
-      className="bg-white border border-border rounded-2xl p-7 flex flex-col gap-5"
-    >
-      <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-extrabold text-navy">Videos</h2>
-        <p className="text-sm text-muted-2">
-          One video band on the homepage (above Our Brands) and one on the About page (above
-          Certifications). They are separate — leave either switched off to hide it.
-        </p>
-      </div>
-
-      <VideoFields page="home" label="Homepage video" initial={initial.home} url={homeUrl} onUrl={setHomeUrl} />
-      <VideoFields page="about" label="About page video" initial={initial.about} url={aboutUrl} onUrl={setAboutUrl} />
-
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex items-center gap-3">
-        <SaveButton saving={saving} />
-        {saved && <span className="text-sm text-emerald-600">Saved ✓</span>}
-      </div>
-    </form>
-  );
-}
-
-function VideoFields({
-  page,
-  label,
-  initial,
-  url,
-  onUrl,
-}: {
-  page: "home" | "about";
-  label: string;
-  initial: SiteVideos["home"];
-  url: string;
-  onUrl: (value: string) => void;
-}) {
-  const id = youTubeId(url);
-
-  return (
-    <fieldset className="border border-border rounded-xl p-5 flex flex-col gap-3.5">
-      <legend className="text-sm font-bold text-navy px-2">{label}</legend>
-
-      <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
-        YouTube link
-        <input
-          type="text"
-          name={`${page}_url`}
-          value={url}
-          onChange={(e) => onUrl(e.target.value)}
-          placeholder="https://www.youtube.com/watch?v=…"
-          className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal"
-        />
-        <span className="text-xs font-normal text-muted-2">
-          Any YouTube address works — watch, youtu.be, Shorts or embed.
-        </span>
-      </label>
-
-      {url.trim() &&
-        (id ? (
-          <div className="flex flex-col gap-1.5">
-            <span className="text-xs font-bold text-navy">Preview</span>
-            <div className="relative w-full max-w-sm aspect-video overflow-hidden rounded-lg border border-border bg-navy">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${id}?rel=0`}
-                title={`${label} preview`}
-                loading="lazy"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
-              />
-            </div>
-          </div>
-        ) : (
-          <p className="text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-            That isn&apos;t a YouTube link we can read. Copy the address from the video&apos;s page or
-            its Share button.
-          </p>
-        ))}
-
-      <Field label="Eyebrow (small pink line above)" name={`${page}_eyebrow`} defaultValue={initial.eyebrow} />
-      <Field label="Heading" name={`${page}_heading`} defaultValue={initial.heading} />
-      <TextArea label="Caption" name={`${page}_caption`} defaultValue={initial.caption} rows={2} />
-      <label className="flex items-center gap-2 text-sm font-semibold text-navy">
-        <input type="checkbox" name={`${page}_is_active`} defaultChecked={initial.is_active} /> Show this
-        video on the site
-      </label>
-    </fieldset>
   );
 }
 
