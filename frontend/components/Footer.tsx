@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getContactInfo, getFooterTagline } from "@/lib/queries";
-import { mailHref, mapEmbedSrc, mapLinkHref, telHref } from "@/lib/contact-links";
+import { mailHref, telHref } from "@/lib/contact-links";
+import AddressMap from "@/components/AddressMap";
 
 export default async function Footer() {
   const [contact, tagline] = await Promise.all([getContactInfo(), getFooterTagline()]);
@@ -16,14 +17,10 @@ export default async function Footer() {
           </span>
         </div>
         <div className="grid grid-cols-2 gap-x-6 gap-y-9 md:flex md:flex-wrap md:gap-16">
-          <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8] md:max-w-[240px]">
-            <span className="text-white font-bold text-[13px] tracking-[0.1em]">FACTORY</span>
-            <span>{contact?.factory_address}</span>
-          </div>
-          <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8] md:max-w-[240px]">
-            <span className="text-white font-bold text-[13px] tracking-[0.1em]">CORPORATE OFFICE</span>
-            <span>{contact?.corporate_address}</span>
-          </div>
+          {contact?.factory_address && <AddressMap label="FACTORY" address={contact.factory_address} />}
+          {contact?.corporate_address && (
+            <AddressMap label="CORPORATE OFFICE" address={contact.corporate_address} />
+          )}
           <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8]">
             <span className="text-white font-bold text-[13px] tracking-[0.1em]">CONTACT</span>
             {contact?.phones.map((p) => (
@@ -47,31 +44,6 @@ export default async function Footer() {
           </div>
         </div>
       </div>
-      {contact?.factory_address && (
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-            <span className="text-white font-bold text-[13px] tracking-[0.1em]">FIND THE FACTORY</span>
-            <a
-              href={mapLinkHref(contact.factory_address)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-[#9DB4C8] hover:text-white transition-colors"
-            >
-              Open in Google Maps →
-            </a>
-          </div>
-          {/* Plain Maps embed — the output=embed form needs no API key. Lazy so
-              it costs nothing until someone scrolls this far. */}
-          <iframe
-            src={mapEmbedSrc(contact.factory_address)}
-            title="M.D. Hygiene factory location"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="w-full h-[220px] md:h-[300px] rounded-2xl border border-white/10"
-          />
-        </div>
-      )}
-
       <div className="border-t border-white/10 pt-6 text-center text-sm text-[#7C93AB]">
         {tagline?.text ?? "M.D. Hygiene — Caring for Hygiene, Caring for You"}
       </div>
