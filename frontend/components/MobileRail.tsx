@@ -3,7 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 /** How long one card-to-card move takes. */
-const GLIDE_MS = 1000;
+const GLIDE_MS = 400;
 /** How long a card rests before the rail moves on. */
 const DWELL_MS = 3500;
 /** Quiet time after a swipe before the rail takes over again. */
@@ -21,7 +21,7 @@ function easeInOut(t: number): number {
  *
  * The move is animated by hand rather than with `scrollTo({behavior:"smooth"})`
  * because that gives no control over duration, and the glide here is a fixed
- * one second.
+ * 0.4 seconds.
  */
 export default function MobileRail({
   children,
