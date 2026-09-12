@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
+import { mailHref, mapLinkHref, telHref } from "@/lib/contact-links";
 import { getContactInfo } from "@/lib/queries";
 
 // Always render against current data — admin edits must show up immediately.
@@ -23,15 +24,33 @@ export default async function ContactPage() {
           </p>
           <div className="flex flex-col gap-1 text-sm text-muted mt-4">
             <span className="font-bold text-navy">Call</span>
-            <span>{contact?.phones?.join(" · ")}</span>
+            {contact?.phones?.map((p) => (
+              <a key={p} href={telHref(p)} className="text-blue font-semibold w-fit hover:text-pink transition-colors">
+                {p}
+              </a>
+            ))}
           </div>
           <div className="flex flex-col gap-1 text-sm text-muted">
             <span className="font-bold text-navy">Email</span>
-            <span>{contact?.email}</span>
+            {contact?.email && (
+              <a href={mailHref(contact.email)} className="text-blue font-semibold w-fit break-all hover:text-pink transition-colors">
+                {contact.email}
+              </a>
+            )}
           </div>
           <div className="flex flex-col gap-1 text-sm text-muted">
             <span className="font-bold text-navy">Factory</span>
             <span>{contact?.factory_address}</span>
+            {contact?.factory_address && (
+              <a
+                href={mapLinkHref(contact.factory_address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue font-semibold w-fit hover:text-pink transition-colors"
+              >
+                Open in Google Maps →
+              </a>
+            )}
           </div>
         </div>
         <ContactForm />

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getContactInfo } from "@/lib/queries";
 import MobileNav from "@/components/MobileNav";
+import { mailHref, telHref } from "@/lib/contact-links";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -20,8 +21,24 @@ export default async function Header() {
     <>
       <div className="hidden md:flex justify-between gap-10 bg-navy text-[#C3D6E7] text-[13px] px-14 py-2">
         <div className="flex gap-7">
-          {contact?.phones?.length ? <span>Call: {contact.phones.join(" · ")}</span> : null}
-          {contact?.email ? <span>{contact.email}</span> : null}
+          {contact?.phones?.length ? (
+            <span className="flex gap-2">
+              Call:
+              {contact.phones.map((p, i) => (
+                <span key={p} className="flex gap-2">
+                  {i > 0 && <span aria-hidden>·</span>}
+                  <a href={telHref(p)} className="hover:text-white transition-colors">
+                    {p}
+                  </a>
+                </span>
+              ))}
+            </span>
+          ) : null}
+          {contact?.email ? (
+            <a href={mailHref(contact.email)} className="hover:text-white transition-colors">
+              {contact.email}
+            </a>
+          ) : null}
         </div>
         <div className="flex gap-5">
           <span>BIS · CE · GMP Certified</span>

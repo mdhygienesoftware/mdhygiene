@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getContactInfo, getFooterTagline } from "@/lib/queries";
+import { mailHref, mapEmbedSrc, mapLinkHref, telHref } from "@/lib/contact-links";
 
 export default async function Footer() {
   const [contact, tagline] = await Promise.all([getContactInfo(), getFooterTagline()]);
@@ -25,8 +26,16 @@ export default async function Footer() {
           </div>
           <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8]">
             <span className="text-white font-bold text-[13px] tracking-[0.1em]">CONTACT</span>
-            {contact?.phones.map((p) => <span key={p}>{p}</span>)}
-            <span>{contact?.email}</span>
+            {contact?.phones.map((p) => (
+              <a key={p} href={telHref(p)} className="hover:text-white transition-colors w-fit">
+                {p}
+              </a>
+            ))}
+            {contact?.email && (
+              <a href={mailHref(contact.email)} className="hover:text-white transition-colors w-fit break-all">
+                {contact.email}
+              </a>
+            )}
           </div>
           <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8]">
             <span className="text-white font-bold text-[13px] tracking-[0.1em]">COMPANY</span>
@@ -38,6 +47,31 @@ export default async function Footer() {
           </div>
         </div>
       </div>
+      {contact?.factory_address && (
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <span className="text-white font-bold text-[13px] tracking-[0.1em]">FIND THE FACTORY</span>
+            <a
+              href={mapLinkHref(contact.factory_address)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-[#9DB4C8] hover:text-white transition-colors"
+            >
+              Open in Google Maps →
+            </a>
+          </div>
+          {/* Plain Maps embed — the output=embed form needs no API key. Lazy so
+              it costs nothing until someone scrolls this far. */}
+          <iframe
+            src={mapEmbedSrc(contact.factory_address)}
+            title="M.D. Hygiene factory location"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full h-[220px] md:h-[300px] rounded-2xl border border-white/10"
+          />
+        </div>
+      )}
+
       <div className="border-t border-white/10 pt-6 text-center text-sm text-[#7C93AB]">
         {tagline?.text ?? "M.D. Hygiene — Caring for Hygiene, Caring for You"}
       </div>
