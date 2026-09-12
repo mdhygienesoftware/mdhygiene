@@ -9,9 +9,8 @@
  * `featured` marks the handful shown on the homepage band. Everything else is
  * on /certifications.
  *
- * When a certificate is renewed, update `validUntil` and `validUntilIso` here.
- * Anything past its date drops off the public pages on its own — see
- * activeCertifications().
+ * When a certificate is renewed, update `validUntilIso` here. Anything past
+ * its date drops off the public pages on its own — see activeCertifications().
  */
 
 export type Certification = {
@@ -25,9 +24,10 @@ export type Certification = {
   issuer: string;
   certificateNumber: string;
   scope: string;
-  issued?: string;
-  validUntil: string;
-  /** Same date, sortable — drives the expiry filter. */
+  /**
+   * Expiry date, not shown on the page — it is only what the expiry filter
+   * sorts on, so a lapsed certificate stops being advertised.
+   */
   validUntilIso: string;
   what: string;
   why: string;
@@ -53,7 +53,6 @@ export const CERTIFICATIONS: Certification[] = [
     issuer: "Bureau of Indian Standards, Surat Branch Office",
     certificateNumber: "CM/L-7200133594",
     scope: "Sanitary napkins",
-    validUntil: "28 October 2027",
     validUntilIso: "2027-10-28",
     what: "India's national standards body licenses the manufacturer to carry the Standard Mark on a product tested against a published Indian Standard — here IS 5405, the specification for sanitary napkins.",
     why: "For government and institutional tenders this is usually the first requirement on the list: it shows the product has been tested against a national specification, not an in-house one.",
@@ -69,8 +68,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "BN23942/22619",
     scope:
       "Design, manufacture and supply of sanitary pads, sanitary napkins and adult/baby diapers. Technical area: non-active medical devices, A.1.1.21",
-    issued: "13 March 2025",
-    validUntil: "12 March 2028",
     validUntilIso: "2028-03-12",
     what: "The quality management standard written specifically for medical devices. It goes beyond general quality management into design control, risk management, traceability, sterile and clean-room conditions where relevant, and post-market surveillance.",
     why: "It is the most demanding quality system a hygiene manufacturer can hold, and it covers design as well as manufacture — which matters if you are asking us to develop a product rather than just produce one.",
@@ -85,8 +82,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "2182/GMP/24",
     scope:
       "Cosmetic products, sanitary pads, baby and adult diapers, underpads, baby wet wipes, sanitary napkins, tampons and towels, and sanitary preparations for personal, veterinary and medical purposes",
-    issued: "31 May 2024",
-    validUntil: "30 May 2027",
     validUntilIso: "2027-05-30",
     what: "Good Manufacturing Practice assessed against the World Health Organization's framework: premises and equipment, personnel hygiene, material handling, process control, cleaning validation and batch records.",
     why: "It is the difference between a product that happens to pass a test and a process built to produce the same result every batch — which is what matters when you are ordering by the container load.",
@@ -102,8 +97,6 @@ export const CERTIFICATIONS: Certification[] = [
     issuer: "VRS Certifications Services Pvt. Ltd. — accredited by IAFCB",
     certificateNumber: "7309/CE/R001",
     scope: "Gloves, PPE kits, masks, baby diapers, sanitary pads, sanitary napkins and tissue papers",
-    issued: "27 May 2024",
-    validUntil: "26 May 2027",
     validUntilIso: "2027-05-26",
     what: "An assessment that the technical file for the products conforms to the essential health and safety requirements of the European directives named above.",
     why: "It is what makes the range exportable into European markets, and it shows the technical file, testing and labelling behind each product are documented to EU expectations.",
@@ -119,8 +112,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "2025121639",
     scope:
       "Manufacturing of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
-    issued: "16 December 2025",
-    validUntil: "15 December 2028",
     validUntilIso: "2028-12-15",
     what: "The international standard for quality management systems: documented processes, defined responsibilities, control of non-conforming product, corrective action and continual improvement, verified by independent audit.",
     why: "The most widely recognised proof of a working quality system, and a common prequalification requirement in tenders and export contracts.",
@@ -136,8 +127,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "305025070248E",
     scope:
       "Manufacturing of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
-    issued: "2 July 2025",
-    validUntil: "1 July 2028",
     validUntilIso: "2028-07-01",
     what: "The environmental management standard: identifying the environmental impact of the operation, setting objectives against it, and controlling waste, emissions and resource use under audit.",
     why: "Buyers with their own sustainability reporting increasingly need their suppliers to hold it, and public-sector tenders are beginning to score it.",
@@ -153,8 +142,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "2597SAFV2021",
     scope:
       "Manufacturing and trading of gloves, PPE kits, masks, baby diapers, sanitary pads, sanitary napkins and tissue papers",
-    issued: "27 May 2024",
-    validUntil: "26 May 2027",
     validUntilIso: "2027-05-26",
     what: "The standard for managing information security: how commercial, design and customer data is classified, accessed, retained and protected, with risks assessed and controls audited.",
     why: "Relevant to private-label clients in particular — your formulations, artwork, volumes and pricing sit with us, and this is the audited system that governs how they are handled.",
@@ -169,8 +156,6 @@ export const CERTIFICATIONS: Certification[] = [
     issuer: "QVA Certification — accredited by UGAC",
     certificateNumber: "MDHY-26-4870286",
     scope: "Manufacturer and trader of sanitary napkins",
-    issued: "20 January 2026",
-    validUntil: "19 January 2029",
     validUntilIso: "2029-01-19",
     what: "The specification a plastic has to meet to be called compostable — covering disintegration, biodegradation and the absence of harmful residue in the compost that results.",
     why: "Disposable hygiene is under growing scrutiny for what it leaves behind. This is the recognised way to substantiate a compostability claim rather than assert it.",
@@ -186,8 +171,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "PYCA-26-4870689",
     scope:
       "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
-    issued: "6 July 2026",
-    validUntil: "5 July 2029",
     validUntilIso: "2029-07-05",
     what: "The test method behind a composting claim: it measures how completely a material breaks down under controlled composting conditions, by tracking the carbon dioxide evolved.",
     why: "It is the measurement that a compostability specification such as ISO 17088 relies on, so the two are usually asked for together.",
@@ -203,8 +186,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "PYCA-26-4870690",
     scope:
       "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
-    issued: "6 July 2026",
-    validUntil: "5 July 2029",
     validUntilIso: "2029-07-05",
     what: "An independent assessment by QVA that the manufacturing system meets this standard across the scope listed above.",
     why: "Part of the documentation pack we supply to buyers and tender committees on request.",
@@ -220,8 +201,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "PYCA-26-4870691",
     scope:
       "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
-    issued: "6 July 2026",
-    validUntil: "5 July 2029",
     validUntilIso: "2029-07-05",
     what: "An independent assessment by QVA that the manufacturing system meets this standard across the scope listed above.",
     why: "Part of the documentation pack we supply to buyers and tender committees on request.",
@@ -237,8 +216,6 @@ export const CERTIFICATIONS: Certification[] = [
     certificateNumber: "10240623",
     scope:
       "Manufacture of sanitary pads, baby diapers, adult diapers, sanitary napkins, tampons and towels, and sanitary preparations for veterinary and medical purposes",
-    issued: "1 June 2023",
-    validUntil: "31 May 2026",
     validUntilIso: "2026-05-31",
     what: "The earlier edition of the compostable-plastics specification, superseded by the 2021 certificate above.",
     why: "Kept on record; the current ISO 17088:2021 certificate is the one in force.",

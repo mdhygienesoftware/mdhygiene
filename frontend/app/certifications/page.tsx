@@ -146,8 +146,6 @@ function CertificationCard({ cert }: { cert: Certification }) {
           <Fact term="Issued by" value={cert.issuer} />
           <Fact term="Certificate no." value={cert.certificateNumber} mono />
           <Fact term="Scope" value={cert.scope} wide />
-          {cert.issued && <Fact term="Issued" value={cert.issued} />}
-          <Fact term="Valid until" value={cert.validUntil} />
         </dl>
       </div>
     </article>
