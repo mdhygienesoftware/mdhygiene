@@ -5,7 +5,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 /** How long one card-to-card move takes. */
 const GLIDE_MS = 400;
 /** How long a card rests before the rail moves on. */
-const DWELL_MS = 2200;
+const DWELL_MS = 1400;
 /** Quiet time after a swipe before the rail takes over again. */
 const RESUME_MS = 6000;
 
