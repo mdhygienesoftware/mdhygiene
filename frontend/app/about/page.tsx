@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Certifications from "@/components/Certifications";
-import { getAboutContent, getCertifications, getContactInfo } from "@/lib/queries";
+import { getAboutContent, getCertifications } from "@/lib/queries";
 
 // Always render against current data — admin edits must show up immediately.
 export const dynamic = "force-dynamic";
@@ -9,11 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "About — MDHygiene" };
 
 export default async function AboutPage() {
-  const [about, certifications, contact] = await Promise.all([
-    getAboutContent(),
-    getCertifications(),
-    getContactInfo(),
-  ]);
+  const [about, certifications] = await Promise.all([getAboutContent(), getCertifications()]);
 
   return (
     <>
@@ -26,18 +22,9 @@ export default async function AboutPage() {
           <p className="text-navy font-semibold leading-relaxed">{about?.mission}</p>
         </section>
 
+        {/* The addresses used to be repeated here; the footer carries them on
+            every page, each with its own map. */}
         <Certifications names={certifications} />
-
-        <section className="px-5 md:px-14 py-10 md:py-14 grid md:grid-cols-2 gap-7 md:gap-8">
-          <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2">
-            <h3 className="text-lg font-extrabold text-navy">Factory</h3>
-            <p className="text-muted-2 text-sm leading-relaxed">{contact?.factory_address}</p>
-          </div>
-          <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2">
-            <h3 className="text-lg font-extrabold text-navy">Corporate Office</h3>
-            <p className="text-muted-2 text-sm leading-relaxed">{contact?.corporate_address}</p>
-          </div>
-        </section>
       </main>
       <Footer />
     </>
