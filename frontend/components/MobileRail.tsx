@@ -6,8 +6,8 @@ import { useEffect, useRef, type ReactNode } from "react";
 const GLIDE_MS = 400;
 /** How long a card rests before the rail moves on. */
 const DWELL_MS = 1400;
-/** Quiet time after a swipe before the rail takes over again. */
-const RESUME_MS = 6000;
+/** Quiet time after the finger lifts before the rail takes over again. */
+const RESUME_MS = 1200;
 
 function easeInOut(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -44,6 +44,7 @@ export default function MobileRail({
     let frame = 0;
     let timer = 0;
     let idleUntil = 0;
+    let holding = false;
 
     function glideTo(target: number) {
       const el = rail.current;
@@ -75,7 +76,7 @@ export default function MobileRail({
     function advance() {
       const el = rail.current;
       if (!el) return;
-      if (performance.now() < idleUntil) return;
+      if (holding || performance.now() < idleUntil) return;
 
       const cards = Array.from(el.children) as HTMLElement[];
       if (cards.length < 2) return;
@@ -93,24 +94,40 @@ export default function MobileRail({
       glideTo(Math.max(0, next));
     }
 
-    // A swipe hands control back to the reader for a while.
-    const pause = () => {
-      idleUntil = performance.now() + RESUME_MS;
+    // The rail holds still under a finger and picks up again shortly after it
+    // lifts — pausing until a fixed timeout expires instead made it look like
+    // touching the rail had stopped it for good.
+    const hold = () => {
+      holding = true;
       cancelAnimationFrame(frame);
       if (rail.current) rail.current.style.scrollSnapType = "";
     };
-    el.addEventListener("pointerdown", pause, { passive: true });
-    el.addEventListener("touchstart", pause, { passive: true });
-    el.addEventListener("wheel", pause, { passive: true });
+    const release = () => {
+      holding = false;
+      idleUntil = performance.now() + RESUME_MS;
+    };
+    el.addEventListener("pointerdown", hold, { passive: true });
+    el.addEventListener("touchstart", hold, { passive: true });
+    el.addEventListener("wheel", release, { passive: true });
+    // Listened for on the window: a finger that started on the rail often lifts
+    // somewhere else, and the rail would never hear about it.
+    window.addEventListener("pointerup", release, { passive: true });
+    window.addEventListener("pointercancel", release, { passive: true });
+    window.addEventListener("touchend", release, { passive: true });
+    window.addEventListener("touchcancel", release, { passive: true });
 
     timer = window.setInterval(advance, DWELL_MS + GLIDE_MS);
 
     return () => {
       window.clearInterval(timer);
       cancelAnimationFrame(frame);
-      el.removeEventListener("pointerdown", pause);
-      el.removeEventListener("touchstart", pause);
-      el.removeEventListener("wheel", pause);
+      el.removeEventListener("pointerdown", hold);
+      el.removeEventListener("touchstart", hold);
+      el.removeEventListener("wheel", release);
+      window.removeEventListener("pointerup", release);
+      window.removeEventListener("pointercancel", release);
+      window.removeEventListener("touchend", release);
+      window.removeEventListener("touchcancel", release);
     };
   }, []);
 

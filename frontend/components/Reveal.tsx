@@ -6,6 +6,10 @@ import { useEffect, useRef, useState } from "react";
  * Fades/slides children in when they scroll into view, and resets once they
  * leave, so the animation replays on every pass rather than only on first load.
  *
+ * `holdOnPhone` switches that reset off below md. Inside a horizontal rail a
+ * card leaves the viewport sideways every few seconds, and replaying a vertical
+ * slide each time reads as the card bobbing up and down.
+ *
  * Falls back to permanently visible if IntersectionObserver is unavailable, so
  * content can never be stranded invisible.
  */
@@ -13,10 +17,12 @@ export default function Reveal({
   children,
   delay = 0,
   className = "",
+  holdOnPhone = false,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
+  holdOnPhone?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -29,13 +35,15 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
+    const stayShown = holdOnPhone && window.matchMedia("(max-width: 767px)").matches;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (!entry) return;
         if (entry.isIntersecting) {
           setShown(true);
-        } else if (entry.boundingClientRect.top > 0) {
+        } else if (entry.boundingClientRect.top > 0 && !stayShown) {
           // Only reset when it leaves downward (below the viewport). Resetting
           // on the way out the top would make content vanish as you scroll past.
           setShown(false);
@@ -45,7 +53,7 @@ export default function Reveal({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [holdOnPhone]);
 
   return (
     <div

@@ -19,7 +19,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
 
       <MobileRail className="flex overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
         {brands.map((brand, i) => (
-          <Reveal key={brand.slug} delay={i * 110} className="flex-[0_0_76%] snap-start md:flex-none h-full">
+          <Reveal key={brand.slug} delay={i * 110} holdOnPhone className="flex-[0_0_76%] snap-start md:flex-none h-full">
             <Link
               href={`/brands/${brand.slug}`}
               style={{ ["--brand-accent" as string]: brand.accent_color ?? "#E4779F" }}

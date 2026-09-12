@@ -32,7 +32,7 @@ export default function PartnerSegments() {
       </Reveal>
       <MobileRail className="flex overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-3 md:gap-6">
         {SEGMENTS.map((s, i) => (
-          <Reveal key={s.n} delay={i * 130} className="flex-[0_0_76%] snap-start md:flex-none h-full">
+          <Reveal key={s.n} delay={i * 130} holdOnPhone className="flex-[0_0_76%] snap-start md:flex-none h-full">
             <div className="group h-full bg-white rounded-2xl p-7 md:p-8 flex flex-col gap-3 border border-transparent transition-all duration-300 hover:-translate-y-1 hover:border-pink/40 hover:shadow-[0_12px_30px_rgba(18,58,92,0.10)]">
               <span className="text-[13px] font-mono text-pink">{s.n}</span>
               <h3 className="text-xl font-bold text-navy">{s.title}</h3>
