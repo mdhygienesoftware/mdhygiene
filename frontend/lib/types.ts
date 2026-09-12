@@ -34,6 +34,20 @@ export interface AboutContent {
   mission: string;
 }
 
+export interface VideoBlock {
+  url: string;
+  eyebrow: string;
+  heading: string;
+  caption: string;
+  is_active: boolean;
+}
+
+/** One video per page, so the two can differ. */
+export interface SiteVideos {
+  home: VideoBlock;
+  about: VideoBlock;
+}
+
 export interface JobOpening {
   /** Stable id so a listing can be linked to and applied for by name. */
   id: string;

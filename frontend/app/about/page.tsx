@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Certifications from "@/components/Certifications";
-import { getAboutContent, getCertifications } from "@/lib/queries";
+import VideoSection from "@/components/VideoSection";
+import { getAboutContent, getCertifications, getSiteVideos } from "@/lib/queries";
 
 // Always render against current data — admin edits must show up immediately.
 export const dynamic = "force-dynamic";
@@ -9,7 +10,11 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "About — MDHygiene" };
 
 export default async function AboutPage() {
-  const [about, certifications] = await Promise.all([getAboutContent(), getCertifications()]);
+  const [about, certifications, videos] = await Promise.all([
+    getAboutContent(),
+    getCertifications(),
+    getSiteVideos(),
+  ]);
 
   return (
     <>
@@ -24,6 +29,8 @@ export default async function AboutPage() {
 
         {/* The addresses used to be repeated here; the footer carries them on
             every page, each with its own map. */}
+        <VideoSection video={videos.about} />
+
         <Certifications names={certifications} />
       </main>
       <Footer />

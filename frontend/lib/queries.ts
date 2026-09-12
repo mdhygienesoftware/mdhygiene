@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { isRenderableImage } from "@/lib/image";
-import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, HeroSlide, Product } from "@/lib/types";
+import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, HeroSlide, Product, SiteVideos, VideoBlock } from "@/lib/types";
 import { withCareerDefaults } from "@/lib/careers";
 
 /** Public content is fetched straight from Supabase with the anon key — RLS
@@ -117,6 +117,17 @@ export const getContactInfo = () => getSetting<ContactInfo>("contact");
 export const getAboutContent = () => getSetting<AboutContent>("about");
 export const getCertifications = () => getSetting<string[]>("certifications");
 export const getFooterTagline = () => getSetting<{ text: string }>("footer_tagline");
+
+const EMPTY_VIDEO: VideoBlock = { url: "", eyebrow: "", heading: "", caption: "", is_active: false };
+
+/** The two video blocks — one for the homepage, one for About — as a pair. */
+export const getSiteVideos = async (): Promise<SiteVideos> => {
+  const saved = await getSetting<Partial<SiteVideos>>("videos");
+  return {
+    home: { ...EMPTY_VIDEO, ...(saved?.home ?? {}) },
+    about: { ...EMPTY_VIDEO, ...(saved?.about ?? {}) },
+  };
+};
 
 /** Careers copy and the openings list, both edited in Admin → Careers. */
 export const getCareers = async (): Promise<CareersContent> =>
