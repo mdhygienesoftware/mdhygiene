@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; font-family: "Schibsted Grotesk", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1E62B0; text-decoration: none; } a:hover { color: #E4779F; }
+    .rail { display: flex; gap: 14px; overflow-x: auto; padding: 0 20px 4px; scrollbar-width: none; }
+    .rail::-webkit-scrollbar { display: none; }
+  </style>
+</helmet>
+
+<div style="width: 390px; background: #FBF6F2; color: #123A5C; position: relative;">
+
+  <!-- Header: sticky on the real page -->
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #ffffff; border-bottom: 1px solid #F0E4DC;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 40px; height: 40px; border-radius: 999px; background: #FDF1F5; border: 1px solid #F0E4DC; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #E4779F;">MDH</div>
+      <div style="display: flex; flex-direction: column; line-height: 1.15;">
+        <span style="font-size: 15px; font-weight: 800;">M.D. HYGIENE</span>
+        <span style="font-size: 10px; letter-spacing: 0.14em; color: #8A7B73;">PRIVATE LIMITED</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="background: #E4779F; color: #ffffff; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 8px;">Quote</div>
+      <div style="width: 44px; height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;">
+        <span style="display: block; width: 22px; height: 2px; background: #123A5C;"></span>
+        <span style="display: block; width: 22px; height: 2px; background: #123A5C;"></span>
+        <span style="display: block; width: 22px; height: 2px; background: #123A5C;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO — image band over a white card, not an overlay -->
+  <div style="margin: 12px; border-radius: 24px; overflow: hidden; background: #ffffff; border: 1px solid #F0E4DC;">
+    <img src="hero.jpg" alt="" style="display: block; width: 100%; height: 218px; object-fit: cover;">
+    <div style="display: flex; flex-direction: column; gap: 18px; padding: 22px 20px 24px;">
+      <span style="align-self: flex-start; background: #FDF1F5; color: #E4779F; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 999px;">BIS · CE · GMP Certified</span>
+      <h1 style="margin: 0; font-size: 30px; line-height: 1.4; font-weight: 800; text-wrap: pretty;">Manufacturing hygiene at national scale</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #44566B;">500+ distributors PAN-India, OEM &amp; private-label manufacturing, and government-tender capacity — all from one certified facility.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #1E62B0; color: #ffffff; text-align: center; font-size: 15px; font-weight: 600; padding: 15px; border-radius: 8px;">Explore products</div>
+        <div style="background: #ffffff; border: 1.5px solid #F0E4DC; text-align: center; font-size: 15px; font-weight: 600; padding: 14px; border-radius: 8px;">Partner with us</div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <span style="display: block; width: 30px; height: 5px; border-radius: 999px; background: #E4779F;"></span>
+        <span style="display: block; width: 14px; height: 5px; border-radius: 999px; background: rgba(18,58,92,0.25);"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS — 2x2 -->
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #ffffff; border-top: 1px solid #F0E4DC; border-bottom: 1px solid #F0E4DC;">
+    <div style="padding: 18px 20px; border-right: 1px solid #F5EBE4; border-bottom: 1px solid #F5EBE4; display: flex; flex-direction: column; gap: 3px;">
+      <span style="font-size: 28px; font-weight: 800; color: #1E62B0;">10+</span>
+      <span style="font-size: 13px; color: #8A7B73; line-height: 1.4;">Years in the hygiene market</span>
+    </div>
+    <div style="padding: 18px 20px; border-bottom: 1px solid #F5EBE4; display: flex; flex-direction: column; gap: 3px;">
+      <span style="font-size: 28px; font-weight: 800; color: #1E62B0;">500+</span>
+      <span style="font-size: 13px; color: #8A7B73; line-height: 1.4;">Distributors across India</span>
+    </div>
+    <div style="padding: 18px 20px; border-right: 1px solid #F5EBE4; display: flex; flex-direction: column; gap: 3px;">
+      <span style="font-size: 28px; font-weight: 800; color: #1E62B0;">100+</span>
+      <span style="font-size: 13px; color: #8A7B73; line-height: 1.4;">Employees</span>
+    </div>
+    <div style="padding: 18px 20px; display: flex; flex-direction: column; gap: 3px;">
+      <span style="font-size: 28px; font-weight: 800; color: #E4779F;">PAN India</span>
+      <span style="font-size: 13px; color: #8A7B73; line-height: 1.4;">Distribution + global exports</span>
+    </div>
+  </div>
+
+  <!-- BRANDS — swipe rail instead of four stacked cards -->
+  <div style="display: flex; flex-direction: column; gap: 18px; padding: 40px 0 36px;">
+    <div style="display: flex; flex-direction: column; gap: 6px; padding: 0 20px;">
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #E4779F;">OUR BRANDS</span>
+      <h2 style="margin: 0; font-size: 26px; line-height: 1.25; font-weight: 800;">Trusted on shelves across India</h2>
+    </div>
+    <div class="rail">
+      <div style="flex: 0 0 236px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;">
+        <span style="position: absolute; inset: 0 0 auto 0; height: 4px; background: #1E62B0;"></span>
+        <div style="height: 54px; display: flex; align-items: center;"><img src="brand-7soft.png" alt="7Soft" style="max-height: 46px; max-width: 150px; width: auto;"></div>
+        <span style="font-size: 14px; line-height: 1.6; color: #7E8C93;">India's trusted diaper &amp; sanitary pad brand — premium comfort with advanced leak-lock protection.</span>
+        <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View range →</span>
+      </div>
+      <div style="flex: 0 0 236px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;">
+        <span style="position: absolute; inset: 0 0 auto 0; height: 4px; background: #7B1FA2;"></span>
+        <div style="height: 54px; display: flex; align-items: center;"><img src="brand-extrasure.png" alt="Extra Sure" style="max-height: 30px; max-width: 160px; width: auto;"></div>
+        <span style="font-size: 14px; line-height: 1.6; color: #7E8C93;">Extra absorption, all-day confidence — value-priced protection for every market.</span>
+        <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View range →</span>
+      </div>
+      <div style="flex: 0 0 236px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;">
+        <span style="position: absolute; inset: 0 0 auto 0; height: 4px; background: #E4145A;"></span>
+        <div style="height: 54px; display: flex; align-items: center;"><img src="brand-extrasoft.png" alt="Extra Soft" style="max-height: 38px; max-width: 160px; width: auto;"></div>
+        <span style="font-size: 14px; line-height: 1.6; color: #7E8C93;">Jumbo packs with fast-absorption gel technology for busy days and nights.</span>
+        <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View range →</span>
+      </div>
+      <div style="flex: 0 0 236px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;">
+        <span style="position: absolute; inset: 0 0 auto 0; height: 4px; background: #0E7AC4;"></span>
+        <div style="height: 54px; display: flex; align-items: center;"><img src="brand-24care.png" alt="24Care" style="max-height: 46px; max-width: 140px; width: auto;"></div>
+        <span style="font-size: 14px; line-height: 1.6; color: #7E8C93;">Round-the-clock active-anion protection, day and night.</span>
+        <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View range →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED PRODUCTS — swipe rail -->
+  <div style="display: flex; flex-direction: column; gap: 18px; padding: 36px 0; background: #ffffff; border-top: 1px solid #F0E4DC; border-bottom: 1px solid #F0E4DC;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 0 20px;">
+      <h2 style="margin: 0; font-size: 24px; line-height: 1.25; font-weight: 800;">Featured products</h2>
+      <span style="font-size: 14px; font-weight: 600; color: #1E62B0; white-space: nowrap;">See all →</span>
+    </div>
+    <div class="rail">
+      <div style="flex: 0 0 210px; border: 1px solid #F0E4DC; border-radius: 16px; overflow: hidden; background: #ffffff; display: flex; flex-direction: column;">
+        <div style="position: relative; height: 150px; background: #F5E1EA;">
+          <img src="p1.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; top: 10px; left: 10px; background: #123A5C; color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;">Jumbo Pack</span>
+        </div>
+        <div style="padding: 16px; display: flex; flex-direction: column; gap: 9px;">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #1E62B0;">7SOFT</span>
+          <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">7Soft Diaper Jumbo Pack</h3>
+          <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 11px; border-radius: 999px;">S · M · L · XL</span>
+        </div>
+      </div>
+      <div style="flex: 0 0 210px; border: 1px solid #F0E4DC; border-radius: 16px; overflow: hidden; background: #ffffff; display: flex; flex-direction: column;">
+        <div style="position: relative; height: 150px; background: #F5E1EA;">
+          <img src="p2.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; top: 10px; left: 10px; background: #123A5C; color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;">New Technology</span>
+        </div>
+        <div style="padding: 16px; display: flex; flex-direction: column; gap: 9px;">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #1E62B0;">7SOFT</span>
+          <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">7Soft Ultra Care (XL)</h3>
+          <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 11px; border-radius: 999px;">XL</span>
+        </div>
+      </div>
+      <div style="flex: 0 0 210px; border: 1px solid #F0E4DC; border-radius: 16px; overflow: hidden; background: #ffffff; display: flex; flex-direction: column;">
+        <div style="position: relative; height: 150px; background: #F5E1EA;">
+          <img src="p3.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; top: 10px; left: 10px; background: #123A5C; color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;">New Gel Technology</span>
+        </div>
+        <div style="padding: 16px; display: flex; flex-direction: column; gap: 9px;">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #E4145A;">EXTRA SOFT</span>
+          <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">Extra Soft 3X Maxi (Purple)</h3>
+          <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 11px; border-radius: 999px;">XXL (320mm)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTNER — stacked -->
+  <div style="display: flex; flex-direction: column; gap: 18px; padding: 40px 20px; background: #FDF1F5;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #E4779F;">WORK WITH US</span>
+      <h2 style="margin: 0; font-size: 26px; line-height: 1.25; font-weight: 800;">One factory. Three ways to partner.</h2>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="background: #ffffff; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-size: 12px; font-family: 'IBM Plex Mono', ui-monospace, monospace; color: #E4779F;">01</span>
+        <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Distribution</h3>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #7E8C93;">Join 500+ distributors stocking 7Soft, Extrasure and 24Care — with reliable supply and strong retail margins.</p>
+      </div>
+      <div style="background: #ffffff; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-size: 12px; font-family: 'IBM Plex Mono', ui-monospace, monospace; color: #E4779F;">02</span>
+        <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Private Label &amp; OEM</h3>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #7E8C93;">Launch your own brand of pads or diapers — we handle specification, production and packaging end-to-end.</p>
+      </div>
+      <div style="background: #ffffff; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-size: 12px; font-family: 'IBM Plex Mono', ui-monospace, monospace; color: #E4779F;">03</span>
+        <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Government &amp; Tenders</h3>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #7E8C93;">Proven capacity and compliance for government and institutional tenders, at volume and on schedule.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CERTIFICATIONS — 2x2 previews, not four across -->
+  <div style="display: flex; flex-direction: column; gap: 20px; padding: 40px 20px; background: #ffffff; border-top: 1px solid #F0E4DC; border-bottom: 1px solid #F0E4DC;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #E4779F;">CERTIFICATIONS</span>
+      <h3 style="margin: 0; font-size: 24px; line-height: 1.3; font-weight: 800;">Certified manufacturing you can trust</h3>
+      <span style="font-size: 15px; line-height: 1.6; color: #8A7B73;">Quality systems that stand up to institutional and government scrutiny.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <img src="cert-bis.jpg" alt="BIS certificate" style="width: 100%; height: 200px; object-fit: cover; object-position: top; border: 1px solid #F0E4DC; border-radius: 12px;">
+        <span style="text-align: center; font-size: 13px; font-weight: 700;">BIS</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <img src="cert-iso-13485.jpg" alt="ISO 13485 certificate" style="width: 100%; height: 200px; object-fit: cover; object-position: top; border: 1px solid #F0E4DC; border-radius: 12px;">
+        <span style="text-align: center; font-size: 13px; font-weight: 700;">ISO 13485</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <img src="cert-who-gmp.jpg" alt="WHO-GMP certificate" style="width: 100%; height: 200px; object-fit: cover; object-position: top; border: 1px solid #F0E4DC; border-radius: 12px;">
+        <span style="text-align: center; font-size: 13px; font-weight: 700;">WHO-GMP</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <img src="cert-ce.jpg" alt="CE certificate" style="width: 100%; height: 200px; object-fit: cover; object-position: top; border: 1px solid #F0E4DC; border-radius: 12px;">
+        <span style="text-align: center; font-size: 13px; font-weight: 700;">CE</span>
+      </div>
+    </div>
+    <span style="font-size: 15px; font-weight: 600; color: #1E62B0;">See all 11 certifications →</span>
+  </div>
+
+  <!-- CAREERS -->
+  <div style="display: flex; flex-direction: column; gap: 16px; padding: 36px 20px; background: #FBF6F2;">
+    <h2 style="margin: 0; font-size: 24px; line-height: 1.3; font-weight: 800;">Grow with a team of 100+</h2>
+    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #7E8C93;">Production, quality, sales and export roles at our Surat facility.</p>
+    <div style="background: #123A5C; color: #ffffff; text-align: center; font-size: 15px; font-weight: 600; padding: 15px; border-radius: 8px;">View openings</div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="display: flex; flex-direction: column; gap: 22px; padding: 36px 20px 32px; background: #123A5C; color: #9DB4C8;">
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <span style="font-size: 16px; font-weight: 800; color: #ffffff;">M.D. HYGIENE PVT. LTD.</span>
+      <span style="font-size: 14px; line-height: 1.65;">Manufacturer of sanitary pads &amp; baby diapers. Surat, Gujarat, India — serving PAN India and export markets since 2016.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #ffffff;">DOMESTIC</span>
+        <span style="font-size: 14px;">sales@mdhygiene.in</span>
+        <span style="font-size: 14px;">+91 89800 53962</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #ffffff;">INTERNATIONAL</span>
+        <span style="font-size: 14px;">export@mdhygiene.in</span>
+        <span style="font-size: 14px;">+91 89800 65859</span>
+      </div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <span style="font-size: 14px; padding-top: 16px;">About · Products · Brands · Certifications · Careers</span>
+    </div>
+  </div>
+
+  <!-- Sticky action bar — proposed, mobile only -->
+  <div style="position: sticky; bottom: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(255,255,255,0.94); border-top: 1px solid #F0E4DC; backdrop-filter: blur(12px);">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid #F0E4DC; border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 600;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#123A5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Call sales
+    </div>
+    <div style="display: flex; align-items: center; justify-content: center; background: #E4779F; color: #ffffff; border-radius: 8px; padding: 14px; font-size: 15px; font-weight: 600;">Get a quote</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

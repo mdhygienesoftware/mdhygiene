@@ -15,7 +15,7 @@ export default function CareersStrip({ careers }: { careers: CareersContent }) {
   return (
     <section
       id="careers"
-      className="px-5 md:px-14 py-12 md:py-16 bg-cream flex flex-col md:flex-row md:items-center justify-between gap-7 md:gap-10"
+      className="px-5 md:px-14 py-10 md:py-16 bg-cream flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10"
     >
       <Reveal>
         <div className="flex flex-col gap-2 max-w-2xl">

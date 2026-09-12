@@ -1,0 +1,25 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Home", "x": 0, "y": 0, "w": 390, "h": 3300 },
+    { "file": "Products.dc.html", "title": "Products", "x": 490, "y": 0, "w": 390, "h": 1380 },
+    { "file": "Certifications.dc.html", "title": "Certifications", "x": 980, "y": 0, "w": 390, "h": 1920 },
+    { "file": "Careers.dc.html", "title": "Careers", "x": 1470, "y": 0, "w": 390, "h": 1780 }
+  ],
+  "annotations": [
+    {
+      "id": "brief",
+      "x": 0,
+      "y": -210,
+      "w": 420,
+      "text": "Mobile screens for mdhygiene.in — 390px wide.\nDesktop stays exactly as built; these are the phone-only layouts.\n\nSame tokens as the live site: Schibsted Grotesk, navy #123A5C, blue #1E62B0, pink #E4779F, cream #FBF6F2, border #F0E4DC, 16px cards, 8px buttons."
+    },
+    {
+      "id": "what-changes",
+      "x": 490,
+      "y": -210,
+      "w": 420,
+      "text": "What is deliberately different from desktop:\n\n• Brands + featured products become swipe rails instead of stacked full-width cards\n• Products list is a compact image-left row — four fit a screen instead of one\n• Certifications drop to a 2x2 preview grid on home, thumbnail-left rows on the page\n• Sticky Call / Get a quote bar (proposal — not on the site yet)"
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

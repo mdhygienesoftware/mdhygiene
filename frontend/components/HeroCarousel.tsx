@@ -28,19 +28,19 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
     slide.cta_label?.trim().toLowerCase() !== "partner with us";
 
   return (
-    <section className="relative overflow-hidden bg-white md:bg-transparent md:min-h-[600px] flex flex-col md:flex-row md:items-center m-3 md:m-6 rounded-[24px] md:rounded-[32px]">
-      {/* On a phone the media is a band across the top and the copy sits below
-          it on solid cream — overlaying the two leaves the photo invisible
-          under the blur and the text hard to read. From md up it goes back to
-          full-bleed behind the copy, which is what the wrapper's md: rules do.
+    <section className="relative overflow-hidden min-h-[560px] md:min-h-[600px] flex flex-col justify-end md:flex-row md:items-center md:justify-start m-3 md:m-6 rounded-[24px] md:rounded-[32px]">
+      {/* Full-bleed media at every width. On a phone the copy sits ON the photo
+          over a dark scrim; from md up a frosted panel carries it instead.
           Slides cross-fade and drift left→right. */}
-      <div className="relative w-full h-[230px] sm:h-[300px] shrink-0 md:absolute md:inset-0 md:h-auto">
+      <div className="absolute inset-0">
         {slides.map((s, i) => (
           <div
             key={s.id}
             aria-hidden={i !== active}
             className={`absolute inset-0 transition-all duration-[1200ms] ease-out ${
-              i === active ? "opacity-100 translate-x-0 scale-100" : "opacity-0 -translate-x-6 scale-105"
+              i === active
+                ? "opacity-100 translate-x-0 scale-100 animate-[kenburns_9s_ease-out_both] md:animate-none"
+                : "opacity-0 -translate-x-6 scale-105"
             }`}
           >
             {s.media_type === "video" && isRenderableImage(s.media_url) ? (
@@ -71,17 +71,62 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         ))}
       </div>
 
+      {/* Scrim, phone only: the copy sits on the photo there, and white text on
+          an unmanaged photograph is unreadable without one. */}
+      <div className="absolute inset-0 md:hidden bg-[linear-gradient(to_top,rgba(12,38,60,0.92)_0%,rgba(12,38,60,0.72)_38%,rgba(12,38,60,0.12)_72%,transparent_100%)]" />
+
       {/* Frosted panel behind the copy, desktop only — blurs the image on the
           left. 36% wide with the mask going transparent at 78% of that: solid
           across the first 28% of the frame, photo clean for the rest. */}
       <div className="hidden md:block absolute md:inset-y-0 md:left-0 md:right-auto md:w-[36%] backdrop-blur-xl bg-white/60 md:[mask-image:linear-gradient(to_right,black_78%,transparent_100%)]" />
 
+      {/* Phone slide controls. Dots are a pointer affordance; on a touch screen
+          the photo itself is the control — tap left or right — with segment
+          bars showing where you are and how long is left on this slide. */}
+      {slides.length > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label="Previous slide"
+            onClick={() => setActive((i) => (i - 1 + slides.length) % slides.length)}
+            className="md:hidden absolute top-0 left-0 w-[32%] h-[62%]"
+          />
+          <button
+            type="button"
+            aria-label="Next slide"
+            onClick={() => setActive((i) => (i + 1) % slides.length)}
+            className="md:hidden absolute top-0 right-0 w-[68%] h-[62%]"
+          />
+          <div className="md:hidden absolute top-3.5 inset-x-4 flex items-center gap-1.5">
+            {slides.map((s, i) => (
+              <span key={s.id} className="flex-1 h-[3px] rounded-full bg-white/30 overflow-hidden">
+                <span
+                  // Re-keyed on the active slide so the fill restarts each time.
+                  key={`${active}-${i}`}
+                  className="block h-full rounded-full bg-white"
+                  style={
+                    i < active
+                      ? { width: "100%" }
+                      : i === active
+                        ? { animation: `barFill ${Math.max(2, slide.duration_seconds ?? 6)}s linear forwards` }
+                        : { width: 0 }
+                  }
+                />
+              </span>
+            ))}
+          </div>
+          <span className="md:hidden absolute top-[30px] right-4 font-mono text-[11px] tracking-[0.1em] text-white/85 [text-shadow:0_1px_6px_rgba(12,38,60,0.5)]">
+            {String(active + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+          </span>
+        </>
+      )}
+
       <div className="relative w-full px-5 py-8 md:px-10 lg:px-14 md:py-16">
-        <div className="max-w-[560px] md:max-w-[min(560px,23vw)] flex flex-col gap-8">
+        <div className="max-w-[560px] md:max-w-[min(560px,23vw)] flex flex-col gap-[18px] md:gap-8">
           {slide.eyebrow && (
             <span
               key={`${slide.id}-eyebrow`}
-              className="self-start inline-flex items-center gap-2 bg-white text-pink text-[13px] font-bold px-4 py-1.5 rounded-full shadow-sm animate-[heroIn_700ms_ease-out_both]"
+              className="self-start inline-flex items-center gap-2 bg-pink text-white md:bg-white md:text-pink text-xs md:text-[13px] font-bold px-4 py-1.5 rounded-full md:shadow-sm animate-[heroIn_700ms_ease-out_both]"
             >
               {slide.eyebrow}
             </span>
@@ -93,23 +138,23 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               it — a fixed size overflows on a narrow desktop. */}
           <h1
             key={`${slide.id}-headline`}
-            className="text-[32px] sm:text-4xl md:text-[clamp(22px,2.9vw,42px)] leading-[1.4] font-extrabold text-navy text-balance animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
+            className="text-[32px] sm:text-4xl md:text-[clamp(22px,2.9vw,42px)] leading-[1.32] md:leading-[1.4] font-extrabold text-white md:text-navy text-balance animate-[heroIn_700ms_ease-out_both] [animation-delay:80ms]"
           >
             {slide.headline}
           </h1>
           {slide.subheading && (
             <p
               key={`${slide.id}-sub`}
-              className="text-[15px] sm:text-base md:text-[15px] lg:text-base leading-relaxed text-[#44566B] max-w-[500px] animate-[heroIn_700ms_ease-out_both] [animation-delay:160ms]"
+              className="text-[15px] sm:text-base md:text-[15px] lg:text-base leading-relaxed text-[#E3ECF4] md:text-[#44566B] max-w-[500px] animate-[heroIn_700ms_ease-out_both] [animation-delay:160ms]"
             >
               {slide.subheading}
             </p>
           )}
-          <div className="flex flex-wrap gap-3.5 animate-[heroIn_700ms_ease-out_both] [animation-delay:240ms]">
+          <div className="flex flex-wrap gap-2.5 md:gap-3.5 animate-[heroIn_700ms_ease-out_both] [animation-delay:240ms]">
             {slide.cta_label && slide.cta_href && (
               <Link
                 href={slide.cta_href}
-                className="flex-1 md:flex-none text-center bg-blue text-white px-6 md:px-[30px] py-[14px] md:py-[15px] rounded-lg font-semibold text-[15px] md:text-base hover:bg-navy transition-colors"
+                className="flex-1 md:flex-none text-center bg-white text-navy md:bg-blue md:text-white px-6 md:px-[30px] py-[14px] md:py-[15px] rounded-[10px] md:rounded-lg font-bold md:font-semibold text-[15px] md:text-base hover:bg-navy hover:text-white transition-colors"
               >
                 {slide.cta_label}
               </Link>
@@ -117,7 +162,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             {showPartnerCta && (
               <Link
                 href="/contact"
-                className="flex-1 md:flex-none text-center bg-white/90 border-[1.5px] border-border text-navy px-6 md:px-[30px] py-[14px] md:py-[15px] rounded-lg font-semibold text-[15px] md:text-base hover:border-pink transition-colors"
+                className="flex-1 md:flex-none text-center bg-white/[0.14] md:bg-white/90 border-[1.5px] border-white/45 md:border-border text-white md:text-navy px-6 md:px-[30px] py-[14px] md:py-[15px] rounded-[10px] md:rounded-lg font-semibold text-[15px] md:text-base hover:border-pink transition-colors"
               >
                 Partner with us
               </Link>
@@ -125,7 +170,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
           </div>
 
           {slides.length > 1 && (
-            <div className="flex gap-2 mt-2">
+            <div className="hidden md:flex gap-2 mt-2">
               {slides.map((s, i) => (
                 <button
                   key={s.id}

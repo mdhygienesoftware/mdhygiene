@@ -29,7 +29,7 @@ export default function Certifications({ names }: { names?: string[] | null }) {
   return (
     <section
       id="certifications"
-      className="px-5 md:px-14 py-12 md:py-14 bg-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-9 lg:gap-14 border-y border-border"
+      className="px-5 md:px-14 py-10 md:py-14 bg-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-7 lg:gap-14 border-y border-border"
     >
       <Reveal>
         <div className="flex flex-col gap-2 max-w-lg">

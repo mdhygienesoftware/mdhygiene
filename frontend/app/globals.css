@@ -49,6 +49,27 @@ a, button {
   }
 }
 
+/* Phone hero. The photo carries the copy there instead of sitting beside it,
+   so it gets a slow push-in, and the dot row is replaced by segment bars that
+   fill over each slide's own display time. Both are mobile-only. */
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.14);
+  }
+}
+
+@keyframes barFill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

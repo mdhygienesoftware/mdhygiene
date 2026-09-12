@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; font-family: "Schibsted Grotesk", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1E62B0; text-decoration: none; } a:hover { color: #E4779F; }
+    .chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 4px; scrollbar-width: none; }
+    .chips::-webkit-scrollbar { display: none; }
+  </style>
+</helmet>
+
+<div style="width: 390px; background: #FBF6F2; color: #123A5C;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #ffffff; border-bottom: 1px solid #F0E4DC;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 40px; height: 40px; border-radius: 999px; background: #FDF1F5; border: 1px solid #F0E4DC; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #E4779F;">MDH</div>
+      <div style="display: flex; flex-direction: column; line-height: 1.15;">
+        <span style="font-size: 15px; font-weight: 800;">M.D. HYGIENE</span>
+        <span style="font-size: 10px; letter-spacing: 0.14em; color: #8A7B73;">PRIVATE LIMITED</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="background: #E4779F; color: #ffffff; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 8px;">Quote</div>
+      <div style="width: 44px; height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;">
+        <span style="display: block; width: 22px; height: 2px; background: #123A5C;"></span>
+        <span style="display: block; width: 22px; height: 2px; background: #123A5C;"></span>
+        <span style="display: block; width: 22px; height: 2px; background: #123A5C;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px; padding: 26px 20px 18px;">
+    <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #E4779F;">CATALOGUE</span>
+    <h1 style="margin: 0; font-size: 28px; line-height: 1.3; font-weight: 800;">Products</h1>
+    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #7E8C93;">Sanitary napkins and baby diapers across four house brands. Distributor pricing on request.</p>
+  </div>
+
+  <!-- Filters become a scrollable chip row instead of a sidebar -->
+  <div class="chips" style="padding-bottom: 18px;">
+    <span style="flex: 0 0 auto; background: #123A5C; color: #ffffff; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 999px;">All</span>
+    <span style="flex: 0 0 auto; background: #ffffff; border: 1px solid #F0E4DC; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 999px;">7Soft</span>
+    <span style="flex: 0 0 auto; background: #ffffff; border: 1px solid #F0E4DC; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 999px;">Extra Sure</span>
+    <span style="flex: 0 0 auto; background: #ffffff; border: 1px solid #F0E4DC; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 999px;">Extra Soft</span>
+    <span style="flex: 0 0 auto; background: #ffffff; border: 1px solid #F0E4DC; font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 999px;">24Care</span>
+  </div>
+
+  <!-- Compact list rows: image left, detail right — four fit a screen instead of one -->
+  <div style="display: flex; flex-direction: column; gap: 12px; padding: 0 20px 32px;">
+
+    <div style="display: flex; gap: 14px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 12px;">
+      <div style="flex: 0 0 100px; height: 112px; border-radius: 10px; overflow: hidden; background: #F5E1EA;">
+        <img src="p1.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #1E62B0;">7SOFT</span>
+        <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">7Soft Diaper Jumbo Pack</h3>
+        <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 10px; border-radius: 999px;">S · M · L · XL</span>
+        <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 12px; color: #8A7B73;">4 sizes</span>
+          <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View →</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 12px;">
+      <div style="flex: 0 0 100px; height: 112px; border-radius: 10px; overflow: hidden; background: #F5E1EA;">
+        <img src="p2.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #1E62B0;">7SOFT</span>
+        <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">7Soft Ultra Care (XL)</h3>
+        <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 10px; border-radius: 999px;">XL</span>
+        <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 12px; color: #8A7B73;">1 size</span>
+          <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View →</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 12px;">
+      <div style="flex: 0 0 100px; height: 112px; border-radius: 10px; overflow: hidden; background: #F5E1EA;">
+        <img src="p3.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #E4145A;">EXTRA SOFT</span>
+        <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">Extra Soft 3X Maxi (Purple)</h3>
+        <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 10px; border-radius: 999px;">XXL (320mm)</span>
+        <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 12px; color: #8A7B73;">1 size</span>
+          <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View →</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; background: #ffffff; border: 1px solid #F0E4DC; border-radius: 16px; padding: 12px;">
+      <div style="flex: 0 0 100px; height: 112px; border-radius: 10px; overflow: hidden; background: #F5E1EA; display: flex; align-items: center; justify-content: center;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#D9A8BC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+      </div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #7B1FA2;">EXTRA SURE</span>
+        <h3 style="margin: 0; font-size: 16px; line-height: 1.35; font-weight: 800;">Extra Sure Maxi Care (XXL)</h3>
+        <span style="align-self: flex-start; background: #FBF1F5; color: #8C6A77; font-size: 12px; padding: 4px 10px; border-radius: 999px;">XXL (320mm)</span>
+        <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 12px; color: #8A7B73;">1 size</span>
+          <span style="font-size: 14px; font-weight: 600; color: #1E62B0;">View →</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OEM cross-sell -->
+  <div style="display: flex; flex-direction: column; gap: 14px; padding: 32px 20px; background: #FDF1F5;">
+    <h2 style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 800;">Want it under your own brand?</h2>
+    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #7E8C93;">We manufacture private-label pads and diapers end-to-end — specification, production and packaging.</p>
+    <div style="background: #123A5C; color: #ffffff; text-align: center; font-size: 15px; font-weight: 600; padding: 15px; border-radius: 8px;">See OEM range</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 30px 20px; background: #123A5C; color: #9DB4C8;">
+    <span style="font-size: 16px; font-weight: 800; color: #ffffff;">M.D. HYGIENE PVT. LTD.</span>
+    <span style="font-size: 14px; line-height: 1.6;">sales@mdhygiene.in · +91 89800 53962</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

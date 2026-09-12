@@ -12,16 +12,16 @@ export default function ProductShowcase({ products, title }: { products: Product
   }
 
   return (
-    <section className="px-5 md:px-14 pb-16 md:pb-20 flex flex-col gap-8">
+    <section className="px-5 md:px-14 pb-10 md:pb-20 flex flex-col gap-7 md:gap-8">
       {title && (
         <Reveal>
           <h2 className="text-[26px] md:text-[36px] font-extrabold text-navy">{title}</h2>
         </Reveal>
       )}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+      <div className="flex overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
         {products.map((product, i) => (
           // Stagger caps out so a long grid doesn't leave the last cards waiting.
-          <Reveal key={product.slug} delay={Math.min(i, 7) * 80} className="h-full">
+          <Reveal key={product.slug} delay={Math.min(i, 7) * 80} className="flex-[0_0_76%] snap-start md:flex-none h-full">
             <ProductCard product={product} />
           </Reveal>
         ))}
