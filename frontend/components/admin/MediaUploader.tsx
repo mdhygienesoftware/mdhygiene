@@ -11,6 +11,35 @@ const ALLOWED: Record<"image" | "video", string[]> = {
   video: ["video/mp4", "video/webm", "video/quicktime"],
 };
 
+/**
+ * Extension → the content type the bucket expects.
+ *
+ * Windows does not always have a MIME type registered for a video extension,
+ * so `file.type` arrives empty or as something unhelpful like
+ * application/octet-stream for a perfectly good MP4. Rejecting on that alone
+ * turned "add a video" into a dead end, so the extension gets the final say.
+ */
+const BY_EXTENSION: Record<string, string> = {
+  jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp",
+  avif: "image/avif", gif: "image/gif",
+  mp4: "video/mp4", m4v: "video/mp4", webm: "video/webm", mov: "video/quicktime",
+};
+
+/** What the file picker should offer — extensions as well as MIME types, since
+ *  a Windows dialog matches on the extension. */
+const ACCEPT: Record<"image" | "video", string> = {
+  image: ".jpg,.jpeg,.png,.webp,.avif,.gif,image/*",
+  video: ".mp4,.m4v,.webm,.mov,video/*",
+};
+
+/** The content type to store this file as, or null if we cannot support it. */
+function contentTypeFor(file: File, kind: "image" | "video"): string | null {
+  if (ALLOWED[kind].includes(file.type)) return file.type;
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const guess = BY_EXTENSION[ext];
+  return guess && ALLOWED[kind].includes(guess) ? guess : null;
+}
+
 function prettySize(bytes: number): string {
   return bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`;
 }
@@ -64,13 +93,20 @@ export default function MediaUploader({
     setError(null);
 
     if (file.size > MAX_BYTES) {
-      setError(`That file is ${prettySize(file.size)}. The limit is 50 MB — compress it and try again.`);
+      setError(
+        `That file is ${prettySize(file.size)} and the limit is 50 MB. ` +
+          (kind === "video"
+            ? "Shorten the clip or export it at 1080p and a lower bitrate, then try again."
+            : "Save it smaller and try again.")
+      );
       e.target.value = "";
       return;
     }
-    if (!ALLOWED[kind].includes(file.type)) {
+
+    const contentType = contentTypeFor(file, kind);
+    if (!contentType) {
       setError(
-        `${file.type || "That file type"} isn't supported. Use ${
+        `${file.name.split(".").pop()?.toUpperCase() || "That file type"} isn't supported. Use ${
           kind === "video" ? "MP4, WebM or MOV" : "JPG, PNG, WebP, AVIF or GIF"
         }.`
       );
@@ -83,7 +119,7 @@ export default function MediaUploader({
     const path = `uploads/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_")}`;
     const { error: uploadError } = await supabase.storage
       .from("media")
-      .upload(path, file, { upsert: false, contentType: file.type });
+      .upload(path, file, { upsert: false, contentType });
 
     if (uploadError) {
       setError(uploadError.message);
@@ -114,7 +150,7 @@ export default function MediaUploader({
       <div className="flex items-center gap-3">
         <input
           type="file"
-          accept={accept ?? (kind === "video" ? ALLOWED.video.join(",") : ALLOWED.image.join(","))}
+          accept={accept ?? ACCEPT[kind]}
           onChange={handleFile}
           disabled={uploading}
           className="text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-navy file:px-3 file:py-1.5 file:text-white file:text-sm file:font-semibold hover:file:bg-pink file:cursor-pointer disabled:opacity-60"

@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -c \"(New-Object Media.SoundPlayer 'C:/Windows/Media/Speech On.wav').PlaySync()\"",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -c \"(New-Object Media.SoundPlayer 'C:/Windows/Media/Speech On.wav').PlaySync()\"",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}
