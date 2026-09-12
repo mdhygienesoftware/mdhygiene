@@ -31,7 +31,9 @@ export default async function Header() {
 
       <header className="flex items-center justify-between gap-4 md:gap-12 px-4 md:px-14 py-3 bg-white border-b border-border sticky top-0 z-30">
         <Link href="/" className="flex items-center gap-3 shrink-0">
-          <Image src="/images/brand/mdh-logo.png" alt="M.D. Hygiene" width={48} height={48} className="rounded-full w-10 h-10 md:w-12 md:h-12" />
+          {/* The asset is already a circle on transparency, so no rounding is
+              needed here — and object-contain keeps it from being stretched. */}
+          <Image src="/images/brand/mdh-logo.png" alt="M.D. Hygiene" width={96} height={96} priority className="w-10 h-10 md:w-12 md:h-12 object-contain" />
           <span className="flex flex-col leading-tight">
             <span className="font-extrabold text-[15px] md:text-[17px]">M.D. HYGIENE</span>
             <span className="text-[10px] md:text-[11px] text-muted tracking-[0.14em]">PRIVATE LIMITED</span>
