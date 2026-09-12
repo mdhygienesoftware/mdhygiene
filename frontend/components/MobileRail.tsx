@@ -8,9 +8,16 @@ const GLIDE_MS = 400;
 const DWELL_MS = 1400;
 /** Quiet time after the finger lifts before the rail takes over again. */
 const RESUME_MS = 1200;
+/** Delay before the very first move, after the cards have finished appearing. */
+const FIRST_MOVE_MS = 900;
 
-function easeInOut(t: number): number {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+/**
+ * Ease-out. An ease-in-out spends its first third barely moving, which over
+ * 400ms reads as the rail hesitating before it goes; this leaves at full speed
+ * and settles into place.
+ */
+function easeOut(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 /**
@@ -63,7 +70,7 @@ export default function MobileRail({
         const el = rail.current;
         if (!el) return;
         const t = Math.min(1, (now - start) / GLIDE_MS);
-        el.scrollLeft = from + distance * easeInOut(t);
+        el.scrollLeft = from + distance * easeOut(t);
         if (t < 1) {
           frame = requestAnimationFrame(step);
         } else {
@@ -116,10 +123,26 @@ export default function MobileRail({
     window.addEventListener("touchend", release, { passive: true });
     window.addEventListener("touchcancel", release, { passive: true });
 
-    timer = window.setInterval(advance, DWELL_MS + GLIDE_MS);
+    function tick() {
+      const now = performance.now();
+      if (holding) {
+        timer = window.setTimeout(tick, 150);
+        return;
+      }
+      if (now < idleUntil) {
+        timer = window.setTimeout(tick, idleUntil - now);
+        return;
+      }
+      advance();
+      timer = window.setTimeout(tick, DWELL_MS + GLIDE_MS);
+    }
+
+    // First move comes sooner than a full dwell — long enough for the cards'
+    // entrance to finish, not so long that the rail looks static on arrival.
+    timer = window.setTimeout(tick, FIRST_MOVE_MS);
 
     return () => {
-      window.clearInterval(timer);
+      window.clearTimeout(timer);
       cancelAnimationFrame(frame);
       el.removeEventListener("pointerdown", hold);
       el.removeEventListener("touchstart", hold);
