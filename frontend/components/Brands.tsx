@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import MobileRail from "@/components/MobileRail";
 import type { Brand } from "@/lib/types";
 import { isRenderableImage } from "@/lib/image";
 
@@ -16,7 +17,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
         </div>
       </Reveal>
 
-      <div className="flex overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
+      <MobileRail className="flex overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
         {brands.map((brand, i) => (
           <Reveal key={brand.slug} delay={i * 110} className="flex-[0_0_76%] snap-start md:flex-none h-full">
             <Link
@@ -53,7 +54,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
             </Link>
           </Reveal>
         ))}
-      </div>
+      </MobileRail>
     </section>
   );
 }
