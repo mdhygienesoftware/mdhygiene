@@ -14,6 +14,7 @@ const NAV = [
   { href: "/admin/hero", label: "Hero & Media" },
   { href: "/admin/content", label: "Site Content" },
   { href: "/admin/videos", label: "Videos" },
+  { href: "/admin/gallery", label: "Gallery" },
   { href: "/admin/members", label: "Members" },
   { href: "/admin/careers", label: "Careers" },
   { href: "/admin/inquiries", label: "Inquiries" },

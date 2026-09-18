@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { isRenderableImage } from "@/lib/image";
-import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, HeroSlide, Product, SiteVideos, VideoBlock } from "@/lib/types";
+import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, HeroSlide, GalleryBlock, Product, SiteGalleries, SiteVideos, VideoBlock } from "@/lib/types";
 import { withCareerDefaults } from "@/lib/careers";
 
 /** Public content is fetched straight from Supabase with the anon key — RLS
@@ -117,6 +117,23 @@ export const getContactInfo = () => getSetting<ContactInfo>("contact");
 export const getAboutContent = () => getSetting<AboutContent>("about");
 export const getCertifications = () => getSetting<string[]>("certifications");
 export const getFooterTagline = () => getSetting<{ text: string }>("footer_tagline");
+
+const EMPTY_GALLERY: GalleryBlock = {
+  eyebrow: "",
+  heading: "",
+  caption: "",
+  is_active: false,
+  images: [],
+};
+
+/** The two image carousels — one for the homepage, one for About. */
+export const getSiteGalleries = async (): Promise<SiteGalleries> => {
+  const saved = await getSetting<Partial<SiteGalleries>>("galleries");
+  return {
+    home: { ...EMPTY_GALLERY, ...(saved?.home ?? {}), images: saved?.home?.images ?? [] },
+    about: { ...EMPTY_GALLERY, ...(saved?.about ?? {}), images: saved?.about?.images ?? [] },
+  };
+};
 
 const EMPTY_VIDEO: VideoBlock = { url: "", eyebrow: "", heading: "", caption: "", is_active: false };
 

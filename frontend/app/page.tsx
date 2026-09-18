@@ -6,9 +6,10 @@ import ProductShowcase from "@/components/ProductShowcase";
 import PartnerSegments from "@/components/PartnerSegments";
 import Certifications from "@/components/Certifications";
 import VideoSection from "@/components/VideoSection";
+import GallerySection from "@/components/GallerySection";
 import CareersStrip from "@/components/CareersStrip";
 import Footer from "@/components/Footer";
-import { getBrands, getCareers, getCertifications, getCompanyStats, getContactInfo, getFeaturedProducts, getHeroSlides, getSiteVideos } from "@/lib/queries";
+import { getBrands, getCareers, getCertifications, getCompanyStats, getContactInfo, getFeaturedProducts, getHeroSlides, getSiteGalleries, getSiteVideos } from "@/lib/queries";
 import { getSeoAi, getSeoGeneral, getSeoLocal, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } from "@/components/StructuredData";
 
@@ -16,20 +17,21 @@ import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } fr
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [slides, stats, brands, featured, certifications, contact, careers, general, local, ai, videos] =
+  const [slides, stats, brands, featured, certifications, contact, careers, general, local, ai, videos, galleries] =
     await Promise.all([
-    getHeroSlides(),
-    getCompanyStats(),
-    getBrands(),
-    getFeaturedProducts(8),
-    getCertifications(),
-    getContactInfo(),
-    getCareers(),
-    getSeoGeneral(),
-    getSeoLocal(),
-    getSeoAi(),
-    getSiteVideos(),
-  ]);
+      getHeroSlides(),
+      getCompanyStats(),
+      getBrands(),
+      getFeaturedProducts(8),
+      getCertifications(),
+      getContactInfo(),
+      getCareers(),
+      getSeoGeneral(),
+      getSeoLocal(),
+      getSeoAi(),
+      getSiteVideos(),
+      getSiteGalleries(),
+    ]);
 
   const siteUrl = resolveSiteUrl(general.canonical_domain);
   const contactBits = { phones: contact?.phones, email: contact?.email };
@@ -47,6 +49,7 @@ export default async function HomePage() {
         <VideoSection video={videos.home} />
         <Brands brands={brands} />
         <ProductShowcase products={featured} title="Featured products" />
+        <GallerySection gallery={galleries.home} />
         <PartnerSegments />
         <Certifications names={certifications} />
         <CareersStrip careers={careers} />

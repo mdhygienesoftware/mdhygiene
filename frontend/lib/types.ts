@@ -34,6 +34,26 @@ export interface AboutContent {
   mission: string;
 }
 
+export interface GalleryImage {
+  url: string;
+  /** Description for screen readers and for when the image fails to load. */
+  alt: string;
+}
+
+export interface GalleryBlock {
+  eyebrow: string;
+  heading: string;
+  caption: string;
+  is_active: boolean;
+  images: GalleryImage[];
+}
+
+/** One carousel per page, so the two can differ. */
+export interface SiteGalleries {
+  home: GalleryBlock;
+  about: GalleryBlock;
+}
+
 export interface VideoBlock {
   url: string;
   eyebrow: string;
