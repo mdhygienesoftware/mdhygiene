@@ -9,7 +9,9 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="rounded-2xl overflow-hidden border border-border bg-white flex flex-col hover:shadow-lg transition-shadow"
+      // h-full so the card fills the grid cell. Without it a card is only as
+      // tall as its own text, and a row of them comes out ragged.
+      className="h-full rounded-2xl overflow-hidden border border-border bg-white flex flex-col hover:shadow-lg transition-shadow"
     >
       <div className="relative h-[220px] bg-[#F5E1EA]">
         {isRenderableImage(product.image_url) && (
@@ -27,7 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.brand.name}
           </span>
         )}
-        <h3 className="text-lg font-extrabold text-navy leading-snug">{product.name}</h3>
+        <h3 className="text-lg font-extrabold text-navy leading-snug line-clamp-2">{product.name}</h3>
         <div className="flex gap-2 flex-wrap">
           <span className="bg-[#FBF1F5] text-[#8C6A77] text-[12px] px-3 py-1 rounded-full">{sizes.join(" · ")}</span>
         </div>
