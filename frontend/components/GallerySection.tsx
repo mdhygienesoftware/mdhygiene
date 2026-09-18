@@ -36,9 +36,10 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
         </Reveal>
       )}
 
-      <Reveal delay={120}>
-        <ImageCarousel images={images} />
-      </Reveal>
+      {/* Not wrapped in Reveal. That holds its children at opacity 0 until an
+          IntersectionObserver fires, which makes "the images never appeared"
+          a possible outcome for a section whose whole point is the images. */}
+      <ImageCarousel images={images} />
     </section>
   );
 }
