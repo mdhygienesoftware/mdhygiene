@@ -47,7 +47,11 @@ export default function Brands({ brands }: { brands: Brand[] }) {
                   </span>
                 )}
               </div>
-              <span className="text-[14px] leading-relaxed text-muted-2">{brand.tagline}</span>
+              {/* Desktop only: on a phone the cards are a swipe rail, and the
+                  taglines made each card tall enough to crowd the row. */}
+              <span className="hidden md:block text-[14px] leading-relaxed text-muted-2">
+                {brand.tagline}
+              </span>
               <span className="mt-auto pt-1 text-sm font-semibold text-blue opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
                 View range →
               </span>
