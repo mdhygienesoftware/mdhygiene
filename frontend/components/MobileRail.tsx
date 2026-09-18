@@ -21,7 +21,7 @@ function easeOut(t: number): number {
 }
 
 /**
- * A swipe rail that also moves on its own — phone only.
+ * A swipe rail that also moves on its own, looping — phone only.
  *
  * From md up this renders as the plain grid the `className` describes and the
  * timer never starts, so the desktop layout is untouched.
@@ -94,11 +94,15 @@ export default function MobileRail({
       const pad = parseFloat(getComputedStyle(el).paddingLeft) || 0;
       const offsets = cards.map((card) => card.offsetLeft - el.offsetLeft - pad);
 
-      // Next card whose left edge is past the current position, or back to the
-      // start once the last one is showing.
+      // Next card whose left edge is past the current position.
       const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
-      const next = atEnd ? 0 : (offsets.find((x) => x > el.scrollLeft + 8) ?? 0);
-      glideTo(Math.max(0, next));
+      if (atEnd) {
+        // Back to the first card to keep the loop going. Jumped, not glided:
+        // gliding would run the whole set backwards past the reader's eyes.
+        el.scrollLeft = 0;
+        return;
+      }
+      glideTo(Math.max(0, offsets.find((x) => x > el.scrollLeft + 8) ?? 0));
     }
 
     // The rail holds still under a finger and picks up again shortly after it
