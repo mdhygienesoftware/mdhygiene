@@ -14,12 +14,11 @@ const DWELL_MS = 4500;
  * the page around; each sits in a fixed box so the section's height never
  * changes between slides.
  *
- * It stops advancing while the pointer is over it, and doesn't advance at all
- * for someone who has asked for reduced motion.
+ * It runs on a continuous loop — past the last image it returns to the first —
+ * and only holds still for someone who has asked for reduced motion.
  */
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const go = useCallback(
@@ -28,19 +27,18 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   );
 
   useEffect(() => {
-    if (images.length < 2 || paused) return;
+    if (images.length < 2) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setTimeout(() => go(1), DWELL_MS);
     return () => window.clearTimeout(id);
-  }, [active, paused, images.length, go]);
+    // Keyed on `active`, so using an arrow or a dot also restarts the count.
+  }, [active, images.length, go]);
 
   if (images.length === 0) return null;
 
   return (
     <div
       className="relative"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => {
         touchStartX.current = e.touches[0]?.clientX ?? null;
       }}
@@ -67,7 +65,9 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
               alt={image.alt || ""}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 80vw"
+              // The box is capped at max-w-3xl, so asking for 80vw would fetch
+              // a far larger file than is ever displayed.
+              sizes="(max-width: 768px) 100vw, 768px"
               priority={i === 0}
             />
           </div>

@@ -39,7 +39,11 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
       {/* Not wrapped in Reveal. That holds its children at opacity 0 until an
           IntersectionObserver fires, which makes "the images never appeared"
           a possible outcome for a section whose whole point is the images. */}
-      <ImageCarousel images={images} />
+      {/* Capped rather than full-bleed: at section width the 16:9 box was
+          over 700px tall on a desktop and dominated the page. */}
+      <div className="w-full max-w-3xl">
+        <ImageCarousel images={images} />
+      </div>
     </section>
   );
 }
