@@ -101,11 +101,8 @@ export default function MobileRail({
       const cards = Array.from(el.children) as HTMLElement[];
       if (cards.length < 2) return;
 
-      // The set is laid out twice. Once the scroll has carried past the first
-      // copy, it is wound back by exactly one set — invisible, because what is
-      // on screen at that point is identical — so the loop runs forward for
-      // ever without the rail ever reaching a hard end.
-      const setWidth = cards.length > items.length ? cards[items.length].offsetLeft - cards[0].offsetLeft : 0;
+      // Backstop for the scroll listener above.
+      const setWidth = setWidthOf(el);
       if (setWidth > 0 && el.scrollLeft >= setWidth - 1) el.scrollLeft -= setWidth;
 
       // Where each card sits, measured from the rail's own left edge with the
@@ -143,6 +140,24 @@ export default function MobileRail({
       holding = false;
       idleUntil = performance.now() + RESUME_MS;
     };
+    function setWidthOf(el: HTMLElement): number {
+      const cards = Array.from(el.children) as HTMLElement[];
+      return cards.length > items.length ? cards[items.length].offsetLeft - cards[0].offsetLeft : 0;
+    }
+
+    // The repeat exists so there is a card to the right of the last one. It is
+    // not meant to be somewhere you can end up: crossing into it winds the
+    // scroll back by one set straight away, which is invisible because the
+    // content at that point is identical, and keeps the rail from ever showing
+    // the same cards twice over.
+    function onScroll() {
+      const el = rail.current;
+      if (!el) return;
+      const width = setWidthOf(el);
+      if (width > 0 && el.scrollLeft >= width - 1) el.scrollLeft -= width;
+    }
+    el.addEventListener("scroll", onScroll, { passive: true });
+
     el.addEventListener("pointerdown", hold, { passive: true });
     el.addEventListener("touchstart", hold, { passive: true });
     el.addEventListener("wheel", release, { passive: true });
@@ -174,6 +189,7 @@ export default function MobileRail({
     return () => {
       window.clearTimeout(timer);
       cancelAnimationFrame(frame);
+      el.removeEventListener("scroll", onScroll);
       el.removeEventListener("pointerdown", hold);
       el.removeEventListener("touchstart", hold);
       el.removeEventListener("wheel", release);
