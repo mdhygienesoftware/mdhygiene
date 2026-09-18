@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { HeroSlide } from "@/lib/types";
 import { isRenderableImage } from "@/lib/image";
 
 export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [active, setActive] = useState(0);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   // Each slide carries its own display time, set per slide in admin.
   useEffect(() => {
@@ -28,7 +29,28 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
     slide.cta_label?.trim().toLowerCase() !== "partner with us";
 
   return (
-    <section className="relative overflow-hidden min-h-[560px] md:min-h-[600px] flex flex-col justify-end md:flex-row md:items-center md:justify-start m-3 md:m-6 rounded-[24px] md:rounded-[32px]">
+    <section
+      className="relative overflow-hidden min-h-[560px] md:min-h-[600px] flex flex-col justify-end md:flex-row md:items-center md:justify-start m-3 md:m-6 rounded-[24px] md:rounded-[32px]"
+      // Swipe to change slides. Touch only: a mouse drag across a hero is not
+      // a gesture anyone expects, and the desktop hero has dots for this.
+      onTouchStart={(e) => {
+        const t = e.touches[0];
+        touchStart.current = t ? { x: t.clientX, y: t.clientY } : null;
+      }}
+      onTouchEnd={(e) => {
+        const from = touchStart.current;
+        const to = e.changedTouches[0];
+        touchStart.current = null;
+        if (!from || !to || slides.length < 2) return;
+
+        const dx = to.clientX - from.x;
+        const dy = to.clientY - from.y;
+        // Sideways intent, and far enough to be a swipe rather than a tap or a
+        // scroll that drifted.
+        if (Math.abs(dx) < 45 || Math.abs(dx) <= Math.abs(dy)) return;
+        setActive((i) => (i + (dx < 0 ? 1 : -1) + slides.length) % slides.length);
+      }}
+    >
       {/* Full-bleed media at every width. On a phone the copy sits ON the photo
           over a dark scrim; from md up a frosted panel carries it instead.
           Slides cross-fade and drift left→right. */}
