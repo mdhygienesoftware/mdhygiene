@@ -13,8 +13,12 @@ const SLIDE_MS = 700;
  * Image carousel for the homepage and About page.
  *
  * Slides horizontally on a continuous loop: past the last image it runs back
- * to the first. There are no arrow buttons — it moves on its own, with a swipe
- * or a dot there for anyone who wants to steer.
+ * to the first. There are no arrow buttons — it moves on its own, and can be
+ * steered by dragging it, by the dots, or with the arrow keys.
+ *
+ * The drag is on pointer events rather than touch events, so a mouse gets the
+ * same gesture a finger does; with the arrows gone, a touch-only drag left a
+ * desktop visitor no way to move it at all.
  *
  * Images are contained rather than cropped, because a packshot is portrait and
  * a factory photo is wide: cropping either to one common box cuts the subject
@@ -23,7 +27,7 @@ const SLIDE_MS = 700;
  */
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState(0);
-  const touchStartX = useRef<number | null>(null);
+  const dragStartX = useRef<number | null>(null);
 
   const go = useCallback(
     (delta: number) => setActive((i) => (i + delta + images.length) % images.length),
@@ -42,20 +46,32 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
 
   return (
     <div
-      className="flex flex-col gap-4"
-      onTouchStart={(e) => {
-        touchStartX.current = e.touches[0]?.clientX ?? null;
+      className="flex flex-col gap-4 focus:outline-none"
+      tabIndex={0}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Image carousel"
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") go(1);
+        if (e.key === "ArrowLeft") go(-1);
       }}
-      onTouchEnd={(e) => {
-        const from = touchStartX.current;
-        const to = e.changedTouches[0]?.clientX;
-        touchStartX.current = null;
-        if (from == null || to == null) return;
-        // A deliberate swipe, not a tap or a vertical scroll that drifted.
-        if (Math.abs(to - from) > 40) go(to < from ? 1 : -1);
+      onPointerDown={(e) => {
+        // Left button or a finger; ignore right-clicks and middle-clicks.
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        dragStartX.current = e.clientX;
+      }}
+      onPointerUp={(e) => {
+        const from = dragStartX.current;
+        dragStartX.current = null;
+        if (from == null) return;
+        // A deliberate drag, not a click or a scroll that drifted sideways.
+        if (Math.abs(e.clientX - from) > 40) go(e.clientX < from ? 1 : -1);
+      }}
+      onPointerCancel={() => {
+        dragStartX.current = null;
       }}
     >
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-[#FBF6F2]">
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-[#FBF6F2] cursor-grab active:cursor-grabbing select-none touch-pan-y">
         {/* One wide track holding every image side by side; moving it is the
             slide. A transform beats animating `left` — it stays on the
             compositor instead of forcing layout on every frame. */}
@@ -69,7 +85,8 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
                 src={image.url}
                 alt={image.alt || ""}
                 fill
-                className="object-contain p-3 sm:p-4"
+                draggable={false}
+                className="object-contain p-3 sm:p-4 pointer-events-none"
                 // The box is capped at max-w-3xl, so asking for more would
                 // fetch a far larger file than is ever displayed.
                 sizes="(max-width: 768px) 100vw, 768px"
