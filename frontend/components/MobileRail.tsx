@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { Children, useEffect, useRef, type ReactNode } from "react";
 
 /** How long one card-to-card move takes. */
 const GLIDE_MS = 400;
@@ -33,11 +33,24 @@ function easeOut(t: number): number {
 export default function MobileRail({
   children,
   className,
+  itemClassName = "flex-[0_0_70vw] snap-center md:hidden",
 }: {
   children: ReactNode;
   className: string;
+  /** Sizing for the repeated copies; must match the real items' phone sizing. */
+  itemClassName?: string;
 }) {
   const rail = useRef<HTMLDivElement>(null);
+  const items = Children.toArray(children);
+
+  // React 18 does not render the `inert` attribute — it arrived in 19 — so it
+  // is set here. Without it the repeated copies are a second set of tab stops
+  // through the same links.
+  useEffect(() => {
+    rail.current
+      ?.querySelectorAll<HTMLElement>("[data-rail-repeat]")
+      .forEach((node) => node.setAttribute("inert", ""));
+  }, [items.length]);
 
   useEffect(() => {
     const el = rail.current;
@@ -88,6 +101,13 @@ export default function MobileRail({
       const cards = Array.from(el.children) as HTMLElement[];
       if (cards.length < 2) return;
 
+      // The set is laid out twice. Once the scroll has carried past the first
+      // copy, it is wound back by exactly one set — invisible, because what is
+      // on screen at that point is identical — so the loop runs forward for
+      // ever without the rail ever reaching a hard end.
+      const setWidth = cards.length > items.length ? cards[items.length].offsetLeft - cards[0].offsetLeft : 0;
+      if (setWidth > 0 && el.scrollLeft >= setWidth - 1) el.scrollLeft -= setWidth;
+
       // Where each card sits, measured from the rail's own left edge with the
       // side padding taken off, so a card lands where scroll-snap wants it.
       const pad = parseFloat(getComputedStyle(el).paddingLeft) || 0;
@@ -104,14 +124,10 @@ export default function MobileRail({
       // clientWidth is arithmetic that goes subtly wrong as padding and card
       // widths change, and when it does the rail stops at the last card instead
       // of looping.
-      const next = (here + 1) % cards.length;
-
-      if (next === 0) {
-        // Back to the first card. Jumped, not glided: gliding would run the
-        // whole set backwards past the reader.
-        el.scrollLeft = 0;
-        return;
-      }
+      // Always forward. With the set repeated there is a real card to the
+      // right of the last one — the first one — so the loop never has to run
+      // backwards to start again.
+      const next = Math.min(here + 1, offsets.length - 1);
       glideTo(Math.max(0, offsets[next]));
     }
 
@@ -166,11 +182,20 @@ export default function MobileRail({
       window.removeEventListener("touchend", release);
       window.removeEventListener("touchcancel", release);
     };
-  }, []);
+  }, [items.length]);
 
   return (
     <div ref={rail} className={className}>
-      {children}
+      {items}
+      {/* The set again, for the loop to run into. Hidden from md up, where this
+          is a grid and there is no loop; hidden from screen readers and taken
+          out of the tab order, since it is the same content twice. */}
+      {items.length > 1 &&
+        items.map((item, i) => (
+          <div key={`repeat-${i}`} data-rail-repeat aria-hidden="true" className={itemClassName}>
+            {item}
+          </div>
+        ))}
     </div>
   );
 }
