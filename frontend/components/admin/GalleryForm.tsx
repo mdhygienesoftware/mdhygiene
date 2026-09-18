@@ -56,7 +56,7 @@ export default function GalleryForm({ galleries }: { galleries: SiteGalleries })
       <GalleryFields
         page="home"
         label="Homepage carousel"
-        where="Shows on the homepage, below Featured products."
+        where="Shows on the homepage, between Our Brands and Featured products."
         initial={galleries.home}
         images={home}
         onImages={setHome}

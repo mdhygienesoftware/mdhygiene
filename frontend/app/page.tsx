@@ -48,8 +48,8 @@ export default async function HomePage() {
         <Stats stats={stats} />
         <VideoSection video={videos.home} />
         <Brands brands={brands} />
-        <ProductShowcase products={featured} title="Featured products" />
         <GallerySection gallery={galleries.home} />
+        <ProductShowcase products={featured} title="Featured products" />
         <PartnerSegments />
         <Certifications names={certifications} />
         <CareersStrip careers={careers} />
