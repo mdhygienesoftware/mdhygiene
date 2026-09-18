@@ -19,10 +19,10 @@ export default function ProductShowcase({ products, title }: { products: Product
           <h2 className="text-[26px] md:text-[36px] font-extrabold text-navy">{title}</h2>
         </Reveal>
       )}
-      <MobileRail className="flex overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
+      <MobileRail className="flex items-stretch overflow-x-auto snap-x snap-mandatory gap-[14px] -mx-5 px-5 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 md:pb-0 md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
         {products.map((product, i) => (
           // Stagger caps out so a long grid doesn't leave the last cards waiting.
-          <Reveal key={product.slug} delay={Math.min(i, 7) * 80} holdOnPhone className="flex-[0_0_76%] snap-start md:flex-none h-full">
+          <Reveal key={product.slug} delay={Math.min(i, 7) * 80} holdOnPhone className="flex-[0_0_76%] snap-start md:flex-none">
             <ProductCard product={product} />
           </Reveal>
         ))}
