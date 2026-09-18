@@ -88,21 +88,31 @@ export default function MobileRail({
       const cards = Array.from(el.children) as HTMLElement[];
       if (cards.length < 2) return;
 
-      // Card positions are measured from the rail's own left edge, then the
-      // side padding is taken off so the first card lands flush with the copy
-      // above it rather than against the screen edge.
+      // Where each card sits, measured from the rail's own left edge with the
+      // side padding taken off, so a card lands where scroll-snap wants it.
       const pad = parseFloat(getComputedStyle(el).paddingLeft) || 0;
       const offsets = cards.map((card) => card.offsetLeft - el.offsetLeft - pad);
 
-      // Next card whose left edge is past the current position.
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
-      if (atEnd) {
-        // Back to the first card to keep the loop going. Jumped, not glided:
-        // gliding would run the whole set backwards past the reader's eyes.
+      // Which card is showing now — asked of the scroll position rather than
+      // remembered, so a swipe carries the loop on from wherever it was left.
+      const here = offsets.reduce(
+        (best, x, i) => (Math.abs(x - el.scrollLeft) < Math.abs(offsets[best] - el.scrollLeft) ? i : best),
+        0
+      );
+
+      // Straight modulo. Deciding "are we at the end?" from scrollWidth against
+      // clientWidth is arithmetic that goes subtly wrong as padding and card
+      // widths change, and when it does the rail stops at the last card instead
+      // of looping.
+      const next = (here + 1) % cards.length;
+
+      if (next === 0) {
+        // Back to the first card. Jumped, not glided: gliding would run the
+        // whole set backwards past the reader.
         el.scrollLeft = 0;
         return;
       }
-      glideTo(Math.max(0, offsets.find((x) => x > el.scrollLeft + 8) ?? 0));
+      glideTo(Math.max(0, offsets[next]));
     }
 
     // The rail holds still under a finger and picks up again shortly after it
