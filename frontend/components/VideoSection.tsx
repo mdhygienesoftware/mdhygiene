@@ -40,7 +40,7 @@ export default function VideoSection({ video }: { video: VideoBlock | null }) {
           Capped to the same width as the image carousel, and a 16:9 box rather
           than a fixed height — YouTube's own ratio, so the player fills it with
           no bars at the sides. */}
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-3xl mx-auto">
         <div className="relative w-full aspect-video overflow-hidden rounded-2xl border border-border bg-navy">
           <iframe
             src={youTubeEmbedSrc(id)}

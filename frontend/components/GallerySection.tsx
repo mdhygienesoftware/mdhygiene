@@ -41,7 +41,7 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
           a possible outcome for a section whose whole point is the images. */}
       {/* Capped rather than full-bleed: at section width the 16:9 box was
           over 700px tall on a desktop and dominated the page. */}
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-3xl mx-auto">
         <ImageCarousel images={images} />
       </div>
     </section>
