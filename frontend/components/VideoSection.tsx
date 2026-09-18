@@ -34,8 +34,13 @@ export default function VideoSection({ video }: { video: VideoBlock | null }) {
         </Reveal>
       )}
 
-      <Reveal delay={120}>
-        {/* 16:9 box rather than a fixed height, so it fits any screen width. */}
+      {/* Not wrapped in Reveal: that holds its children at opacity 0 until an
+          IntersectionObserver fires, which makes "the video never appeared" a
+          reachable state for a section that is nothing but the video.
+          Capped to the same width as the image carousel, and a 16:9 box rather
+          than a fixed height — YouTube's own ratio, so the player fills it with
+          no bars at the sides. */}
+      <div className="w-full max-w-3xl">
         <div className="relative w-full aspect-video overflow-hidden rounded-2xl border border-border bg-navy">
           <iframe
             src={youTubeEmbedSrc(id)}
@@ -47,7 +52,7 @@ export default function VideoSection({ video }: { video: VideoBlock | null }) {
             className="absolute inset-0 h-full w-full border-0"
           />
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }
