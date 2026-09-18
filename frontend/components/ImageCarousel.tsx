@@ -6,16 +6,20 @@ import type { GalleryImage } from "@/lib/types";
 
 /** How long each image holds before the carousel moves on. */
 const DWELL_MS = 4500;
+/** How long the slide itself takes. */
+const SLIDE_MS = 700;
 
 /**
  * Image carousel for the homepage and About page.
  *
- * Cross-fades rather than sliding, so images of different shapes don't shunt
- * the page around; each sits in a fixed box so the section's height never
- * changes between slides.
+ * Slides horizontally on a continuous loop: past the last image it runs back
+ * to the first. There are no arrow buttons — it moves on its own, with a swipe
+ * or a dot there for anyone who wants to steer.
  *
- * It runs on a continuous loop — past the last image it returns to the first —
- * and only holds still for someone who has asked for reduced motion.
+ * Images are contained rather than cropped, because a packshot is portrait and
+ * a factory photo is wide: cropping either to one common box cuts the subject
+ * out. The box keeps a fixed shape so the section's height never changes as
+ * the loop runs.
  */
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState(0);
@@ -31,14 +35,14 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setTimeout(() => go(1), DWELL_MS);
     return () => window.clearTimeout(id);
-    // Keyed on `active`, so using an arrow or a dot also restarts the count.
+    // Keyed on `active`, so using a dot also restarts the count.
   }, [active, images.length, go]);
 
   if (images.length === 0) return null;
 
   return (
     <div
-      className="relative"
+      className="flex flex-col gap-4"
       onTouchStart={(e) => {
         touchStartX.current = e.touches[0]?.clientX ?? null;
       }}
@@ -51,38 +55,33 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
         if (Math.abs(to - from) > 40) go(to < from ? 1 : -1);
       }}
     >
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] overflow-hidden rounded-2xl border border-border bg-[#F5E1EA]">
-        {images.map((image, i) => (
-          <div
-            key={`${image.url}-${i}`}
-            aria-hidden={i !== active}
-            className={`absolute inset-0 transition-opacity duration-700 ease-out ${
-              i === active ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <Image
-              src={image.url}
-              alt={image.alt || ""}
-              fill
-              className="object-cover"
-              // The box is capped at max-w-3xl, so asking for 80vw would fetch
-              // a far larger file than is ever displayed.
-              sizes="(max-width: 768px) 100vw, 768px"
-              priority={i === 0}
-            />
-          </div>
-        ))}
-
-        {images.length > 1 && (
-          <>
-            <Arrow direction="prev" onClick={() => go(-1)} />
-            <Arrow direction="next" onClick={() => go(1)} />
-          </>
-        )}
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-[#FBF6F2]">
+        {/* One wide track holding every image side by side; moving it is the
+            slide. A transform beats animating `left` — it stays on the
+            compositor instead of forcing layout on every frame. */}
+        <div
+          className="flex h-full w-full transition-transform ease-out motion-reduce:transition-none"
+          style={{ transform: `translateX(-${active * 100}%)`, transitionDuration: `${SLIDE_MS}ms` }}
+        >
+          {images.map((image, i) => (
+            <div key={`${image.url}-${i}`} className="relative h-full w-full shrink-0">
+              <Image
+                src={image.url}
+                alt={image.alt || ""}
+                fill
+                className="object-contain p-3 sm:p-4"
+                // The box is capped at max-w-3xl, so asking for more would
+                // fetch a far larger file than is ever displayed.
+                sizes="(max-width: 768px) 100vw, 768px"
+                priority={i === 0}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {images.length > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="flex justify-center gap-2">
           {images.map((image, i) => (
             <button
               key={`${image.url}-dot-${i}`}
@@ -98,23 +97,5 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
         </div>
       )}
     </div>
-  );
-}
-
-function Arrow({ direction, onClick }: { direction: "prev" | "next"; onClick: () => void }) {
-  const isPrev = direction === "prev";
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={isPrev ? "Previous image" : "Next image"}
-      className={`absolute top-1/2 -translate-y-1/2 ${
-        isPrev ? "left-3" : "right-3"
-      } grid h-11 w-11 place-items-center rounded-full bg-white/85 text-navy shadow-[0_4px_14px_rgba(18,58,92,0.18)] backdrop-blur-sm transition-colors hover:bg-white hover:text-pink`}
-    >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d={isPrev ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"} />
-      </svg>
-    </button>
   );
 }
