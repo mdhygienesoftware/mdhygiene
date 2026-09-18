@@ -8,6 +8,10 @@ import type { GalleryImage } from "@/lib/types";
 const DWELL_MS = 4500;
 /** How long the slide itself takes. */
 const SLIDE_MS = 700;
+/** How far a two-finger trackpad swipe must travel to count as one slide. */
+const WHEEL_THRESHOLD = 60;
+/** Quiet period after a wheel slide, so one fling doesn't run through the set. */
+const WHEEL_COOLDOWN_MS = 450;
 
 /**
  * Image carousel for the homepage and About page.
@@ -18,7 +22,8 @@ const SLIDE_MS = 700;
  *
  * The drag is on pointer events rather than touch events, so a mouse gets the
  * same gesture a finger does; with the arrows gone, a touch-only drag left a
- * desktop visitor no way to move it at all.
+ * desktop visitor no way to move it at all. A two-finger sideways swipe on a
+ * laptop trackpad works as well — that arrives as a horizontal wheel delta.
  *
  * Images are contained rather than cropped, because a packshot is portrait and
  * a factory photo is wide: cropping either to one common box cuts the subject
@@ -28,6 +33,7 @@ const SLIDE_MS = 700;
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState(0);
   const dragStartX = useRef<number | null>(null);
+  const box = useRef<HTMLDivElement>(null);
 
   const go = useCallback(
     (delta: number) => setActive((i) => (i + delta + images.length) % images.length),
@@ -41,6 +47,45 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
     return () => window.clearTimeout(id);
     // Keyed on `active`, so using a dot also restarts the count.
   }, [active, images.length, go]);
+
+  /**
+   * Two-finger trackpad swipes.
+   *
+   * Registered by hand rather than with onWheel because React's wheel listener
+   * is passive, and this one has to preventDefault: left unhandled, a sideways
+   * swipe is a back/forward gesture in most browsers, so steering the carousel
+   * would navigate away from the page.
+   *
+   * Deltas are accumulated — a trackpad sends a stream of small ones per
+   * gesture — and a short cooldown stops a single fling running through every
+   * image at once.
+   */
+  useEffect(() => {
+    const el = box.current;
+    if (!el || images.length < 2) return;
+
+    let travelled = 0;
+    let readyAt = 0;
+
+    function onWheel(e: WheelEvent) {
+      // Sideways intent only; a vertical scroll must still scroll the page.
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+
+      const now = performance.now();
+      if (now < readyAt) return;
+
+      travelled += e.deltaX;
+      if (Math.abs(travelled) < WHEEL_THRESHOLD) return;
+
+      go(travelled > 0 ? 1 : -1);
+      travelled = 0;
+      readyAt = now + WHEEL_COOLDOWN_MS;
+    }
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [images.length, go]);
 
   if (images.length === 0) return null;
 
@@ -71,7 +116,10 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
         dragStartX.current = null;
       }}
     >
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-[#FBF6F2] cursor-grab active:cursor-grabbing select-none touch-pan-y">
+      <div
+        ref={box}
+        className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-[#FBF6F2] cursor-grab active:cursor-grabbing select-none touch-pan-y"
+      >
         {/* One wide track holding every image side by side; moving it is the
             slide. A transform beats animating `left` — it stays on the
             compositor instead of forcing layout on every frame. */}
