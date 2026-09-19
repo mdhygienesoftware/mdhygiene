@@ -3,9 +3,9 @@
 import { Children, useEffect, useRef, type ReactNode } from "react";
 
 /** How long one card-to-card move takes. */
-const GLIDE_MS = 600;
+const GLIDE_MS = 400;
 /** How long a card rests before the rail moves on. */
-const DWELL_MS = 2000;
+const DWELL_MS = 1400;
 /** Quiet time after a scroll before the rail is considered to have settled. */
 const SETTLE_MS = 160;
 /** Quiet time after the finger lifts before the rail takes over again. */
