@@ -66,34 +66,56 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
       onChange={(e) => syncPreview(e.currentTarget)}
       className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-4 max-w-xl"
     >
-      <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
-        Slide media
-        <select name="media_type" value={mediaType} onChange={(e) => setMediaType(e.target.value)} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal">
-          <option value="image">Image</option>
-          <option value="video">Video (autoplays, muted, looped)</option>
-        </select>
-      </label>
-      <MediaUploader
-        label={mediaType === "video" ? "Hero video" : "Hero image"}
-        name="media_url"
-        defaultValue={slide?.media_url}
-        kind={mediaType === "video" ? "video" : "image"}
-        onValueChange={(media_url) => setPreview((p) => ({ ...p, media_url }))}
-      />
-      {mediaType === "video" && <MediaUploader label="Poster image (shown while video loads)" name="poster_url" defaultValue={slide?.poster_url} />}
-
-      {/* The hero is about 3:1 on a monitor and about 2:3 on a phone, so one
-          landscape file loses its sides on a phone. A portrait crop here is
-          used below 768px; left empty, the media above is used at every width. */}
-      <fieldset className="border border-border rounded-xl p-5 flex flex-col gap-3.5 mt-1">
-        <legend className="text-sm font-bold text-navy px-2">Phone version (optional)</legend>
+      {/* The two screens are separate sections because they are separate
+          pictures: the hero is about 3:1 on a monitor and about 2:3 on a phone,
+          so a landscape file loses its sides on a phone and a portrait one
+          loses its top and bottom on a monitor. Each section previews the crop
+          it will actually produce, beside the picker that sets it. */}
+      <fieldset className="border border-border rounded-xl p-5 flex flex-col gap-3.5">
+        <legend className="text-sm font-bold text-navy px-2">Computer</legend>
         <p className="text-xs text-muted-2 -mt-1">
-          A portrait crop for phones — ideally 9:16, around 1080 × 1920. Leave it empty and the picture
-          above is used on every screen.
+          Landscape, 16:9 — 1920 × 1080 is the size to aim for. Used on every screen unless a phone
+          picture is set below.
         </p>
 
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
-          Phone media
+          Media
+          <select
+            name="media_type"
+            value={mediaType}
+            onChange={(e) => setMediaType(e.target.value)}
+            className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal"
+          >
+            <option value="image">Image</option>
+            <option value="video">Video (autoplays, muted, looped)</option>
+          </select>
+        </label>
+        <MediaUploader
+          label={mediaType === "video" ? "Hero video" : "Hero image"}
+          name="media_url"
+          defaultValue={slide?.media_url}
+          kind={mediaType === "video" ? "video" : "image"}
+          onValueChange={(media_url) => setPreview((p) => ({ ...p, media_url }))}
+        />
+        {mediaType === "video" && (
+          <MediaUploader
+            label="Poster image (shown while video loads)"
+            name="poster_url"
+            defaultValue={slide?.poster_url}
+          />
+        )}
+        <SlidePreview slide={preview} />
+      </fieldset>
+
+      <fieldset className="border border-border rounded-xl p-5 flex flex-col gap-3.5">
+        <legend className="text-sm font-bold text-navy px-2">Phone (optional)</legend>
+        <p className="text-xs text-muted-2 -mt-1">
+          A portrait crop — ideally 9:16, around 1080 × 1920. Leave it empty and the computer picture is
+          used on phones too.
+        </p>
+
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+          Media
           <select
             name="mobile_media_type"
             value={mobileType}
@@ -118,18 +140,24 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
             defaultValue={slide?.mobile_poster_url}
           />
         )}
+        <SlidePreview slide={preview} variant="mobile" />
       </fieldset>
 
-      <Field label="Eyebrow" name="eyebrow" defaultValue={slide?.eyebrow ?? ""} />
-      <Field label="Headline" name="headline" defaultValue={slide?.headline} required />
-      <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
-        Subheading
-        <textarea name="subheading" defaultValue={slide?.subheading ?? ""} rows={3} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal resize-none" />
-      </label>
-      <div className="grid md:grid-cols-2 gap-4">
-        <Field label="CTA label" name="cta_label" defaultValue={slide?.cta_label ?? ""} />
-        <Field label="CTA link" name="cta_href" defaultValue={slide?.cta_href ?? ""} />
-      </div>
+      <fieldset className="border border-border rounded-xl p-5 flex flex-col gap-3.5">
+        <legend className="text-sm font-bold text-navy px-2">Words and buttons</legend>
+        <p className="text-xs text-muted-2 -mt-1">Shared by both screens.</p>
+        <Field label="Eyebrow" name="eyebrow" defaultValue={slide?.eyebrow ?? ""} />
+        <Field label="Headline" name="headline" defaultValue={slide?.headline} required />
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+          Subheading
+          <textarea name="subheading" defaultValue={slide?.subheading ?? ""} rows={3} className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal resize-none" />
+        </label>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Field label="CTA label" name="cta_label" defaultValue={slide?.cta_label ?? ""} />
+          <Field label="CTA link" name="cta_href" defaultValue={slide?.cta_href ?? ""} />
+        </div>
+      </fieldset>
+
       <div className="grid md:grid-cols-3 gap-4 items-start">
         <Field label="Sort order" name="sort_order" type="number" defaultValue={String(slide?.sort_order ?? 0)} />
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
@@ -148,11 +176,6 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
           <input type="checkbox" name="is_active" defaultChecked={slide?.is_active ?? true} /> Active
         </label>
       </div>
-      <div className="grid sm:grid-cols-[1fr_auto] gap-5 items-start">
-        <SlidePreview slide={preview} />
-        <SlidePreview slide={preview} variant="mobile" />
-      </div>
-
       {error && (
         <p role="alert" className="text-sm font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
           {error}
