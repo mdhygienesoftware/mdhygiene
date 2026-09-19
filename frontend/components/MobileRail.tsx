@@ -3,9 +3,11 @@
 import { Children, useEffect, useRef, type ReactNode } from "react";
 
 /** How long one card-to-card move takes. */
-const GLIDE_MS = 400;
+const GLIDE_MS = 600;
 /** How long a card rests before the rail moves on. */
-const DWELL_MS = 1400;
+const DWELL_MS = 2000;
+/** Quiet time after a scroll before the rail is considered to have settled. */
+const SETTLE_MS = 160;
 /** Quiet time after the finger lifts before the rail takes over again. */
 const RESUME_MS = 1200;
 /** Delay before the very first move, after the cards have finished appearing. */
@@ -66,6 +68,7 @@ export default function MobileRail({
     let idleUntil = 0;
     let holding = false;
     let gliding = false;
+    let settle = 0;
 
     function glideTo(target: number) {
       const el = rail.current;
@@ -163,12 +166,23 @@ export default function MobileRail({
     // scroll back by one set straight away, which is invisible because the
     // content at that point is identical, and keeps the rail from ever showing
     // the same cards twice over.
+    /**
+     * Wind back only once the scroll has come to rest.
+     *
+     * Doing it on the scroll event itself meant moving scrollLeft out from
+     * under a momentum scroll still in flight: the browser carried on from
+     * where it thought it was, the rewind pulled it back, and a fast swipe
+     * juddered the whole way. Waiting for a still moment costs nothing —
+     * the content either side of the seam is identical.
+     */
     function onScroll() {
-      const el = rail.current;
-      // Hands off while the rail is gliding — that scroll is ours, and the
-      // glide rewinds itself when it lands.
-      if (!el || gliding) return;
-      rewind(el);
+      if (gliding) return;
+      window.clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        const el = rail.current;
+        if (!el || holding || gliding) return;
+        rewind(el);
+      }, SETTLE_MS);
     }
     el.addEventListener("scroll", onScroll, { passive: true });
 
@@ -202,6 +216,7 @@ export default function MobileRail({
 
     return () => {
       window.clearTimeout(timer);
+      window.clearTimeout(settle);
       cancelAnimationFrame(frame);
       el.removeEventListener("scroll", onScroll);
       el.removeEventListener("pointerdown", hold);
