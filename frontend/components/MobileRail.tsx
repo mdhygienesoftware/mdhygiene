@@ -65,6 +65,7 @@ export default function MobileRail({
     let timer = 0;
     let idleUntil = 0;
     let holding = false;
+    let gliding = false;
 
     function glideTo(target: number) {
       const el = rail.current;
@@ -78,6 +79,7 @@ export default function MobileRail({
       // stutter, so it is lifted for the duration and restored at the end —
       // finger swipes keep snapping.
       el.style.scrollSnapType = "none";
+      gliding = true;
 
       const step = (now: number) => {
         const el = rail.current;
@@ -87,7 +89,12 @@ export default function MobileRail({
         if (t < 1) {
           frame = requestAnimationFrame(step);
         } else {
+          gliding = false;
           el.style.scrollSnapType = "";
+          // Only once the glide has landed. Winding back mid-glide fought the
+          // animation: each frame set scrollLeft forward, the scroll handler
+          // pulled it back a whole set, and the two argued all the way across.
+          rewind(el);
         }
       };
       frame = requestAnimationFrame(step);
@@ -102,8 +109,7 @@ export default function MobileRail({
       if (cards.length < 2) return;
 
       // Backstop for the scroll listener above.
-      const setWidth = setWidthOf(el);
-      if (setWidth > 0 && el.scrollLeft >= setWidth - 1) el.scrollLeft -= setWidth;
+      rewind(el);
 
       // Where each card sits, measured from the rail's own left edge with the
       // side padding taken off, so a card lands where scroll-snap wants it.
@@ -133,6 +139,7 @@ export default function MobileRail({
     // touching the rail had stopped it for good.
     const hold = () => {
       holding = true;
+      gliding = false;
       cancelAnimationFrame(frame);
       if (rail.current) rail.current.style.scrollSnapType = "";
     };
@@ -145,6 +152,12 @@ export default function MobileRail({
       return cards.length > items.length ? cards[items.length].offsetLeft - cards[0].offsetLeft : 0;
     }
 
+    /** Back off the repeated copy, if the scroll has run into it. */
+    function rewind(el: HTMLElement) {
+      const width = setWidthOf(el);
+      if (width > 0 && el.scrollLeft >= width - 1) el.scrollLeft -= width;
+    }
+
     // The repeat exists so there is a card to the right of the last one. It is
     // not meant to be somewhere you can end up: crossing into it winds the
     // scroll back by one set straight away, which is invisible because the
@@ -152,9 +165,10 @@ export default function MobileRail({
     // the same cards twice over.
     function onScroll() {
       const el = rail.current;
-      if (!el) return;
-      const width = setWidthOf(el);
-      if (width > 0 && el.scrollLeft >= width - 1) el.scrollLeft -= width;
+      // Hands off while the rail is gliding — that scroll is ours, and the
+      // glide rewinds itself when it lands.
+      if (!el || gliding) return;
+      rewind(el);
     }
     el.addEventListener("scroll", onScroll, { passive: true });
 
@@ -208,7 +222,10 @@ export default function MobileRail({
           out of the tab order, since it is the same content twice. */}
       {items.length > 1 &&
         items.map((item, i) => (
-          <div key={`repeat-${i}`} data-rail-repeat aria-hidden="true" className={itemClassName}>
+          // `flex` on the wrapper matters: without it the copy inside is not
+          // stretched to the row, so its card — which sizes itself with h-full
+          // — came out at content height while the real cards were full height.
+          <div key={`repeat-${i}`} data-rail-repeat aria-hidden="true" className={`${itemClassName} flex`}>
             {item}
           </div>
         ))}
