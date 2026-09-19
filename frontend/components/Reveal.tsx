@@ -6,9 +6,12 @@ import { useEffect, useRef, useState } from "react";
  * Fades/slides children in when they scroll into view, and resets once they
  * leave, so the animation replays on every pass rather than only on first load.
  *
- * `holdOnPhone` switches that reset off below md. Inside a horizontal rail a
- * card leaves the viewport sideways every few seconds, and replaying a vertical
- * slide each time reads as the card bobbing up and down.
+ * `holdOnPhone` drops the whole entrance below md. Inside a horizontal rail a
+ * card leaves the viewport sideways every few seconds and a fresh one takes its
+ * place, so a vertical slide-in — whether replayed on the way back or run for
+ * the first time on a card that has just scrolled in — reads as the row bobbing
+ * up and down. There is nothing to reveal in a rail anyway: the cards are
+ * already on screen, moving sideways.
  *
  * Falls back to permanently visible if IntersectionObserver is unavailable, so
  * content can never be stranded invisible.
@@ -35,7 +38,12 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    const stayShown = holdOnPhone && window.matchMedia("(max-width: 767px)").matches;
+    // In a phone rail: show it and never observe it, so it neither slides in
+    // when it first scrolls into view nor resets on the way out.
+    if (holdOnPhone && window.matchMedia("(max-width: 767px)").matches) {
+      setShown(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -43,7 +51,7 @@ export default function Reveal({
         if (!entry) return;
         if (entry.isIntersecting) {
           setShown(true);
-        } else if (entry.boundingClientRect.top > 0 && !stayShown) {
+        } else if (entry.boundingClientRect.top > 0) {
           // Only reset when it leaves downward (below the viewport). Resetting
           // on the way out the top would make content vanish as you scroll past.
           setShown(false);
