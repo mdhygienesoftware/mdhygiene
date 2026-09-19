@@ -10,12 +10,17 @@ import { mapEmbedSrc, mapLinkHref } from "@/lib/contact-links";
  * afterwards — two footer iframes loading on every page view would cost every
  * visitor a Google request they never wanted.
  *
- * Hover is a pointer idea, so the address is also a button: tap toggles it on a
- * phone, and it opens on keyboard focus.
+ * Hover is a pointer idea, and on a touch screen there is no hover to offer —
+ * a tap would just fire the map open with no way to preview or dismiss it. So
+ * the map is only wired up where the device can actually hover; everywhere else
+ * this is the address as plain text. Keyboard focus opens it too.
  */
 export default function AddressMap({ label, address }: { label: string; address: string }) {
   const [open, setOpen] = useState(false);
   const [everOpened, setEverOpened] = useState(false);
+  // False until proven otherwise, so a touch device — and the server — get the
+  // plain text version.
+  const [canHover, setCanHover] = useState(false);
   const hideTimer = useRef<number | undefined>(undefined);
 
   function show() {
@@ -35,7 +40,19 @@ export default function AddressMap({ label, address }: { label: string; address:
     hideTimer.current = window.setTimeout(() => setOpen(false), 160);
   }
 
-  useEffect(() => () => window.clearTimeout(hideTimer.current), []);
+  useEffect(() => {
+    setCanHover(window.matchMedia("(hover: hover)").matches);
+    return () => window.clearTimeout(hideTimer.current);
+  }, []);
+
+  if (!canHover) {
+    return (
+      <div className="flex flex-col gap-2.5 text-sm text-[#9DB4C8]">
+        <span className="text-white font-bold text-[13px] tracking-[0.1em]">{label}</span>
+        <span>{address}</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -54,9 +71,6 @@ export default function AddressMap({ label, address }: { label: string; address:
         className="text-left hover:text-white transition-colors"
       >
         {address}
-        <span className="block mt-1 text-[12px] text-[#7C93AB]">
-          {open ? "Hide map" : "Hover or tap for the map"}
-        </span>
       </button>
 
       {everOpened && (
