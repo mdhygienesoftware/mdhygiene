@@ -39,7 +39,7 @@ export default function AddressMap({ label, address }: { label: string; address:
 
   return (
     <div
-      className="relative flex flex-col gap-2.5 text-sm text-[#9DB4C8] md:max-w-[240px]"
+      className="relative flex flex-col gap-2.5 text-sm text-[#9DB4C8]"
       onMouseEnter={show}
       onMouseLeave={scheduleHide}
     >
