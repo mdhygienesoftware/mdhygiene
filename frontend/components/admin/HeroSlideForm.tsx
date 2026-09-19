@@ -9,11 +9,14 @@ import { isRedirectError } from "@/lib/is-redirect";
 
 export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
   const [mediaType, setMediaType] = useState(slide?.media_type ?? "image");
+  const [mobileType, setMobileType] = useState(slide?.mobile_media_type ?? "image");
   // Read straight off the form on every input, so the preview reflects the
   // current values without turning each field into controlled state.
   const [preview, setPreview] = useState<Partial<HeroSlide>>({
     media_url: slide?.media_url ?? "",
     media_type: slide?.media_type ?? "image",
+    mobile_media_url: slide?.mobile_media_url ?? "",
+    mobile_media_type: slide?.mobile_media_type ?? "image",
     eyebrow: slide?.eyebrow ?? "",
     headline: slide?.headline ?? "",
     subheading: slide?.subheading ?? "",
@@ -25,6 +28,8 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
     setPreview({
       media_url: String(f.get("media_url") ?? ""),
       media_type: String(f.get("media_type") ?? "image"),
+      mobile_media_url: String(f.get("mobile_media_url") ?? ""),
+      mobile_media_type: String(f.get("mobile_media_type") ?? "image"),
       eyebrow: String(f.get("eyebrow") ?? ""),
       headline: String(f.get("headline") ?? ""),
       subheading: String(f.get("subheading") ?? ""),
@@ -76,6 +81,45 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
         onValueChange={(media_url) => setPreview((p) => ({ ...p, media_url }))}
       />
       {mediaType === "video" && <MediaUploader label="Poster image (shown while video loads)" name="poster_url" defaultValue={slide?.poster_url} />}
+
+      {/* The hero is about 3:1 on a monitor and about 2:3 on a phone, so one
+          landscape file loses its sides on a phone. A portrait crop here is
+          used below 768px; left empty, the media above is used at every width. */}
+      <fieldset className="border border-border rounded-xl p-5 flex flex-col gap-3.5 mt-1">
+        <legend className="text-sm font-bold text-navy px-2">Phone version (optional)</legend>
+        <p className="text-xs text-muted-2 -mt-1">
+          A portrait crop for phones — ideally 9:16, around 1080 × 1920. Leave it empty and the picture
+          above is used on every screen.
+        </p>
+
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
+          Phone media
+          <select
+            name="mobile_media_type"
+            value={mobileType}
+            onChange={(e) => setMobileType(e.target.value)}
+            className="border border-border rounded-lg px-4 py-2.5 text-sm font-normal"
+          >
+            <option value="image">Image</option>
+            <option value="video">Video (autoplays, muted, looped)</option>
+          </select>
+        </label>
+        <MediaUploader
+          label={mobileType === "video" ? "Phone video" : "Phone image"}
+          name="mobile_media_url"
+          defaultValue={slide?.mobile_media_url}
+          kind={mobileType === "video" ? "video" : "image"}
+          onValueChange={(mobile_media_url) => setPreview((p) => ({ ...p, mobile_media_url }))}
+        />
+        {mobileType === "video" && (
+          <MediaUploader
+            label="Phone poster image (shown while video loads)"
+            name="mobile_poster_url"
+            defaultValue={slide?.mobile_poster_url}
+          />
+        )}
+      </fieldset>
+
       <Field label="Eyebrow" name="eyebrow" defaultValue={slide?.eyebrow ?? ""} />
       <Field label="Headline" name="headline" defaultValue={slide?.headline} required />
       <label className="flex flex-col gap-1.5 text-sm font-semibold text-navy">
@@ -104,7 +148,10 @@ export default function HeroSlideForm({ slide }: { slide?: HeroSlide }) {
           <input type="checkbox" name="is_active" defaultChecked={slide?.is_active ?? true} /> Active
         </label>
       </div>
-      <SlidePreview slide={preview} />
+      <div className="grid sm:grid-cols-[1fr_auto] gap-5 items-start">
+        <SlidePreview slide={preview} />
+        <SlidePreview slide={preview} variant="mobile" />
+      </div>
 
       {error && (
         <p role="alert" className="text-sm font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">

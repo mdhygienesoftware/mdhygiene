@@ -100,6 +100,9 @@ export type Database = {
       };
       hero_slides: {
         Row: {
+          mobile_media_url: string | null;
+          mobile_media_type: string | null;
+          mobile_poster_url: string | null;
           duration_seconds: number
           created_at: string;
           cta_href: string | null;
@@ -115,6 +118,9 @@ export type Database = {
           subheading: string | null;
         };
         Insert: {
+          mobile_media_url?: string | null;
+          mobile_media_type?: string | null;
+          mobile_poster_url?: string | null;
           duration_seconds?: number
           created_at?: string;
           cta_href?: string | null;
@@ -130,6 +136,9 @@ export type Database = {
           subheading?: string | null;
         };
         Update: {
+          mobile_media_url?: string | null;
+          mobile_media_type?: string | null;
+          mobile_poster_url?: string | null;
           duration_seconds?: number
           created_at?: string;
           cta_href?: string | null;

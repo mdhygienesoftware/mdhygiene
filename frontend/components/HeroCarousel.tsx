@@ -65,29 +65,37 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
                 : "opacity-0 -translate-x-6 scale-105"
             }`}
           >
-            {s.media_type === "video" && isRenderableImage(s.media_url) ? (
-              <video
-                src={s.media_url}
-                poster={s.poster_url ?? undefined}
-                className="w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
-            ) : isRenderableImage(s.media_url) ? (
-              <Image
-                src={s.media_url}
-                alt={s.headline}
-                fill
-                className="object-cover object-center"
-                priority={i === 0}
-                sizes="100vw"
-              />
+            {/* A slide can carry a separate portrait crop for phones. When it
+                does, both are in the DOM and CSS picks — cheap, because the
+                hidden one is display:none and never fetched. When it does not,
+                only the one layer renders, as before. */}
+            {isRenderableImage(s.mobile_media_url) ? (
+              <>
+                <Layer
+                  url={s.media_url}
+                  type={s.media_type}
+                  poster={s.poster_url}
+                  alt={s.headline}
+                  priority={i === 0}
+                  className="hidden md:block"
+                />
+                <Layer
+                  url={s.mobile_media_url}
+                  type={s.mobile_media_type}
+                  poster={s.mobile_poster_url}
+                  alt={s.headline}
+                  priority={i === 0}
+                  className="md:hidden"
+                />
+              </>
             ) : (
-              // Unsupported or broken media: keep the slide readable rather than
-              // letting next/image throw and take the whole homepage down.
-              <div className="w-full h-full bg-gradient-to-br from-[#FDEFF4] via-cream to-[#F3F8FC]" />
+              <Layer
+                url={s.media_url}
+                type={s.media_type}
+                poster={s.poster_url}
+                alt={s.headline}
+                priority={i === 0}
+              />
             )}
           </div>
         ))}
@@ -207,5 +215,54 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * One slide's media, filling its parent.
+ *
+ * Anything we cannot serve falls back to a gradient rather than being handed to
+ * next/image, which throws on an unconfigured host and would take the whole
+ * homepage with it.
+ */
+function Layer({
+  url,
+  type,
+  poster,
+  alt,
+  priority,
+  className = "",
+}: {
+  url: string | null;
+  type: string | null;
+  poster: string | null;
+  alt: string;
+  priority: boolean;
+  className?: string;
+}) {
+  if (!isRenderableImage(url)) {
+    return <div className={`absolute inset-0 bg-gradient-to-br from-[#FDEFF4] via-cream to-[#F3F8FC] ${className}`} />;
+  }
+
+  if (type === "video") {
+    return (
+      <div className={`absolute inset-0 ${className}`}>
+        <video
+          src={url}
+          poster={poster ?? undefined}
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`absolute inset-0 ${className}`}>
+      <Image src={url} alt={alt} fill className="object-cover object-center" priority={priority} sizes="100vw" />
+    </div>
   );
 }

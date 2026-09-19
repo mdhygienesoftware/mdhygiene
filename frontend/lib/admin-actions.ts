@@ -159,6 +159,10 @@ export async function saveHeroSlideAction(id: string | null, formData: FormData)
     media_type: String(formData.get("media_type") ?? "image"),
     media_url: String(formData.get("media_url") ?? "").trim(),
     poster_url: String(formData.get("poster_url") ?? "").trim() || null,
+    // Optional phone crop. Left empty, the desktop media is used at every width.
+    mobile_media_type: String(formData.get("mobile_media_type") ?? "image"),
+    mobile_media_url: String(formData.get("mobile_media_url") ?? "").trim() || null,
+    mobile_poster_url: String(formData.get("mobile_poster_url") ?? "").trim() || null,
     eyebrow: String(formData.get("eyebrow") ?? "").trim() || null,
     headline: String(formData.get("headline") ?? "").trim(),
     subheading: String(formData.get("subheading") ?? "").trim() || null,
@@ -175,6 +179,16 @@ export async function saveHeroSlideAction(id: string | null, formData: FormData)
   const poster = await resolveMediaUrl(payload.poster_url);
   if ("error" in poster) return { ok: false, error: poster.error };
   payload.poster_url = poster.url;
+
+  const mobile = await resolveMediaUrl(
+    payload.mobile_media_url,
+    payload.mobile_media_type === "video" ? "video" : "image"
+  );
+  if ("error" in mobile) return { ok: false, error: mobile.error };
+  payload.mobile_media_url = mobile.url;
+  const mobilePoster = await resolveMediaUrl(payload.mobile_poster_url);
+  if ("error" in mobilePoster) return { ok: false, error: mobilePoster.error };
+  payload.mobile_poster_url = mobilePoster.url;
 
   const { error } = id ? await supabase.from("hero_slides").update(payload).eq("id", id) : await supabase.from("hero_slides").insert(payload);
   if (error) return { ok: false, error: error.message };
