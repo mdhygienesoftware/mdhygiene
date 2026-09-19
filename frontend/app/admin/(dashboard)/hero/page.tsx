@@ -20,6 +20,48 @@ export default async function AdminHeroPage() {
         </p>
       </div>
 
+      {/* Ratio guidance, worked out from what the hero box actually measures
+          rather than from a style guide: it runs from 0.65:1 on a phone to
+          3.1:1 on a wide monitor, and the media is object-cover, so the same
+          file is cropped very differently at each end. */}
+      <section className="bg-white border border-border rounded-2xl p-6 md:p-7 flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-lg font-extrabold text-navy">Picture and video guidelines</h2>
+          <p className="text-sm text-muted-2">
+            The hero is not one fixed shape — it is wide on a computer and tall on a phone, and your
+            media is cropped to fill it. These are the sizes that survive both.
+          </p>
+        </div>
+
+        <dl className="grid md:grid-cols-2 gap-x-8 gap-y-4">
+          <Guide term="Use 16:9">
+            The safe ratio for both pictures and video. <span className="font-semibold">1920 × 1080</span>{" "}
+            is the size to aim for; 1600 × 900 is the minimum before it starts to look soft on a large
+            screen.
+          </Guide>
+          <Guide term="Keep the subject centred">
+            The hero is about <span className="font-semibold">3:1</span> on a wide monitor and about{" "}
+            <span className="font-semibold">2:3 — taller than it is wide</span> — on a phone. The sides
+            are cut off on a phone and the top and bottom on a monitor, so anything within a fifth of any
+            edge will be lost to someone.
+          </Guide>
+          <Guide term="Leave the left third clear">
+            On a computer the words sit over a frosted panel across the left third of the picture. On a
+            phone they sit on the photo itself over a dark fade at the bottom, so avoid pictures that are
+            bright or busy down there.
+          </Guide>
+          <Guide term="Video">
+            Same 16:9, MP4, WebM or MOV, up to 50 MB. It plays muted and loops, so it carries no sound.
+            Add a poster image at the same ratio — that is what shows while the video loads.
+          </Guide>
+        </dl>
+
+        <p className="text-xs text-muted-2">
+          The preview under the form shows the slide as it will appear, so you can check the crop before
+          saving.
+        </p>
+      </section>
+
       <div className="flex flex-col gap-3">
         {(slides ?? []).map((slide) => (
           <div key={slide.id} className="bg-white border border-border rounded-2xl p-5 flex items-center gap-4">
@@ -55,6 +97,15 @@ export default async function AdminHeroPage() {
         <h2 className="text-lg font-extrabold text-navy">Add a new slide</h2>
         <HeroSlideForm />
       </div>
+    </div>
+  );
+}
+
+function Guide({ term, children }: { term: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <dt className="text-[12px] font-bold tracking-[0.1em] text-pink uppercase">{term}</dt>
+      <dd className="text-sm leading-relaxed text-muted-2">{children}</dd>
     </div>
   );
 }
