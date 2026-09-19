@@ -23,7 +23,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
             <Link
               href={`/brands/${brand.slug}`}
               style={{ ["--brand-accent" as string]: brand.accent_color ?? "#E4779F" }}
-              className="group relative h-full bg-white border border-border rounded-2xl p-6 md:p-7 flex flex-col gap-4 items-start overflow-hidden
+              className="group relative h-full bg-white border border-border rounded-2xl p-6 md:p-7 flex flex-col gap-4 items-center text-center md:items-start md:text-left overflow-hidden
                          transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(18,58,92,0.12)] hover:border-[var(--brand-accent)]"
             >
               {/* Just the top edge, as it was — but drawn from both ends at
@@ -39,7 +39,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
                 className="absolute top-0 right-0 w-1/2 h-1 origin-right scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                 style={{ background: brand.accent_color ?? "#E4779F" }}
               />
-              <div className="h-24 md:h-16 w-full flex items-center justify-center">
+              <div className="flex-1 min-h-24 md:flex-none md:h-16 w-full flex items-center justify-center">
                 {isRenderableImage(brand.logo_url) ? (
                   <Image
                     src={brand.logo_url}
@@ -59,7 +59,10 @@ export default function Brands({ brands }: { brands: Brand[] }) {
               <span className="hidden md:block text-[14px] leading-relaxed text-muted-2">
                 {brand.tagline}
               </span>
-              <span className="mt-auto pt-1 text-sm font-semibold text-blue opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+              {/* Always visible on a phone: it is hover that reveals it on a
+                  computer, and a touch screen has none — so the card looked
+                  like a picture that happened to navigate when tapped. */}
+              <span className="mt-auto pt-1 text-sm font-semibold text-blue transition-all duration-300 md:opacity-0 md:-translate-x-1 md:group-hover:opacity-100 md:group-hover:translate-x-0">
                 View range →
               </span>
             </Link>
