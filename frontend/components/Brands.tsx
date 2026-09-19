@@ -59,10 +59,9 @@ export default function Brands({ brands }: { brands: Brand[] }) {
               <span className="hidden md:block text-[14px] leading-relaxed text-muted-2">
                 {brand.tagline}
               </span>
-              {/* Always visible on a phone: it is hover that reveals it on a
-                  computer, and a touch screen has none — so the card looked
-                  like a picture that happened to navigate when tapped. */}
-              <span className="mt-auto pt-1 text-sm font-semibold text-blue transition-all duration-300 md:opacity-0 md:-translate-x-1 md:group-hover:opacity-100 md:group-hover:translate-x-0">
+              {/* Desktop only, revealed on hover. On a phone the card is just
+                  the mark, so the logo has the whole card to centre in. */}
+              <span className="hidden md:block mt-auto pt-1 text-sm font-semibold text-blue transition-all duration-300 md:opacity-0 md:-translate-x-1 md:group-hover:opacity-100 md:group-hover:translate-x-0">
                 View range →
               </span>
             </Link>
