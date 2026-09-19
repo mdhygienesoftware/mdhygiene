@@ -76,16 +76,24 @@ export default async function ProductsPage({
             {oem.length > 0 ? (
               <ProductShowcase products={oem} title="OEM / Private label" />
             ) : (
-              <section className="px-5 md:px-14 pb-16 md:pb-20">
-                <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-2 max-w-3xl">
-                  <h2 className="text-xl font-extrabold text-navy">OEM / Private label</h2>
-                  <p className="text-muted-2 text-[15px] leading-relaxed">
-                    We manufacture sanitary napkins and baby diapers under your own brand —
-                    specification, production and packaging handled end-to-end. Private-label lines aren&apos;t
-                    listed publicly; tell us your requirement and we&apos;ll quote.
-                  </p>
-                  <Link href="/contact" className="text-blue font-semibold text-[15px] mt-1">
-                    Discuss a private-label run →
+              // There are no OEM products to list, so this is a call to action,
+              // not a card: it spans the width and puts the ask in a button
+              // rather than stranding a 768px box in a 1392px row.
+              <section className="px-5 md:px-14 pb-4 md:pb-6">
+                <div className="bg-white border border-border rounded-2xl p-7 md:p-9 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10">
+                  <div className="flex flex-col gap-2 max-w-2xl">
+                    <h2 className="text-xl md:text-2xl font-extrabold text-navy">OEM / Private label</h2>
+                    <p className="text-muted-2 text-[15px] leading-relaxed">
+                      We manufacture sanitary napkins and baby diapers under your own brand —
+                      specification, production and packaging handled end-to-end. Private-label lines
+                      aren&apos;t listed publicly; tell us your requirement and we&apos;ll quote.
+                    </p>
+                  </div>
+                  <Link
+                    href="/contact"
+                    className="shrink-0 self-start bg-navy text-white px-8 py-4 rounded-lg font-semibold hover:bg-pink transition-colors"
+                  >
+                    Discuss a private-label run
                   </Link>
                 </div>
               </section>
