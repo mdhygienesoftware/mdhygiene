@@ -32,6 +32,14 @@ function easeOut(t: number): number {
  * because that gives no control over duration, and the glide here is a fixed
  * 0.4 seconds.
  */
+function Copy({ children, className }: { children: ReactNode; className: string }) {
+  return (
+    <div data-rail-repeat aria-hidden="true" className={`${className} flex`}>
+      {children}
+    </div>
+  );
+}
+
 export default function MobileRail({
   children,
   className,
@@ -97,7 +105,7 @@ export default function MobileRail({
           // Only once the glide has landed. Winding back mid-glide fought the
           // animation: each frame set scrollLeft forward, the scroll handler
           // pulled it back a whole set, and the two argued all the way across.
-          rewind(el);
+          normalise(el);
         }
       };
       frame = requestAnimationFrame(step);
@@ -112,7 +120,7 @@ export default function MobileRail({
       if (cards.length < 2) return;
 
       // Backstop for the scroll listener above.
-      rewind(el);
+      normalise(el);
 
       // Where each card sits, measured from the rail's own left edge with the
       // side padding taken off, so a card lands where scroll-snap wants it.
@@ -155,10 +163,18 @@ export default function MobileRail({
       return cards.length > items.length ? cards[items.length].offsetLeft - cards[0].offsetLeft : 0;
     }
 
-    /** Back off the repeated copy, if the scroll has run into it. */
-    function rewind(el: HTMLElement) {
+    /**
+     * Put the scroll back inside the middle set.
+     *
+     * Adding or subtracting exactly one set width lands on identical content,
+     * so this is invisible — and it leaves a full set of room to swipe in
+     * either direction before an edge could be reached.
+     */
+    function normalise(el: HTMLElement) {
       const width = setWidthOf(el);
-      if (width > 0 && el.scrollLeft >= width - 1) el.scrollLeft -= width;
+      if (width <= 0) return;
+      if (el.scrollLeft < width * 0.5) el.scrollLeft += width;
+      else if (el.scrollLeft >= width * 1.5) el.scrollLeft -= width;
     }
 
     // The repeat exists so there is a card to the right of the last one. It is
@@ -181,7 +197,7 @@ export default function MobileRail({
       settle = window.setTimeout(() => {
         const el = rail.current;
         if (!el || holding || gliding) return;
-        rewind(el);
+        normalise(el);
       }, SETTLE_MS);
     }
     el.addEventListener("scroll", onScroll, { passive: true });
@@ -210,6 +226,11 @@ export default function MobileRail({
       timer = window.setTimeout(tick, DWELL_MS + GLIDE_MS);
     }
 
+    // Open on the middle set, so there is a set's worth of slack behind as
+    // well as ahead and neither edge is within reach of a swipe.
+    const startAt = setWidthOf(el);
+    if (startAt > 0) el.scrollLeft = startAt;
+
     // First move comes sooner than a full dwell — long enough for the cards'
     // entrance to finish, not so long that the rail looks static on arrival.
     timer = window.setTimeout(tick, FIRST_MOVE_MS);
@@ -231,19 +252,21 @@ export default function MobileRail({
 
   return (
     <div ref={rail} className={className}>
+      {/* A copy of the set before and after the real one, so neither end of
+          the rail can be reached: a swipe in either direction always has a
+          whole set of slack ahead of it, and the scroll is quietly returned to
+          the middle once it settles.
+
+          Hidden from md up, where this is a grid and there is no loop; hidden
+          from screen readers and taken out of the tab order, since it is the
+          same content three times.
+
+          `flex` on the wrapper matters: without it the copy inside is not
+          stretched to the row, so its card — which sizes itself with h-full —
+          comes out at content height while the real cards are full height. */}
+      {items.length > 1 && items.map((item, i) => <Copy key={`lead-${i}`} className={itemClassName}>{item}</Copy>)}
       {items}
-      {/* The set again, for the loop to run into. Hidden from md up, where this
-          is a grid and there is no loop; hidden from screen readers and taken
-          out of the tab order, since it is the same content twice. */}
-      {items.length > 1 &&
-        items.map((item, i) => (
-          // `flex` on the wrapper matters: without it the copy inside is not
-          // stretched to the row, so its card — which sizes itself with h-full
-          // — came out at content height while the real cards were full height.
-          <div key={`repeat-${i}`} data-rail-repeat aria-hidden="true" className={`${itemClassName} flex`}>
-            {item}
-          </div>
-        ))}
+      {items.length > 1 && items.map((item, i) => <Copy key={`trail-${i}`} className={itemClassName}>{item}</Copy>)}
     </div>
   );
 }
