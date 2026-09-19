@@ -92,14 +92,14 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
         {images.map((image, i) => (
           <div
             key={`${image.url}-${i}`}
-            className="relative aspect-[4/3] sm:aspect-[16/10] w-full shrink-0 snap-start"
+            className="relative aspect-[16/10] w-full shrink-0 snap-start"
           >
             <Image
               src={image.url}
               alt={image.alt || ""}
               fill
               draggable={false}
-              className="object-contain p-3 sm:p-4"
+              className="object-contain"
               // The box is capped at max-w-3xl, so asking for more would fetch
               // a far larger file than is ever displayed.
               sizes="(max-width: 768px) 100vw, 768px"
