@@ -9,7 +9,7 @@ export default function Brands({ brands }: { brands: Brand[] }) {
   if (!brands.length) return null;
 
   return (
-    <section id="brands" className="px-5 md:px-14 py-8 md:py-16 flex flex-col gap-7 md:gap-9">
+    <section id="brands" className="px-5 md:px-14 pt-8 md:pt-16 pb-4 md:pb-6 flex flex-col gap-7 md:gap-9">
       <Reveal>
         <div className="flex flex-col gap-2">
           <span className="text-[13px] font-bold tracking-[0.14em] text-pink">OUR BRANDS</span>

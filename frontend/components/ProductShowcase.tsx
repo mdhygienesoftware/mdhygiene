@@ -6,14 +6,14 @@ import MobileRail from "@/components/MobileRail";
 export default function ProductShowcase({ products, title }: { products: Product[]; title?: string }) {
   if (!products.length) {
     return (
-      <section className="px-5 md:px-14 pb-16 md:pb-20">
+      <section className="px-5 md:px-14 pb-4 md:pb-6">
         <p className="text-muted-2">No products to show yet — check back soon.</p>
       </section>
     );
   }
 
   return (
-    <section className="px-5 md:px-14 pb-8 md:pb-16 flex flex-col gap-7 md:gap-8">
+    <section className="px-5 md:px-14 pb-4 md:pb-6 flex flex-col gap-7 md:gap-8">
       {title && (
         <Reveal>
           <h2 className="text-[26px] md:text-[36px] font-extrabold text-navy">{title}</h2>
