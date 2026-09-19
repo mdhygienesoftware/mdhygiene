@@ -16,6 +16,8 @@ export default function VisitorTracker() {
 
   useEffect(() => {
     if (!pathname || pathname.startsWith("/admin")) return;
+    // Inside a frame this is the admin panel's mobile preview, not a visitor.
+    if (window.self !== window.top) return;
     // React 18 runs effects twice in development; without this the same view
     // would be counted twice on every page.
     if (lastSent.current === pathname) return;

@@ -8,6 +8,7 @@ import { sessionIsCurrent } from "@/lib/session";
 const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/visitors", label: "Visitors" },
+  { href: "/admin/preview", label: "Mobile preview" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/oem", label: "OEM / Private Label" },
   { href: "/admin/brands", label: "Brands" },
