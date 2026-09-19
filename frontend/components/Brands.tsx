@@ -26,27 +26,17 @@ export default function Brands({ brands }: { brands: Brand[] }) {
               className="group relative h-full bg-white border border-border rounded-2xl p-6 md:p-7 flex flex-col gap-4 items-start overflow-hidden
                          transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(18,58,92,0.12)] hover:border-[var(--brand-accent)]"
             >
-              {/* The accent draws itself round the card on hover: each edge
-                  grows from where the one before it ended, so the four together
-                  read as a single line travelling clockwise. */}
+              {/* Just the top edge, as it was — but drawn from both ends at
+                  once: two halves anchored at the left and right corners
+                  growing inward to meet in the middle. */}
               <span
                 aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
+                className="absolute top-0 left-0 w-1/2 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                 style={{ background: brand.accent_color ?? "#E4779F" }}
               />
               <span
                 aria-hidden="true"
-                className="absolute inset-y-0 right-0 w-1 origin-top scale-y-0 transition-transform duration-300 delay-100 group-hover:scale-y-100"
-                style={{ background: brand.accent_color ?? "#E4779F" }}
-              />
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-1 origin-right scale-x-0 transition-transform duration-300 delay-200 group-hover:scale-x-100"
-                style={{ background: brand.accent_color ?? "#E4779F" }}
-              />
-              <span
-                aria-hidden="true"
-                className="absolute inset-y-0 left-0 w-1 origin-bottom scale-y-0 transition-transform duration-300 delay-[300ms] group-hover:scale-y-100"
+                className="absolute top-0 right-0 w-1/2 h-1 origin-right scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                 style={{ background: brand.accent_color ?? "#E4779F" }}
               />
               <div className="h-24 md:h-16 w-full flex items-center justify-center">
