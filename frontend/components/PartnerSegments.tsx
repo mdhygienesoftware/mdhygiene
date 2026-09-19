@@ -21,7 +21,7 @@ const SEGMENTS = [
 
 export default function PartnerSegments() {
   return (
-    <section className="px-5 md:px-14 py-10 md:py-20 bg-cream-2 flex flex-col gap-7 md:gap-9">
+    <section className="px-5 md:px-14 py-8 md:py-16 bg-cream-2 flex flex-col gap-7 md:gap-9">
       <Reveal>
         <div className="flex flex-col gap-2">
           <span className="text-[13px] font-bold tracking-[0.14em] text-pink">WORK WITH US</span>

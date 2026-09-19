@@ -15,7 +15,7 @@ export default async function ContactPage() {
   return (
     <>
       <Header />
-      <main className="px-5 md:px-14 py-10 md:py-14 grid md:grid-cols-2 gap-9 md:gap-12 max-w-5xl mx-auto">
+      <main className="px-5 md:px-14 py-8 md:py-12 grid md:grid-cols-2 gap-9 md:gap-12 max-w-5xl mx-auto">
         <div className="flex flex-col gap-4">
           <h1 className="text-3xl md:text-[40px] font-extrabold text-navy">Get a quote</h1>
           <p className="text-muted-2">

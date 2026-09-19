@@ -57,7 +57,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
         ])}
       />
       <Header />
-      <main className="px-5 md:px-14 py-10 md:py-14 flex flex-col gap-10 md:gap-12">
+      <main className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-10 md:gap-12">
         <div className="grid md:grid-cols-2 gap-7 md:gap-10">
           <div className="relative rounded-2xl h-[240px] sm:h-[300px] md:h-[340px] bg-[#F5E1EA] overflow-hidden">
             {isRenderableImage(product.image_url) && (

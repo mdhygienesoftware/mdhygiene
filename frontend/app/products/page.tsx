@@ -38,7 +38,7 @@ export default async function ProductsPage({
     <>
       <Header />
       <main>
-        <section className="px-5 md:px-14 py-10 md:py-14 flex flex-col gap-6">
+        <section className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-6">
           <div>
             <h1 className="text-[28px] md:text-[40px] font-extrabold text-navy">Product catalog</h1>
             <p className="text-muted-2 mt-2 max-w-xl">

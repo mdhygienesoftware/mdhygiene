@@ -25,7 +25,7 @@ export default async function CertificationsPage() {
     <>
       <Header />
       <main className="flex flex-col">
-        <section className="px-5 md:px-14 py-10 md:py-14 max-w-3xl flex flex-col gap-5">
+        <section className="px-5 md:px-14 py-8 md:py-12 max-w-3xl flex flex-col gap-5">
           <span className="text-[13px] font-bold tracking-[0.14em] text-pink">CERTIFICATIONS</span>
           <h1 className="text-3xl md:text-[40px] font-extrabold text-navy leading-[1.18]">
             Certified manufacturing you can put in a tender file
@@ -52,7 +52,7 @@ export default async function CertificationsPage() {
           </div>
         </section>
 
-        <section className="px-5 md:px-14 py-10 md:py-14 flex flex-col gap-8">
+        <section className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-8">
           <div className="flex flex-col gap-5 md:gap-6">
             <h2 className="text-[22px] md:text-[28px] font-extrabold text-navy">Headline credentials</h2>
             {featured.map((cert, i) => (
@@ -76,7 +76,7 @@ export default async function CertificationsPage() {
           )}
         </section>
 
-        <section className="px-5 md:px-14 py-12 md:py-16 bg-cream-2 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <section className="px-5 md:px-14 py-8 md:py-12 bg-cream-2 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex flex-col gap-2 max-w-xl">
             <h2 className="text-[24px] md:text-[30px] font-extrabold text-navy leading-[1.18]">
               Need the certificates themselves?

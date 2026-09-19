@@ -17,7 +17,7 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
   if (images.length === 0) return null;
 
   return (
-    <section className="px-5 md:px-14 py-10 md:py-16 flex flex-col gap-6 md:gap-8">
+    <section className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-6 md:gap-8">
       {(gallery.eyebrow || gallery.heading) && (
         <Reveal>
           <div className="flex flex-col gap-2 max-w-2xl">

@@ -21,7 +21,7 @@ export default async function CareersPage() {
     <>
       <Header />
       <main className="flex flex-col">
-        <section className="px-5 md:px-14 py-10 md:py-14 max-w-3xl flex flex-col gap-5">
+        <section className="px-5 md:px-14 py-8 md:py-12 max-w-3xl flex flex-col gap-5">
           <span className="text-[13px] font-bold tracking-[0.14em] text-pink">{careers.eyebrow}</span>
           <h1 className="text-3xl md:text-[40px] font-extrabold text-navy leading-[1.18]">{careers.heading}</h1>
           <p className="text-muted-2 leading-relaxed whitespace-pre-line">{careers.body}</p>
@@ -95,7 +95,7 @@ export default async function CareersPage() {
           )}
         </section>
 
-        <section id="apply" className="px-5 md:px-14 py-12 md:py-16 bg-cream-2 flex flex-col gap-6 scroll-mt-20">
+        <section id="apply" className="px-5 md:px-14 py-8 md:py-12 bg-cream-2 flex flex-col gap-6 scroll-mt-20">
           <div className="flex flex-col gap-2 max-w-2xl">
             <h2 className="text-[24px] md:text-[32px] font-extrabold text-navy leading-[1.18]">
               Apply to join us

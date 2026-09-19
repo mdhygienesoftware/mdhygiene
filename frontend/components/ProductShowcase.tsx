@@ -13,7 +13,7 @@ export default function ProductShowcase({ products, title }: { products: Product
   }
 
   return (
-    <section className="px-5 md:px-14 pb-10 md:pb-20 flex flex-col gap-7 md:gap-8">
+    <section className="px-5 md:px-14 pb-8 md:pb-16 flex flex-col gap-7 md:gap-8">
       {title && (
         <Reveal>
           <h2 className="text-[26px] md:text-[36px] font-extrabold text-navy">{title}</h2>
