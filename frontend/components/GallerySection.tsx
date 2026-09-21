@@ -42,8 +42,11 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
 
           Capped and centred: at 4:3 a full-width carousel is 1080px tall on a
           1440px screen, taller than the window it sits in. Narrowing it is the
-          only way to make it shorter without changing the ratio. */}
-      <div className="w-full max-w-xl mx-auto">
+          only way to make it shorter without changing the ratio. The cap is on
+          the whole track, and the picture in the middle takes 76% of it — so
+          the cap is that much wider than the picture, which stays the size it
+          was, with its neighbours showing either side of it. */}
+      <div className="w-full max-w-3xl mx-auto">
         <ImageCarousel images={images} />
       </div>
     </section>
