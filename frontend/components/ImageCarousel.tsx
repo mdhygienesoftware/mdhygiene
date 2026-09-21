@@ -21,7 +21,7 @@ const RESUME_MS = 3000;
  *
  * All the component does is advance it on a timer and keep the dots in step.
  *
- * The pictures run edge to edge at 4:3, the same shape at every width. They
+ * The pictures sit in a 4:3 box, the same shape at every width. They
  * are cut to 16:10 with a generous backdrop around the subject, so filling a
  * narrower box takes the backdrop from the sides rather than the product. The
  * shape is fixed, so the section's height never changes as it runs.
@@ -88,7 +88,7 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
         aria-roledescription="carousel"
         aria-label="Image carousel"
         tabIndex={0}
-        className="flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain border-y border-border bg-[#FBF6F2] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
+        className="flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-2xl border border-border bg-[#FBF6F2] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
       >
         {images.map((image, i) => (
           <div
@@ -101,7 +101,9 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
               fill
               draggable={false}
               className="object-cover"
-              sizes="100vw"
+              // Capped at max-w-xl, so a full-viewport hint would fetch a far
+              // larger file than is ever shown.
+              sizes="(max-width: 576px) 100vw, 576px"
               priority={i === 0}
             />
           </div>

@@ -40,10 +40,10 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
           IntersectionObserver fires, which makes "the images never appeared"
           a possible outcome for a section whose whole point is the images.
 
-          Full bleed: the negative margins cancel the section's own padding so
-          the pictures run from one edge of the screen to the other. The heading
-          above keeps the padding. */}
-      <div className="-mx-5 md:-mx-14">
+          Capped and centred: at 4:3 a full-width carousel is 1080px tall on a
+          1440px screen, taller than the window it sits in. Narrowing it is the
+          only way to make it shorter without changing the ratio. */}
+      <div className="w-full max-w-xl mx-auto">
         <ImageCarousel images={images} />
       </div>
     </section>
