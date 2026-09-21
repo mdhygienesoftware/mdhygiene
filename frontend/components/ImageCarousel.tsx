@@ -21,20 +21,41 @@ const RESUME_MS = 3000;
  *
  * All the component does is advance it on a timer and keep the dots in step.
  *
+ * It travels left to right: each picture arrives from the left and pushes the
+ * one before it off to the right. A scroll container can only do that by
+ * scrolling backwards, so the pictures are laid out in reverse and it starts at
+ * the far end — which leaves the running order on screen the right way round,
+ * first picture first.
+ *
  * Images are contained rather than cropped, because a packshot is portrait and
  * a factory photo is wide: cropping either to one common box cuts the subject
  * out. The box keeps a fixed shape so the section's height never changes.
  */
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
-  const track = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement | null>(null);
   const idleUntil = useRef(0);
   const [active, setActive] = useState(0);
 
-  const scrollTo = useCallback((index: number) => {
-    const el = track.current;
-    if (!el) return;
-    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
-  }, []);
+  const ordered = [...images].reverse();
+  const last = images.length - 1;
+
+  const scrollTo = useCallback(
+    (index: number) => {
+      const el = track.current;
+      if (!el) return;
+      el.scrollTo({ left: (last - index) * el.clientWidth, behavior: "smooth" });
+    },
+    [last]
+  );
+
+  /** Put the track at the far end on mount, so there is room to travel left. */
+  const openAtEnd = useCallback(
+    (el: HTMLDivElement | null) => {
+      track.current = el;
+      if (el && el.clientWidth > 0) el.scrollLeft = last * el.clientWidth;
+    },
+    [last]
+  );
 
   // Which image is showing is read back from the scroll position, so a gesture
   // the browser handled on its own still moves the dots.
@@ -51,7 +72,8 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
       frame = requestAnimationFrame(() => {
         const el = track.current;
         if (!el || el.clientWidth === 0) return;
-        setActive(Math.round(el.scrollLeft / el.clientWidth));
+        // Slot n counts back from the end, because the track is reversed.
+        setActive(last - Math.round(el.scrollLeft / el.clientWidth));
       });
     };
 
@@ -60,7 +82,7 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
       el.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [last]);
 
   useEffect(() => {
     if (images.length < 2) return;
@@ -71,25 +93,31 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
       if (!el || el.clientWidth === 0) return;
       if (performance.now() < idleUntil.current) return;
       const at = Math.round(el.scrollLeft / el.clientWidth);
-      el.scrollTo({ left: ((at + 1) % images.length) * el.clientWidth, behavior: "smooth" });
+      if (at <= 0) {
+        // Round again. Jumped, not glided: sliding back across every picture
+        // would undo the direction the whole thing is travelling in.
+        el.scrollLeft = last * el.clientWidth;
+        return;
+      }
+      el.scrollTo({ left: (at - 1) * el.clientWidth, behavior: "smooth" });
     }, DWELL_MS);
 
     return () => window.clearInterval(id);
-  }, [images.length]);
+  }, [images.length, last]);
 
   if (images.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-4">
       <div
-        ref={track}
+        ref={openAtEnd}
         role="group"
         aria-roledescription="carousel"
         aria-label="Image carousel"
         tabIndex={0}
         className="flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-2xl border border-border bg-[#FBF6F2] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
       >
-        {images.map((image, i) => (
+        {ordered.map((image, i) => (
           <div
             key={`${image.url}-${i}`}
             className="relative aspect-[16/10] w-full shrink-0 snap-start"
@@ -111,7 +139,7 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
 
       {images.length > 1 && (
         <div className="flex justify-center gap-2">
-          {images.map((image, i) => (
+          {ordered.map((image, i) => (
             <button
               key={`${image.url}-dot-${i}`}
               type="button"
