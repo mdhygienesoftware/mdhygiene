@@ -17,10 +17,12 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
   if (images.length === 0) return null;
 
   return (
-    <section className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-6 md:gap-8">
+    // No side padding on the section: the carousel runs the full width of the
+    // window, so the words above it carry their own padding instead.
+    <section className="py-8 md:py-12 flex flex-col gap-6 md:gap-8">
       {(gallery.eyebrow || gallery.heading) && (
         <Reveal>
-          <div className="flex flex-col gap-2 max-w-2xl">
+          <div className="flex flex-col gap-2 max-w-2xl px-5 md:px-14">
             {gallery.eyebrow && (
               <span className="text-[13px] font-bold tracking-[0.14em] text-pink">{gallery.eyebrow}</span>
             )}
@@ -40,15 +42,10 @@ export default function GallerySection({ gallery }: { gallery: GalleryBlock | nu
           IntersectionObserver fires, which makes "the images never appeared"
           a possible outcome for a section whose whole point is the images.
 
-          Capped and centred: at 4:3 a full-width carousel is 1080px tall on a
-          1440px screen, taller than the window it sits in. Narrowing it is the
-          only way to make it shorter without changing the ratio. The cap is on
-          the whole track, and the picture in the middle takes 76% of it — so
-          the cap is that much wider than the picture, which stays the size it
-          was, with its neighbours showing either side of it. */}
-      <div className="w-full max-w-3xl mx-auto">
-        <ImageCarousel images={images} />
-      </div>
+          The carousel is not capped or padded here — it runs edge to edge and
+          sets its own side room, which is what puts the pictures either side
+          of the current one at the very edges of the window. */}
+      <ImageCarousel images={images} />
     </section>
   );
 }

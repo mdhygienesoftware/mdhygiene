@@ -44,51 +44,31 @@ function centreOf(el: HTMLDivElement, slot: number) {
  *
  * All the component does is advance it on a timer and keep the dots in step.
  *
- * The current picture sits in the middle at 4:3, with the ones either side of
- * it showing at the edges, so it reads as a run of pictures rather than a
- * single frame that swaps its contents. Every slide is the same fixed shape,
- * so the section's height never changes as it runs.
+ * The pictures run left to right in the order they were added — first picture
+ * at the left-hand end — and the carousel works its way along them, so the one
+ * peeking on the left is the picture before and the one on the right is the
+ * picture next. It spans the full width of the window: the slide widths and
+ * the padding that centres them are both set in vw, and the padding is exactly
+ * half of what a slide leaves over, which is what lets the first and last
+ * pictures reach the middle.
  *
- * It travels left to right: each picture arrives from the left and pushes the
- * one before it off to the right. A scroll container can only do that by
- * scrolling backwards, so the pictures are laid out in reverse and it opens at
- * the far end — which leaves the running order on screen the right way round,
- * first picture first.
+ * Every slide is 4:3, and the same shape as every other, so the section's
+ * height never changes as it runs. The height is capped: at full width 4:3
+ * would be taller than the window on a monitor, so past that point the box
+ * gets wider rather than taller and the picture is cropped to suit.
  */
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
-  const track = useRef<HTMLDivElement | null>(null);
+  const track = useRef<HTMLDivElement>(null);
   const idleUntil = useRef(0);
   const [active, setActive] = useState(0);
 
   const last = images.length - 1;
-  const ordered = [...images].reverse();
 
-  const scrollTo = useCallback(
-    (index: number) => {
-      const el = track.current;
-      if (!el) return;
-      el.scrollTo({ left: centreOf(el, last - index), behavior: "smooth" });
-    },
-    [last]
-  );
-
-  /** Open at the far end, so there is room to travel leftwards. */
-  const openAtEnd = useCallback(
-    (el: HTMLDivElement | null) => {
-      track.current = el;
-      if (el && el.clientWidth > 0) el.scrollLeft = centreOf(el, last);
-    },
-    [last]
-  );
-
-  // Belt and braces for the jump above: if the track had no width yet when it
-  // mounted, that did nothing and it would open on the last picture instead of
-  // the first. Put it right once layout has actually happened.
-  useEffect(() => {
+  const scrollTo = useCallback((index: number) => {
     const el = track.current;
-    if (!el || el.scrollLeft > 0 || el.clientWidth === 0) return;
-    el.scrollLeft = centreOf(el, last);
-  }, [last]);
+    if (!el) return;
+    el.scrollTo({ left: centreOf(el, index), behavior: "smooth" });
+  }, []);
 
   // Which image is showing is read back from the scroll position, so a gesture
   // the browser handled on its own still moves the dots.
@@ -105,8 +85,7 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
       frame = requestAnimationFrame(() => {
         const el = track.current;
         if (!el || el.clientWidth === 0) return;
-        // Slot n counts back from the end, because the track is reversed.
-        setActive(last - slotAt(el));
+        setActive(slotAt(el));
       });
     };
 
@@ -115,7 +94,7 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
       el.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(frame);
     };
-  }, [last]);
+  }, []);
 
   useEffect(() => {
     if (images.length < 2) return;
@@ -126,14 +105,14 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
       if (!el || el.clientWidth === 0) return;
       if (performance.now() < idleUntil.current) return;
 
-      const at = last - slotAt(el);
+      const at = slotAt(el);
       if (at >= last) {
-        // Round again. Jumped, not glided: sliding back across every picture
-        // would undo the direction the whole thing is travelling in.
-        el.scrollLeft = centreOf(el, last);
+        // Round again. Jumped, not glided: sweeping back across every picture
+        // would run the whole thing backwards for several seconds.
+        el.scrollLeft = Math.max(0, centreOf(el, 0));
         return;
       }
-      el.scrollTo({ left: centreOf(el, last - at - 1), behavior: "smooth" });
+      el.scrollTo({ left: centreOf(el, at + 1), behavior: "smooth" });
     }, DWELL_MS);
 
     return () => window.clearInterval(id);
@@ -144,41 +123,32 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   return (
     <div className="flex flex-col gap-4">
       <div
-        ref={openAtEnd}
+        ref={track}
         role="group"
         aria-roledescription="carousel"
         aria-label="Image carousel"
         tabIndex={0}
         // relative so each slide's offsetLeft is measured against this track,
-        // which is the same space scrollLeft is in.
-        //
-        // The side padding is exactly half the room a slide leaves over
-        // ((100% - 76%) / 2), which is what lets the first and last pictures
-        // reach the middle — and what makes the far end of the scroll the
-        // resting place of the last slot.
-        className="relative flex w-full snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-[12%] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
+        // which is the space scrollLeft is in. items-start so the slides keep
+        // their own 4:3 height instead of being stretched to the tallest.
+        className="relative flex w-full items-start snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-[12vw] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none"
       >
-        {ordered.map((image, i) => {
-          const index = last - i;
-          return (
-            <div
-              key={`${image.url}-${index}`}
-              className="relative aspect-[4/3] w-[76%] shrink-0 snap-center overflow-hidden rounded-2xl border border-border bg-[#FBF6F2]"
-            >
-              <Image
-                src={image.url}
-                alt={image.alt || ""}
-                fill
-                draggable={false}
-                className="object-cover"
-                // 76% of a box capped at max-w-3xl, so a full-viewport hint
-                // would fetch a far larger file than is ever shown.
-                sizes="(max-width: 768px) 76vw, 584px"
-                priority={index === 0}
-              />
-            </div>
-          );
-        })}
+        {images.map((image, i) => (
+          <div
+            key={`${image.url}-${i}`}
+            className="relative aspect-[4/3] max-h-[68vh] w-[76vw] shrink-0 snap-center overflow-hidden rounded-2xl border border-border bg-[#FBF6F2]"
+          >
+            <Image
+              src={image.url}
+              alt={image.alt || ""}
+              fill
+              draggable={false}
+              className="object-cover"
+              sizes="76vw"
+              priority={i === 0}
+            />
+          </div>
+        ))}
       </div>
 
       {images.length > 1 && (
