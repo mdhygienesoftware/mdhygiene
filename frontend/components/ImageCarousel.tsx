@@ -21,10 +21,10 @@ const RESUME_MS = 3000;
  *
  * All the component does is advance it on a timer and keep the dots in step.
  *
- * The pictures run edge to edge as a band. They are cut to 16:10 with a
- * generous backdrop around the subject, so cropping a wider band out of them
- * takes the backdrop rather than the product. The band keeps a fixed shape at
- * each width, so the section's height never changes as it runs.
+ * The pictures run edge to edge at 4:3, the same shape at every width. They
+ * are cut to 16:10 with a generous backdrop around the subject, so filling a
+ * narrower box takes the backdrop from the sides rather than the product. The
+ * shape is fixed, so the section's height never changes as it runs.
  */
 export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
   const track = useRef<HTMLDivElement>(null);
@@ -93,7 +93,7 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
         {images.map((image, i) => (
           <div
             key={`${image.url}-${i}`}
-            className="relative aspect-[4/3] sm:aspect-[2/1] lg:aspect-[21/9] max-h-[560px] w-full shrink-0 snap-start"
+            className="relative aspect-[4/3] w-full shrink-0 snap-start"
           >
             <Image
               src={image.url}
