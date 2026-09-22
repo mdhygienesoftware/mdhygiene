@@ -4,14 +4,29 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import VariantTable from "@/components/VariantTable";
-import { getProductBySlug } from "@/lib/queries";
+import { getProductBySlug, getProducts } from "@/lib/queries";
 import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { breadcrumbSchema, productSchema } from "@/components/StructuredData";
 import type { Metadata } from "next";
 import { isRenderableImage } from "@/lib/image";
 
-// Always render against current data — admin edits must show up immediately.
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
+
+/**
+ * Pre-render every product at build time, so the first visitor to one is served
+ * a finished page instead of waiting on a round trip to Supabase. Anything
+ * added afterwards is still rendered on demand and cached from then on.
+ *
+ * An empty list is a valid answer: if Supabase is unreachable during the
+ * build, the pages fall back to on-demand rendering rather than failing it.
+ */
+export async function generateStaticParams() {
+    const products = await getProducts();
+  return products.filter((product) => product.slug).map((product) => ({ slug: String(product.slug) }));
+}
 
 /** Per-product overrides set in admin win; otherwise fall back to product copy. */
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

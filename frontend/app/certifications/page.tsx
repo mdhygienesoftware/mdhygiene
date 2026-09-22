@@ -3,26 +3,39 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import StructuredData, { itemListSchema } from "@/components/StructuredData";
 import { getContactInfo } from "@/lib/queries";
+import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import { activeCertifications, type Certification } from "@/lib/certifications";
 
-// Always render against current data — admin edits must show up immediately.
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
 
 export const metadata = {
+  alternates: { canonical: "/certifications" },
   title: "Certifications — MDHygiene",
   description:
     "Every certification behind M.D. Hygiene's manufacturing — BIS, ISO 13485, WHO-GMP, CE, ISO 9001, 14001, 27001 and more — with issuing body, certificate number, scope and validity.",
 };
 
 export default async function CertificationsPage() {
-  const contact = await getContactInfo();
+  const [contact, general] = await Promise.all([getContactInfo(), getSeoGeneral()]);
+  const siteUrl = resolveSiteUrl(general.canonical_domain);
   const certifications = activeCertifications();
   const featured = certifications.filter((c) => c.featured);
   const rest = certifications.filter((c) => !c.featured);
 
+  const list = itemListSchema(
+    "M.D. Hygiene certifications",
+    certifications.map((c) => ({ name: c.fullName || c.name, url: `${siteUrl}/certifications#${c.id}` })),
+    `${siteUrl}/certifications`
+  );
+
   return (
     <>
+      {list && <StructuredData data={list} />}
       <Header />
       <main className="flex flex-col">
         <section className="px-5 md:px-14 py-8 md:py-12 max-w-3xl flex flex-col gap-5">

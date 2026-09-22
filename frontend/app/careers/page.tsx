@@ -2,23 +2,35 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import CareerForm from "@/components/CareerForm";
+import StructuredData, { jobPostingSchemas } from "@/components/StructuredData";
 import { getCareers } from "@/lib/queries";
+import { getSeoGeneral, getSeoLocal, resolveSiteUrl } from "@/lib/seo";
 
-// Always render against current data — admin edits must show up immediately.
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
 
 export const metadata = {
+  alternates: { canonical: "/careers" },
   title: "Careers — MDHygiene",
   description:
     "Open roles at M.D. Hygiene — manufacturing, quality, sales and design across our Gujarat factory and distribution network. Apply online.",
 };
 
 export default async function CareersPage() {
-  const careers = await getCareers();
+  const [careers, general, local] = await Promise.all([getCareers(), getSeoGeneral(), getSeoLocal()]);
   const open = careers.openings.filter((o) => o.is_open);
+  const siteUrl = resolveSiteUrl(general.canonical_domain);
+  // No posting date is recorded, and Google requires one. The page's own
+  // render date is the earliest we can honestly claim to have shown the role.
+  const postedIso = new Date().toISOString().slice(0, 10);
 
   return (
     <>
+      {jobPostingSchemas(careers.openings, local, siteUrl, postedIso).map((job) => (
+        <StructuredData key={job.title} data={job} />
+      ))}
       <Header />
       <main className="flex flex-col">
         <section className="px-5 md:px-14 py-8 md:py-12 max-w-3xl flex flex-col gap-5">

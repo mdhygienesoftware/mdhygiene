@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getBrands, getContactInfo, getSocialLinks, getTeamMemberBySlug } from "@/lib/queries";
+import { getBrands, getCardMembers, getContactInfo, getSocialLinks, getTeamMemberBySlug } from "@/lib/queries";
 import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import StructuredData from "@/components/StructuredData";
 import CardActions from "@/components/CardActions";
@@ -12,7 +12,23 @@ import CardBackdrop from "@/components/CardBackdrop";
 import type { TeamMember } from "@/lib/types";
 import { isRenderableImage } from "@/lib/image";
 
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
+
+/**
+ * Pre-render every card at build time, so the first visitor to one is served
+ * a finished page instead of waiting on a round trip to Supabase. Anything
+ * added afterwards is still rendered on demand and cached from then on.
+ *
+ * An empty list is a valid answer: if Supabase is unreachable during the
+ * build, the pages fall back to on-demand rendering rather than failing it.
+ */
+export async function generateStaticParams() {
+    const members = await getCardMembers();
+  return members.filter((member) => member.slug).map((member) => ({ slug: String(member.slug) }));
+}
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const member = (await getTeamMemberBySlug(params.slug)) as TeamMember | null;

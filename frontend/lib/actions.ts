@@ -1,22 +1,40 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sendInquiryNotification } from "@/lib/email";
 import { claimSession, sessionIdFromToken } from "@/lib/session";
-import { isResumePath, resumeLine, safeFileName } from "@/lib/resume";
+import { callerIp, withinLimit } from "@/lib/rate-limit";
 
 export interface ActionResult {
   ok: boolean;
   error?: string;
 }
 
+/**
+ * Both public forms write a row that a person then has to read. Five in an
+ * hour from one address is far more than anyone submits in good faith, and
+ * well short of what a script would manage unchecked.
+ *
+ * The answer to a blocked submission says the same thing as a slow connection
+ * would, rather than announcing that there is a limit to work around.
+ */
+async function withinSubmissionLimit(kind: string): Promise<boolean> {
+  const ip = callerIp(await headers());
+  return withinLimit(`${kind}:${ip}`, 5, 60 * 60 * 1000);
+}
+
+const TOO_MANY = "Too many submissions from this connection. Please try again later, or email us directly.";
+
 export async function submitInquiryAction(formData: FormData): Promise<ActionResult> {
   // Honeypot — real users never fill this hidden field in.
   if (String(formData.get("website") ?? "").length > 0) {
     return { ok: true };
   }
+
+  if (!(await withinSubmissionLimit("inquiry"))) return { ok: false, error: TOO_MANY };
 
   const payload = {
     company_name: String(formData.get("company_name") ?? "").trim(),
@@ -58,6 +76,8 @@ export async function submitApplicationAction(formData: FormData): Promise<Actio
     return { ok: true };
   }
 
+  if (!(await withinSubmissionLimit("application"))) return { ok: false, error: TOO_MANY };
+
   const name = String(formData.get("contact_name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
@@ -66,16 +86,6 @@ export async function submitApplicationAction(formData: FormData): Promise<Actio
   const experience = String(formData.get("experience") ?? "").trim();
   const resumeUrl = String(formData.get("resume_url") ?? "").trim();
   const note = String(formData.get("message") ?? "").trim();
-
-  // The file itself went straight from the browser to storage; what arrives
-  // here is where it landed. Checked rather than trusted — the shape is one we
-  // generate, so anything else is not ours to record or hand to an admin.
-  const resumePath = String(formData.get("resume_path") ?? "").trim();
-  const resumeName = String(formData.get("resume_name") ?? "").trim();
-  const resume =
-    resumePath && isResumePath(resumePath)
-      ? { path: resumePath, name: safeFileName(resumeName) }
-      : null;
 
   if (!name || !email || !phone || !note) {
     return { ok: false, error: "Please fill in all required fields." };
@@ -87,7 +97,6 @@ export async function submitApplicationAction(formData: FormData): Promise<Actio
     `Applying for: ${role}`,
     experience ? `Experience: ${experience}` : null,
     resumeUrl ? `Resume / profile: ${resumeUrl}` : null,
-    resume ? resumeLine(resume.name, resume.path) : null,
     "",
     note,
   ]

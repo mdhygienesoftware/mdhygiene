@@ -1,7 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { getSeoAi, getSeoGeneral, getSeoLocal, resolveSiteUrl } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
 
 /**
  * llms.txt — an emerging convention that gives AI assistants a clean, factual
@@ -18,7 +21,7 @@ export async function GET() {
   }
 
   const base = resolveSiteUrl(general.canonical_domain);
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data: products } = await supabase
     .from("products")
     .select("name, slug, description, brand:brands(name)")

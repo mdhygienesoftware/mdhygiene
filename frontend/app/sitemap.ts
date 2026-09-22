@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 
 /** Generated from live data, so new products appear without a redeploy. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const general = await getSeoGeneral();
   const base = resolveSiteUrl(general.canonical_domain);
-  const supabase = await createClient();
+  const supabase = createPublicClient();
 
   const [{ data: products }, { data: brands }] = await Promise.all([
     supabase.from("products").select("slug, created_at").eq("is_active", true),

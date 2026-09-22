@@ -3,23 +3,36 @@ import Footer from "@/components/Footer";
 import Certifications from "@/components/Certifications";
 import VideoSection from "@/components/VideoSection";
 import GallerySection from "@/components/GallerySection";
+import StructuredData, { aboutPageSchema } from "@/components/StructuredData";
 import { getAboutContent, getCertifications, getSiteGalleries, getSiteVideos } from "@/lib/queries";
+import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 
-// Always render against current data — admin edits must show up immediately.
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
 
-export const metadata = { title: "About — MDHygiene" };
+export const metadata = {
+  title: "About — MDHygiene",
+  description:
+    "M.D. Hygiene has manufactured sanitary napkins and baby diapers in Surat, Gujarat since 2016 — four own brands, OEM and private-label lines, and a distributor network across India.",
+  alternates: { canonical: "/about" },
+};
 
 export default async function AboutPage() {
-  const [about, certifications, videos, galleries] = await Promise.all([
+  const [about, certifications, videos, galleries, general] = await Promise.all([
     getAboutContent(),
     getCertifications(),
     getSiteVideos(),
     getSiteGalleries(),
+    getSeoGeneral(),
   ]);
 
   return (
     <>
+      <StructuredData
+        data={aboutPageSchema(resolveSiteUrl(general.canonical_domain), about?.body ?? "")}
+      />
       <Header />
       <main className="flex flex-col">
         {/* Heading first, the text under it, both across the width of the

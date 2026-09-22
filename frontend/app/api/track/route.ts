@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { callerIp, withinLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,12 +19,6 @@ const SALT = process.env.ANALYTICS_SALT ?? randomBytes(16).toString("hex");
 function visitorHash(ip: string, ua: string): string {
   const day = new Date().toISOString().slice(0, 10);
   return createHash("sha256").update(`${SALT}:${day}:${ip}:${ua}`).digest("hex").slice(0, 32);
-}
-
-function clientIp(headers: Headers): string {
-  const forwarded = headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  return headers.get("x-real-ip") ?? "unknown";
 }
 
 export async function POST(request: Request) {
@@ -46,11 +41,18 @@ export async function POST(request: Request) {
 
   const referrer = typeof body.referrer === "string" && body.referrer ? body.referrer.slice(0, 512) : null;
 
+  // A real person browsing generously reads a page or two a minute. Anything
+  // past sixty an hour from one address is a script, and every one of those is
+  // a row in the database and a distortion of the dashboard.
+  if (!withinLimit(`track:${callerIp(request.headers)}`, 60, 60 * 60 * 1000)) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   const supabase = await createClient();
   await supabase.from("page_views").insert({
     path,
     referrer,
-    visitor_hash: visitorHash(clientIp(request.headers), ua),
+    visitor_hash: visitorHash(callerIp(request.headers), ua),
     device: /mobile|android|iphone|ipad/i.test(ua) ? "mobile" : "desktop",
   });
 

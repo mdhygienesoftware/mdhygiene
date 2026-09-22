@@ -4,19 +4,29 @@ import Footer from "@/components/Footer";
 import ProductShowcase from "@/components/ProductShowcase";
 import Brands from "@/components/Brands";
 import { getBrands, getCategories, getProducts } from "@/lib/queries";
+import StructuredData, { itemListSchema } from "@/components/StructuredData";
+import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import { CATALOG_TYPES } from "@/lib/types";
 
-// Always render against current data — admin edits must show up immediately.
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
 
-export const metadata = { title: "Products — MDHygiene" };
+export const metadata = {
+  title: "Products — MDHygiene",
+  description:
+    "The full M.D. Hygiene catalogue — sanitary napkins and baby diapers across 7Soft, Extra Sure, Extra Soft and 24Care, with pack sizes, case quantities and distributor pricing.",
+  alternates: { canonical: "/products" },
+};
 
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: { brand?: string; category?: string; type?: string };
 }) {
-  const [products, brands, categories] = await Promise.all([
+  const [general, products, brands, categories] = await Promise.all([
+    getSeoGeneral(),
     getProducts({
       brandSlug: searchParams.brand,
       categorySlug: searchParams.category,
@@ -34,8 +44,21 @@ export default async function ProductsPage({
   const ownBrand = products.filter((p) => p.catalog_type !== "oem");
   const oem = products.filter((p) => p.catalog_type === "oem");
 
+  const siteUrl = resolveSiteUrl(general.canonical_domain);
+  // Only the unfiltered catalogue is described as a list. A filtered view is a
+  // subset of the same page, and emitting a different list for each filter
+  // would have several URLs each claiming to be the catalogue.
+  const list = isFiltered
+    ? null
+    : itemListSchema(
+        "M.D. Hygiene product catalogue",
+        products.map((product) => ({ name: product.name, url: `${siteUrl}/products/${product.slug}` })),
+        `${siteUrl}/products`
+      );
+
   return (
     <>
+      {list && <StructuredData data={list} />}
       <Header />
       <main>
         <section className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-6">

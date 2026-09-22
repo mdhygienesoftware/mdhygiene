@@ -13,8 +13,10 @@ import { getBrands, getCareers, getCertifications, getCompanyStats, getContactIn
 import { getSeoAi, getSeoGeneral, getSeoLocal, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } from "@/components/StructuredData";
 
-// Always render against current data — admin edits must show up immediately.
-export const dynamic = "force-dynamic";
+// Rendered once and reused for five minutes, rather than rebuilt from scratch
+// on every visit. Admin saves call revalidatePath, so an edit is live at once;
+// what this changes is every visit in between.
+export const revalidate = 300;
 
 export default async function HomePage() {
   const [slides, stats, brands, featured, certifications, contact, careers, general, local, ai, videos, galleries] =

@@ -145,7 +145,10 @@ export default function ImageCarousel({ images }: { images: GalleryImage[] }) {
               draggable={false}
               className="object-cover"
               sizes="76vw"
-              priority={i === 0}
+              // Deliberately not priority. This sits well below the fold, and
+              // preloading it competes with the hero for the bandwidth that
+              // decides the page's largest-contentful-paint.
+              loading="lazy"
             />
           </div>
         ))}

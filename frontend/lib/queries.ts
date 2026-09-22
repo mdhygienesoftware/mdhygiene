@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isRenderableImage } from "@/lib/image";
 import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, HeroSlide, GalleryBlock, Product, SiteGalleries, SiteVideos, VideoBlock } from "@/lib/types";
 import { withCareerDefaults } from "@/lib/careers";
@@ -15,19 +15,19 @@ import { withCareerDefaults } from "@/lib/careers";
  * edits still appear immediately. */
 
 export const getBrands = cache(async (): Promise<Brand[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.from("brands").select("*").order("sort_order");
   return data ?? [];
 });
 
 export const getBrandBySlug = cache(async (slug: string): Promise<Brand | null> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.from("brands").select("*").eq("slug", slug).maybeSingle();
   return data ?? null;
 });
 
 export const getCategories = cache(async (): Promise<Category[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.from("product_categories").select("*").order("name");
   return data ?? [];
 });
@@ -37,7 +37,7 @@ export const getProducts = cache(async (filter?: {
   categorySlug?: string;
   catalogType?: string;
 }): Promise<Product[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   let query = supabase
     .from("products")
     .select("*, brand:brands(*), category:product_categories(*), variants:product_variants(*)")
@@ -66,7 +66,7 @@ export const getProducts = cache(async (filter?: {
 });
 
 export const getFeaturedProducts = cache(async (limit = 4): Promise<Product[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
     .select("*, brand:brands(*), category:product_categories(*), variants:product_variants(*)")
@@ -78,7 +78,7 @@ export const getFeaturedProducts = cache(async (limit = 4): Promise<Product[]> =
 });
 
 export const getProductBySlug = cache(async (slug: string): Promise<Product | null> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
     .select("*, brand:brands(*), category:product_categories(*), variants:product_variants(*)")
@@ -93,7 +93,7 @@ function sortVariants(product: Product): Product {
 }
 
 export const getHeroSlides = cache(async (): Promise<HeroSlide[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("hero_slides")
     .select("*")
@@ -107,7 +107,7 @@ export const getHeroSlides = cache(async (): Promise<HeroSlide[]> => {
 });
 
 async function getSetting<T>(key: string): Promise<T | null> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.from("site_settings").select("value").eq("key", key).maybeSingle();
   return (data?.value as T) ?? null;
 }
@@ -152,7 +152,7 @@ export const getCareers = async (): Promise<CareersContent> =>
 
 /** One member's digital visiting card (the React port of the old PHP cards). */
 export const getTeamMemberBySlug = cache(async (slug: string) => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("team_members")
     .select("*")
@@ -165,7 +165,7 @@ export const getTeamMemberBySlug = cache(async (slug: string) => {
 
 /** Every member with a live card — used to list and pre-render them. */
 export const getCardMembers = cache(async () => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("team_members")
     .select("*")
@@ -176,7 +176,7 @@ export const getCardMembers = cache(async () => {
 });
 
 export const getSocialLinks = cache(async () => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.from("site_settings").select("value").eq("key", "social_links").maybeSingle();
   return (data?.value ?? {}) as Record<string, string>;
 });

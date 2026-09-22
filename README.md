@@ -172,7 +172,42 @@ fixes (a matching `auth.identities` row, and empty strings rather than NULLs in
 
 Without step 2 the user can sign in but the dashboard signs them straight back out.
 
-## Deployment (Vercel)
+## Deployment (VPS with cPanel)
+
+This is a Node application, not a PHP site: cPanel cannot serve it from
+`public_html`. It runs as a long-lived Node process behind Apache.
+
+1. **Set up the Node app.** cPanel → *Setup Node.js App* → Create Application.
+   Node 18.17 or newer, application root pointing at the repo's `frontend`
+   directory, application URL your domain, startup file `node_modules/next/dist/bin/next`.
+   cPanel writes an `.htaccess` that proxies the domain to the app's port.
+2. **Environment variables.** Add them in that same screen — the values from
+   `frontend/.env.example`. `NEXT_PUBLIC_SITE_URL` must be the real domain, and
+   `ANALYTICS_SALT` must be set to any long random string: left unset it is
+   regenerated on every restart, which inflates the unique-visitor count for
+   the rest of that day.
+3. **Build on the server, not locally.** `npm ci && npm run build`, then start
+   with `npm start`. The build compiles for the machine it runs on, and it
+   pre-renders the catalogue by reading Supabase — so the server needs outbound
+   HTTPS during the build. `next/font` also downloads the two typefaces at build
+   time; a firewall that blocks `fonts.gstatic.com` fails the build.
+4. **Rebuild on content changes? No.** Admin saves call `revalidatePath`, which
+   refreshes the cached pages in place. A rebuild is only needed for code.
+5. **Run a single process.** Cached pages and the rate limiter both live in the
+   process. Under a cluster or multiple PM2 instances each worker keeps its own
+   copy, so an admin edit would refresh one worker and leave the others stale.
+   If the traffic ever needs more than one worker, that is the point to move
+   the cache to Redis.
+6. **HTTPS before launch.** cPanel → SSL/TLS Status → run AutoSSL. The app
+   sends `Strict-Transport-Security`, which tells browsers never to use plain
+   HTTP for this domain again — that header must not go out before the
+   certificate is in place.
+7. **Image handling.** Install `sharp` in the app directory (`npm i sharp`).
+   Without it Next falls back to a WebAssembly encoder that is several times
+   slower per image, which on a shared VPS core is the difference between a
+   photograph appearing immediately and appearing after a beat.
+
+### Deployment (Vercel)
 
 Root directory is `frontend`. Set these environment variables in the Vercel project:
 
@@ -277,6 +312,10 @@ State the audit date, and mark any correction to a previous finding explicitly.
 
 ## Known issues / follow-ups
 
+- **Resumes need their bucket.** `supabase/migrations/20260922_resume_uploads.sql`
+  must be run in the Supabase SQL editor before the careers form's file picker
+  works. Until then, picking a file fails with a message pointing at the link
+  field, which still works.
 - **Next.js is on a version with a CRITICAL advisory chain** — `npm audit --omit=dev`
   reports 1 critical + 1 high. The chain includes unauthenticated RCE on Windows-hosted
   servers, unauthenticated RCE in the Image Optimization API via AVIF, SSRF in Server

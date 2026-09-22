@@ -8,10 +8,30 @@ export default function StructuredData({ data }: { data: object }) {
   return (
     <script
       type="application/ld+json"
-      // Content is our own settings data, not user input.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: serialise(data) }}
     />
   );
+}
+
+/**
+ * JSON, with every character that could end the script tag written as an
+ * escape instead.
+ *
+ * An HTML parser looks for the literal text `</script` and stops there — it
+ * does not know it is inside a JSON string. So a product name or a job
+ * description containing one would close the tag early and put whatever
+ * followed into the page as markup. `<` means the same thing to a JSON
+ * parser and nothing at all to the HTML one.
+ *
+ * This is all admin-entered copy rather than anything a visitor supplies, so
+ * it is a second line rather than the first — but it costs one replace.
+ */
+function serialise(data: object): string {
+  return JSON.stringify(data)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }
 
 function postalAddress(address: SeoAddress) {
@@ -127,5 +147,115 @@ export function breadcrumbSchema(trail: { name: string; url: string }[]) {
       name: item.name,
       item: item.url,
     })),
+  };
+}
+
+/**
+ * Open roles, one JobPosting each.
+ *
+ * This is the schema Google Jobs reads, and it is how an assistant answers
+ * "is M.D. Hygiene hiring?" with the actual roles rather than a guess. Roles
+ * that are closed are left out rather than marked closed — a stale posting is
+ * worse than none.
+ *
+ * `datePosted` is required by Google and we do not record one, so the page's
+ * own build date stands in: it is the earliest date we can honestly claim to
+ * have been showing the role.
+ */
+export function jobPostingSchemas(
+  openings: { id: string; title: string; location: string; employment_type: string; experience: string; description: string; is_open: boolean }[],
+  local: SeoLocal,
+  siteUrl: string,
+  postedIso: string
+) {
+  return openings
+    .filter((role) => role.is_open)
+    .map((role) => ({
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      title: role.title,
+      description: role.description || `${role.title} at M.D. Hygiene.`,
+      datePosted: postedIso,
+      employmentType: employmentTypeCode(role.employment_type),
+      experienceRequirements: role.experience || undefined,
+      hiringOrganization: { "@id": `${siteUrl}/#organization` },
+      jobLocation: {
+        "@type": "Place",
+        address: postalAddress(role.location ? { ...local.factory, city: role.location } : local.factory),
+      },
+      directApply: true,
+      url: `${siteUrl}/careers#apply`,
+    }));
+}
+
+/** Free text in admin, but schema.org expects one of a fixed set. */
+function employmentTypeCode(value: string): string {
+  const normalised = value.toLowerCase().replace(/[^a-z]/g, "");
+  if (normalised.includes("part")) return "PART_TIME";
+  if (normalised.includes("contract")) return "CONTRACTOR";
+  if (normalised.includes("intern")) return "INTERN";
+  if (normalised.includes("temp")) return "TEMPORARY";
+  return "FULL_TIME";
+}
+
+/**
+ * A list page, described as a list.
+ *
+ * Without this a catalogue reads to a crawler as one long page of text. With
+ * it, each entry is a named thing at its own URL, which is what lets an
+ * assistant answer "what does M.D. Hygiene make?" by naming the products.
+ */
+export function itemListSchema(
+  name: string,
+  items: { name: string; url: string }[],
+  pageUrl: string
+) {
+  if (!items.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    url: pageUrl,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: item.url,
+    })),
+  };
+}
+
+/** Marks the contact page as the place to reach the business. */
+export function contactPageSchema(siteUrl: string, contact: { phones?: string[]; email?: string } = {}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    url: `${siteUrl}/contact`,
+    name: "Contact M.D. Hygiene",
+    mainEntity: {
+      "@id": `${siteUrl}/#organization`,
+      "@type": "Organization",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        telephone: contact.phones?.[0],
+        email: contact.email,
+        areaServed: "IN",
+        availableLanguage: ["en", "hi", "gu"],
+      },
+    },
+  };
+}
+
+/** Ties the about page to the organization it describes. */
+export function aboutPageSchema(siteUrl: string, description: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    url: `${siteUrl}/about`,
+    name: "About M.D. Hygiene",
+    description: description || undefined,
+    mainEntity: { "@id": `${siteUrl}/#organization` },
   };
 }

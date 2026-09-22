@@ -1,5 +1,7 @@
 "use server";
 
+import { lookup } from "dns/promises";
+import { isIP } from "net";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -48,6 +50,44 @@ export async function resolveImageUrl(input: string): Promise<string> {
   return url;
 }
 
+/**
+ * Addresses that are not on the public internet.
+ *
+ * This runs on our own server, so "fetch this URL for me" is a request to
+ * reach anything the server can reach — the VPS's own services on localhost,
+ * anything else on the private network, a cloud metadata endpoint. Admin-only
+ * is not enough on its own; an admin pasting a link they were sent should not
+ * be able to turn this box into a proxy for its own network.
+ */
+function isPrivateAddress(ip: string): boolean {
+  if (ip.includes(":")) {
+    const v6 = ip.toLowerCase();
+    // Loopback, link-local, unique-local, and v4 written in v6 form.
+    if (v6 === "::1" || v6 === "::" || v6.startsWith("fe80") || v6.startsWith("fc") || v6.startsWith("fd")) return true;
+    const mapped = v6.split(":").pop() ?? "";
+    return mapped.includes(".") ? isPrivateAddress(mapped) : false;
+  }
+  const [a, b] = ip.split(".").map(Number);
+  if (a === 10 || a === 127 || a === 0) return true;
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  if (a === 169 && b === 254) return true; // link-local, and cloud metadata
+  if (a === 100 && b >= 64 && b <= 127) return true; // carrier-grade NAT
+  return a >= 224; // multicast and reserved
+}
+
+/** True when every address this hostname resolves to is on the public internet. */
+async function resolvesPublicly(hostname: string): Promise<boolean> {
+  const bare = hostname.replace(/^\[|\]$/g, "");
+  if (isIP(bare)) return !isPrivateAddress(bare);
+  try {
+    const addresses = await lookup(bare, { all: true });
+    return addresses.length > 0 && addresses.every((a) => !isPrivateAddress(a.address));
+  } catch {
+    return false;
+  }
+}
+
 export interface ImportResult {
   ok: boolean;
   url?: string;
@@ -74,11 +114,16 @@ export async function importMediaFromUrlAction(rawUrl: string, kind: "image" | "
   if (parsed.protocol !== "https:") {
     return { ok: false, error: "Only https links can be imported." };
   }
+  if (!(await resolvesPublicly(parsed.hostname))) {
+    return { ok: false, error: "That link points somewhere on a private network, so it can't be imported." };
+  }
 
   let res: Response;
   try {
     res = await fetch(target, {
-      redirect: "follow",
+      // Redirects are followed by hand so each hop is checked too — otherwise
+      // a public URL can bounce straight to a private one.
+      redirect: "manual",
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       headers: { "User-Agent": "Mozilla/5.0 (compatible; MDHygieneBot/1.0)" },
       cache: "no-store",
@@ -86,6 +131,10 @@ export async function importMediaFromUrlAction(rawUrl: string, kind: "image" | "
   } catch {
     return { ok: false, error: "Couldn't download that link. Check it opens in a browser, or upload the file instead." };
   }
+  const followed = await followRedirects(res, target);
+  if ("error" in followed) return { ok: false, error: followed.error };
+  res = followed.response;
+
   if (!res.ok) {
     return { ok: false, error: `That link returned ${res.status}. Try “Copy image address” on the picture itself.` };
   }
@@ -119,4 +168,44 @@ export async function importMediaFromUrlAction(rawUrl: string, kind: "image" | "
 
   const { data } = supabase.storage.from("media").getPublicUrl(path);
   return { ok: true, url: data.publicUrl };
+}
+
+/** Walks up to three redirects, checking every hop lands on the public internet. */
+async function followRedirects(
+  response: Response,
+  from: string
+): Promise<{ response: Response } | { error: string }> {
+  let res = response;
+  let current = from;
+
+  for (let hop = 0; hop < 3; hop++) {
+    if (res.status < 300 || res.status >= 400) return { response: res };
+
+    const location = res.headers.get("location");
+    if (!location) return { response: res };
+
+    let next: URL;
+    try {
+      next = new URL(location, current);
+    } catch {
+      return { error: "That link redirects somewhere we can't follow." };
+    }
+    if (next.protocol !== "https:" || !(await resolvesPublicly(next.hostname))) {
+      return { error: "That link redirects somewhere it isn't safe to follow." };
+    }
+
+    try {
+      res = await fetch(next.toString(), {
+        redirect: "manual",
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; MDHygieneBot/1.0)" },
+        cache: "no-store",
+      });
+    } catch {
+      return { error: "Couldn't download that link. Check it opens in a browser, or upload the file instead." };
+    }
+    current = next.toString();
+  }
+
+  return { error: "That link redirects too many times." };
 }
