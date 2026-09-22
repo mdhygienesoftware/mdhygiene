@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { sendInquiryNotification } from "@/lib/email";
 import { claimSession, sessionIdFromToken } from "@/lib/session";
 import { callerIp, withinLimit } from "@/lib/rate-limit";
+import { isResumePath, resumeLine, safeFileName } from "@/lib/resume";
 
 export interface ActionResult {
   ok: boolean;
@@ -87,6 +88,16 @@ export async function submitApplicationAction(formData: FormData): Promise<Actio
   const resumeUrl = String(formData.get("resume_url") ?? "").trim();
   const note = String(formData.get("message") ?? "").trim();
 
+  // The file itself went straight from the browser to storage; what arrives
+  // here is where it landed. Checked rather than trusted — the shape is one we
+  // generate, so anything else is not ours to record or hand to an admin.
+  const resumePath = String(formData.get("resume_path") ?? "").trim();
+  const resumeName = String(formData.get("resume_name") ?? "").trim();
+  const resume =
+    resumePath && isResumePath(resumePath)
+      ? { path: resumePath, name: safeFileName(resumeName) }
+      : null;
+
   if (!name || !email || !phone || !note) {
     return { ok: false, error: "Please fill in all required fields." };
   }
@@ -97,6 +108,7 @@ export async function submitApplicationAction(formData: FormData): Promise<Actio
     `Applying for: ${role}`,
     experience ? `Experience: ${experience}` : null,
     resumeUrl ? `Resume / profile: ${resumeUrl}` : null,
+    resume ? resumeLine(resume.name, resume.path) : null,
     "",
     note,
   ]
