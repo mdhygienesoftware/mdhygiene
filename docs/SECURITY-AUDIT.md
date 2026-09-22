@@ -14,8 +14,8 @@ reading code. Commands used are shown so each can be re-checked after remediatio
 | Severity | Count | Findings |
 |---|---|---|
 | 🔴 Critical | 2 | C1 default admin password, **H1 Next.js RCE chain** (escalated 9 Sep) |
-| 🟠 High | 2 | C2 legacy DB credentials, H2 no enquiry rate limit  ·  *(H3 open image proxy — **fixed** 9 Sep)* |
-| 🟡 Medium | 5 | M1 no security headers, M2 `is_admin()` exposed via RPC, M3 leaked-password protection off, M4 staff PII harvestable, M5 JSON-LD escaping |
+| 🟠 High | 1 | C2 legacy DB credentials  ·  *(H2 enquiry rate limit — **fixed** 22 Sep; H3 open image proxy — **fixed** 9 Sep)* |
+| 🟡 Medium | 3 | M2 `is_admin()` exposed via RPC, M3 leaked-password protection off, M4 staff PII harvestable  ·  *(M1 security headers, M5 JSON-LD escaping — **fixed** 22 Sep)* |
 | 🔵 Low | 4 | L1 no admin MFA, L2 no audit log, L3 no dependency scanning in CI, L4 no storage path separation |
 
 ### What is already correct
@@ -154,7 +154,7 @@ The chain against the installed Next version includes:
    `generateMetadata` in this repo takes them.
 3. Re-test admin login, a product save, an image upload, and a form submit.
 
-### H2 · No rate limit on public enquiry submissions 🟠
+### H2 · No rate limit on public enquiry submissions ✅ *(fixed 22 Sep 2026)*
 
 **Evidence** — five rapid anonymous inserts, all accepted:
 ```
@@ -172,6 +172,16 @@ your sending reputation.
    PostgREST can't be posted to directly.
 2. Add a CAPTCHA (Cloudflare Turnstile is free and unobtrusive) verified server-side.
 3. Minimum: a Postgres trigger rejecting more than N rows per email/IP per hour.
+
+**What was done** — option 1, without the Redis. `lib/rate-limit.ts` holds a
+per-IP window in the Node process; `submitInquiryAction` and
+`submitApplicationAction` allow 5 an hour each, and `/api/track` allows 60.
+
+Two limits remain, both acceptable for spam control and neither acceptable as a
+security boundary. The anon `INSERT` grant is still in place, so PostgREST can
+be posted to directly and bypass this entirely — revoking it is still worth
+doing. And the counters live in the process, so they reset on restart and each
+worker would keep its own if the app is ever clustered.
 
 ### H3 · Open image proxy ✅ *(fixed 9 Sep 2026)*
 
@@ -197,7 +207,7 @@ This also removes the configuration named in `GHSA-9g9p-9gw9-jx7f` (see H1).
 
 ## Phase 2 — Medium priority (before or shortly after launch)
 
-### M1 · No security headers 🟡
+### M1 · No security headers ✅ *(fixed 22 Sep 2026)*
 
 `next.config.mjs` sets none. Missing: `Content-Security-Policy`,
 `Strict-Transport-Security`, `X-Frame-Options`, `X-Content-Type-Options`,
@@ -208,6 +218,17 @@ defence-in-depth against injected script.
 
 **Fix:** add a `headers()` block in `next.config.mjs`. Start CSP in `Report-Only` so a
 mistake doesn't take the site down, then enforce.
+
+**What was done** — `next.config.mjs` now sends `X-Content-Type-Options`,
+`X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`,
+`Strict-Transport-Security`, and a `Content-Security-Policy` limited to
+`frame-ancestors 'self'`. `/admin/*` additionally gets `no-store`.
+
+A full CSP (`script-src`, `style-src`) is deliberately **not** set yet. The app
+inlines the GTM/GA bootstrap and Next injects inline bootstrap script of its
+own, so an enforcing policy needs nonces threading through both — worth doing,
+but not something to switch on blind. `Strict-Transport-Security` only goes out
+once the VPS serves https; it must not precede the certificate.
 
 ### M2 · `is_admin()` is callable by anyone via RPC 🟡
 
@@ -246,7 +267,7 @@ This is *partly by design* — the visiting cards must show contact details. The
 2. Or split contact columns into a separate table readable only by exact-code lookup.
 3. At minimum, confirm each employee consents to their mobile number being public.
 
-### M5 · JSON-LD is not escaped against `</script>` 🟡
+### M5 · JSON-LD is not escaped against `</script>` ✅ *(fixed 22 Sep 2026)*
 
 `StructuredData.tsx` renders `JSON.stringify(data)` into a `<script>` via
 `dangerouslySetInnerHTML`. `JSON.stringify` does **not** escape `</script>`, so a value
