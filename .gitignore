@@ -2,9 +2,12 @@ node_modules/
 dist/
 .next/
 out/
-.env
-.env.local
-.env.*.local
+# Every environment file, whatever it is called. The previous three lines
+# covered .env, .env.local and .env.*.local but not .env.production or
+# .env.vps — exactly the names a server deployment invites. One rule that
+# catches all of them, with the committed template as the sole exception.
+.env*
+!.env.example
 *.log
 .DS_Store
 coverage/
