@@ -4,9 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getBrandBySlug, getBrands, getProducts } from "@/lib/queries";
-import { getSeoGeneral } from "@/lib/seo";
+import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
+import StructuredData, { brandSchema, breadcrumbSchema } from "@/components/StructuredData";
 import type { Metadata } from "next";
 import { isRenderableImage } from "@/lib/image";
+import { brandMetaDescription } from "@/lib/meta";
 
 // Rendered once and reused for five minutes, rather than rebuilt from scratch
 // on every visit. Admin saves call revalidatePath, so an edit is live at once;
@@ -28,11 +30,17 @@ export async function generateStaticParams() {
 
 /** Admin overrides win; otherwise fall back to the brand's own name and tagline. */
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const [brand, general] = await Promise.all([getBrandBySlug(params.slug), getSeoGeneral()]);
+  // getProducts is deduped against the page body's own call by React cache(),
+  // so counting the range here costs no extra round trip.
+  const [brand, general, products] = await Promise.all([
+    getBrandBySlug(params.slug),
+    getSeoGeneral(),
+    getProducts({ brandSlug: params.slug }),
+  ]);
   if (!brand) return {};
 
   const title = brand.meta_title?.trim() || `${brand.name} — sanitary napkins & baby diapers`;
-  const description = brand.meta_description?.trim() || brand.tagline || general.default_description;
+  const description = brandMetaDescription(brand, products.length, general.default_description);
 
   return {
     title,
@@ -48,14 +56,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BrandPage({ params }: { params: { slug: string } }) {
-  const [brand, products] = await Promise.all([
+  const [brand, products, general] = await Promise.all([
     getBrandBySlug(params.slug),
     getProducts({ brandSlug: params.slug }),
+    getSeoGeneral(),
   ]);
   if (!brand) return notFound();
 
+  const siteUrl = resolveSiteUrl(general.canonical_domain);
+
   return (
     <>
+      <StructuredData data={brandSchema(brand, products, siteUrl)} />
+      <StructuredData
+        data={breadcrumbSchema([
+          { name: "Home", url: siteUrl },
+          { name: "Products", url: `${siteUrl}/products` },
+          { name: brand.name, url: `${siteUrl}/brands/${brand.slug}` },
+        ])}
+      />
       <Header />
       <main>
         <section className="px-5 md:px-14 py-8 md:py-12 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
@@ -69,7 +88,11 @@ export default async function BrandPage({ params }: { params: { slug: string } }
             <p className="text-muted-2 mt-1 max-w-xl">{brand.tagline}</p>
           </div>
         </section>
-        <ProductShowcase products={products} />
+        {/* The title is what renders the section's <h2>. Without one the page
+            went straight from its <h1> to the product cards' <h3>s, which is a
+            level skipped — a screen reader announces a subsection with nothing
+            above it, and a crawler reads the cards as belonging to nothing. */}
+        <ProductShowcase products={products} title={`The ${brand.name} range`} />
       </main>
       <Footer />
     </>

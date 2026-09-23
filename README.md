@@ -202,6 +202,24 @@ This is a Node application, not a PHP site: cPanel cannot serve it from
    sends `Strict-Transport-Security`, which tells browsers never to use plain
    HTTP for this domain again — that header must not go out before the
    certificate is in place.
+
+   A certificate on its own does not stop anyone reaching the site over plain
+   HTTP; the app never sees those requests, because Apache answers them before
+   the proxy. Redirect them there, above the block cPanel wrote for the Node
+   app, in `public_html/.htaccess`:
+
+   ```apache
+   RewriteEngine On
+   # Behind cPanel's proxy the original scheme arrives in a header, so testing
+   # HTTPS alone would loop forever on a request Apache already terminated.
+   RewriteCond %{HTTPS} !=on
+   RewriteCond %{HTTP:X-Forwarded-Proto} !https
+   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+   ```
+
+   Also pick one hostname and send the other to it — `example.com` and
+   `www.example.com` serving the same pages splits your ranking between two
+   URLs. Whichever you choose must match `canonical_domain` in Admin → SEO.
 7. **Image handling.** Install `sharp` in the app directory (`npm i sharp`).
    Without it Next falls back to a WebAssembly encoder that is several times
    slower per image, which on a shared VPS core is the difference between a

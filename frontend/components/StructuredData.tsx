@@ -259,3 +259,36 @@ export function aboutPageSchema(siteUrl: string, description: string) {
     mainEntity: { "@id": `${siteUrl}/#organization` },
   };
 }
+
+/**
+ * A brand, and the products carried under it.
+ *
+ * Brand pages carried no structured data at all, which left an assistant asked
+ * "what does 7Soft make?" with nothing but prose to parse. `Brand` names the
+ * thing and ties it back to the manufacturer; the nested `ItemList` names every
+ * product under it at its own URL, so the answer can be specific.
+ */
+export function brandSchema(
+  brand: { name: string; slug: string; tagline: string | null; logo_url: string | null },
+  products: { name: string; slug: string }[],
+  siteUrl: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    "@id": `${siteUrl}/brands/${brand.slug}#brand`,
+    name: brand.name,
+    description: brand.tagline ?? undefined,
+    logo: brand.logo_url ?? undefined,
+    url: `${siteUrl}/brands/${brand.slug}`,
+    manufacturer: { "@id": `${siteUrl}/#organization` },
+    hasPart: products.length
+      ? products.map((product) => ({
+          "@type": "Product",
+          name: product.name,
+          url: `${siteUrl}/products/${product.slug}`,
+          brand: { "@id": `${siteUrl}/brands/${brand.slug}#brand` },
+        }))
+      : undefined,
+  };
+}

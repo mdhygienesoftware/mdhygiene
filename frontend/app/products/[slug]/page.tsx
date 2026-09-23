@@ -9,6 +9,7 @@ import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { breadcrumbSchema, productSchema } from "@/components/StructuredData";
 import type { Metadata } from "next";
 import { isRenderableImage } from "@/lib/image";
+import { productMetaDescription } from "@/lib/meta";
 
 // Rendered once and reused for five minutes, rather than rebuilt from scratch
 // on every visit. Admin saves call revalidatePath, so an edit is live at once;
@@ -34,10 +35,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!product) return {};
 
   const title = product.meta_title?.trim() || product.name;
-  const description =
-    product.meta_description?.trim() ||
-    product.description?.trim() ||
-    general.default_description;
+  const description = productMetaDescription(product, general.default_description);
   const image = product.og_image_url?.trim() || product.image_url || general.default_og_image;
 
   return {
