@@ -9,10 +9,10 @@ distributor net pricing, pack counts and case quantities.
 
 | Layer | Choice |
 |---|---|
-| Frontend + server | Next.js 14 (App Router), TypeScript, Tailwind |
+| Frontend + server | Next.js 15 (App Router), TypeScript, Tailwind |
 | Database / Auth / Storage | Supabase (Postgres 17, GoTrue, Storage) |
 | Mutations | Next.js Server Actions, authorized by Postgres RLS |
-| Hosting | Vercel |
+| Hosting | VPS with cPanel (Node app under Passenger) — see [`docs/DEPLOY.md`](docs/DEPLOY.md) |
 
 There is no separate backend service — Supabase *is* the backend, and the app talks to it
 directly. Public reads use the anon key (RLS decides what's visible); every write runs
@@ -34,8 +34,12 @@ MD/
 ## Local development
 
 **Easiest way:** double-click **`start-website.bat`** in the project root. It clears the
-build cache (OneDrive corrupts it), installs dependencies on first run, and starts the
-site. Keep the window open while you work — closing it stops the site.
+build cache, installs dependencies on first run, and starts the site. Keep the window
+open while you work — closing it stops the site.
+
+> Keep this repository **outside** OneDrive. Files On-Demand turns directories into
+> cloud placeholders, which both corrupts `.next` and has twice silently reverted
+> committed source files back to an older state on disk.
 
 ```
 Website:     http://localhost:3000
@@ -176,6 +180,14 @@ Without step 2 the user can sign in but the dashboard signs them straight back o
 
 This is a Node application, not a PHP site: cPanel cannot serve it from
 `public_html`. It runs as a long-lived Node process behind Apache.
+
+**[`docs/DEPLOY.md`](docs/DEPLOY.md) is the step-by-step version** — what each
+step is for, what breaks if it is skipped, and a table of symptoms to causes.
+Follow that at the server; the summary below is for orientation.
+
+The startup file is `frontend/server.js`, not `npm start`: cPanel runs Node
+apps under Passenger, which starts an app by loading a file rather than running
+a script.
 
 1. **Set up the Node app.** cPanel → *Setup Node.js App* → Create Application.
    Node 18.17 or newer, application root pointing at the repo's `frontend`
