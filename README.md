@@ -312,10 +312,9 @@ State the audit date, and mark any correction to a previous finding explicitly.
 
 ## Known issues / follow-ups
 
-- **Resumes need their bucket.** `supabase/migrations/20260922_resume_uploads.sql`
-  must be run in the Supabase SQL editor before the careers form's file picker
-  works. Until then, picking a file fails with a message pointing at the link
-  field, which still works.
+- [`docs/LAUNCH-READINESS.md`](docs/LAUNCH-READINESS.md) is the wider view —
+  security, performance, crawlability and the decisions still open before this
+  goes live. The list below is the short version.
 - **Next.js is on a version with a CRITICAL advisory chain** — `npm audit --omit=dev`
   reports 1 critical + 1 high. The chain includes unauthenticated RCE on Windows-hosted
   servers, unauthenticated RCE in the Image Optimization API via AVIF, SSRF in Server
