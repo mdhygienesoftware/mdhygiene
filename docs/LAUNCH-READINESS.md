@@ -166,6 +166,41 @@ save and appear in Admin → Inquiries.
 
 ---
 
+## After the site is live
+
+None of this can be done before there is a public URL to point at, so it is
+recorded here rather than raised as a blocker. The site is not hosted yet.
+
+**Once the domain resolves**
+
+- **Search Console and Bing Webmaster.** Paste the verification strings into
+  Admin → SEO (`google_site_verification`, `bing_site_verification`) — the
+  fields already render into the page head. Then submit `/sitemap.xml` in both.
+- **Analytics.** `ga_measurement_id` or `gtm_id` in the same place. Both are
+  empty, so there is currently no analytics beyond the built-in visitor
+  counter at Admin → Visitors.
+- **Re-crawl to confirm the live site.** The checks under "Re-running these
+  checks" all work against a public URL — swap `localhost:3000` for the domain.
+  Canonicals in particular must show the real domain, not localhost, which
+  depends on `canonical_domain` having been set *before* the production build.
+
+**Off-site, once there is something to link to**
+
+For a B2B manufacturer, the links that move local and trade rankings are trade
+citations rather than editorial backlinks:
+
+- A Google Business Profile for each of the two Surat addresses. This also
+  feeds the `LocalBusiness` schema the homepage already emits.
+- IndiaMART and TradeIndia supplier listings.
+- The SGCCI membership directory, and the supplier listings run by the
+  certification bodies already named on `/certifications`.
+
+Consistency matters more than volume: the business name, both addresses and the
+phone numbers must match what `site_settings` serves, or the citations compete
+with each other instead of reinforcing.
+
+---
+
 ## Accepted, not fixed
 
 - **No enforcing CSP** beyond `frame-ancestors`. The inline GTM bootstrap and
