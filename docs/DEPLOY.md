@@ -191,7 +191,8 @@ pages in place. Only code changes need `npm ci && npm run build` and a restart.
 Then, in order:
 
 1. **Check the old links.** `mdhygiene.in/card/95863.php` should land on
-   Rutika's new card. Those numbers are printed on visiting cards and encoded
+   Rutika's new card, and `mdhygiene.in/card/pdf/1.pdf` should open the
+   catalogue itself. Those addresses are printed on visiting cards and encoded
    in QR codes that cannot be edited, so this is the one to check first.
 2. **Search Console and Bing Webmaster.** Paste the verification strings into
    Admin → SEO, then submit `https://mdhygiene.in/sitemap.xml` to both.

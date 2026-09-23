@@ -65,12 +65,12 @@ const nextConfig = {
     return [
       ...cardRedirects,
 
-      // The catalogue PDFs. The products pages carry the same range with
-      // current sizes and pack quantities, where the PDFs are a snapshot that
-      // stopped being true the day it was exported — so these point at the
-      // live catalogue rather than at a stale download.
-      { source: "/card/pdf/:file*", destination: "/products", permanent: true },
-      { source: "/card/card/pdf/:file*", destination: "/products", permanent: true },
+      // The catalogue PDFs are NOT redirected. They are served as static files
+      // from public/card/pdf, at the addresses the old site used, so an old
+      // link opens the same document it always did rather than a page about
+      // it. Only the duplicated /card/card path needs sending anywhere, and it
+      // goes to the file rather than away from it.
+      { source: "/card/card/pdf/:file", destination: "/card/pdf/:file", permanent: true },
 
       // Any other numbered card page we do not have a mapping for. Better the
       // homepage than an error, and it keeps the old site from leaving 404s
