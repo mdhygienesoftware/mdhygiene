@@ -16,8 +16,8 @@ the values from `frontend/.env.example`.
 
 **Do this first, and do it even if you do nothing else on this page.**
 
-The seeded password `ChangeMe123!` still works, and it is written in this
-repository, which is on GitHub. The moment the admin panel is reachable on a
+The password this project was seeded with still works, and it was published in
+this repository, which is on GitHub — so treat it as public knowledge. The moment the admin panel is reachable on a
 public domain, that is an open door to every product, price, enquiry and job
 application in the system.
 

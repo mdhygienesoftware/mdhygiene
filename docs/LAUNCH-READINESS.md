@@ -8,6 +8,7 @@ Companion to [`SECURITY-AUDIT.md`](SECURITY-AUDIT.md), which holds the numbered
 security findings (C1–M5) and their evidence. This document is the wider view.
 
 Last run: 23 Sep 2026, against Supabase project `gtpvibbeqlndkaezqniz`.
+Revised the same day as the remaining items were closed.
 
 ---
 
@@ -23,11 +24,12 @@ Last run: 23 Sep 2026, against Supabase project `gtpvibbeqlndkaezqniz`.
 | Canonical URLs | ✅ Fixed — five pages were claiming to be the homepage |
 | Structured data | ✅ Extended to every public page |
 | Resume uploads | ✅ Private bucket live and verified end to end |
-| **Next.js version** | 🔴 **Unresolved — critical advisory chain, needs a decision** |
-| **Admin password** | 🔴 **Unresolved — seeded default still authenticates** |
-| **Production domain** | 🔴 **Unresolved — baked in at build time now** |
-| RLS policy efficiency | 🟡 Open — 50 advisor findings, fix needs sign-off |
-| Dead `orders` tables | 🟡 Open — publicly writable, unused |
+| Next.js version | ✅ On 15.5.25 — critical advisories closed |
+| Production domain | ✅ `https://mdhygiene.in`, verified in the prerendered HTML |
+| Old PHP addresses | ✅ Cards redirect; catalogue PDFs served at their original URLs |
+| RLS policy efficiency | ✅ Advisor findings 52 → 1 |
+| Dead `orders` tables | ✅ Dropped |
+| **Admin password** | 🔴 **The one item left — seeded default still authenticates** |
 
 ---
 
@@ -116,41 +118,20 @@ free target for junk nobody would notice.
 
 ## Decisions still open
 
-### Next.js version — the largest live risk
+### Admin password — the one thing still outstanding
 
-On 14.2.35 with one critical and one high advisory, and **14.2.35 is the last
-14.x — there is no patched release on that line.** The chain includes
-*SSRF in Server Actions on custom servers*, which describes a cPanel
-reverse-proxy setup exactly.
+The seeded password for `admin@mdhygiene.in` still authenticates, and it was
+published in the README and the migration history, so treat it as public.
 
-- **15.5.25** — `params`/`searchParams` become Promises; about eight files.
-  Recommended.
-- **16.3.5** — what `npm audit` suggests; larger jump.
+There is no password-reset page in the app, so this is done from the Supabase
+dashboard. **Do not use "Send password recovery"** — it emails a link back to a
+URL this app does not handle.
 
-### Admin password
-
-`admin@mdhygiene.in / ChangeMe123!` still authenticates and is printed in the
-README. Enable leaked-password protection in Supabase → Authentication → Policies
-*before* rotating, so the replacement is checked against known breaches.
-
-### Production domain
-
-`resolveSiteUrl` falls back to `http://localhost:3000`. Pages are pre-rendered
-now, so **the domain is baked in at build time**: set `canonical_domain` in
-Admin → SEO *and* `NEXT_PUBLIC_SITE_URL` before building on the server, or every
-canonical, sitemap entry and JSON-LD id will point at localhost.
-
-### RLS policy efficiency (needs sign-off — touches the security boundary)
-
-Supabase's performance advisors return 50 `multiple_permissive_policies`
-findings: every table carries an `Admin write X` policy scoped `FOR ALL`, so it
-is evaluated on `SELECT` alongside `Public read X`. Every catalogue query and
-settings lookup pays double policy evaluation. Fix is to scope the admin
-policies to `INSERT/UPDATE/DELETE`.
-
-Also two `auth_rls_initplan` findings on `admin_profiles` and `page_views`, where
-`auth.<fn>()` is re-evaluated per row — harmless at 306 rows, degrades linearly
-as `page_views` grows. Fix is wrapping in `(select auth.uid())`.
+1. **Authentication → Providers → Email** (older dashboards: **Policies**) →
+   enable **Prevent use of leaked passwords**, *before* step 2, so the new
+   password is checked against known breaches.
+2. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
+3. Sign in at `/admin/login` to confirm.
 
 ### Staff contact details
 

@@ -66,14 +66,14 @@ Wi-Fi can open the admin panel and sign in with the default password.
 
 ### C1 · Default admin password is active and publicly documented 🔴
 
-The seeded password `ChangeMe123!` still works, and it is written in `README.md` line 56
+The seeded password still works, and it was written in `README.md`
 and in the migration history.
 
 **Evidence**
 ```bash
 curl -X POST "$SUPABASE_URL/auth/v1/token?grant_type=password" \
   -H "apikey: $ANON" -H "Content-Type: application/json" \
-  -d '{"email":"admin@mdhygiene.in","password":"ChangeMe123!"}'
+  -d '{"email":"admin@mdhygiene.in","password":"<the seeded password>"}'
 # -> HTTP 200 (login succeeds)
 ```
 
@@ -310,7 +310,7 @@ curl "$SUPABASE_URL/rest/v1/distributor_inquiries?select=*" -H "apikey: $ANON"
 # Default password no longer works (expect 400 after C1)
 curl -X POST "$SUPABASE_URL/auth/v1/token?grant_type=password" -H "apikey: $ANON" \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@mdhygiene.in","password":"ChangeMe123!"}'
+  -d '{"email":"admin@mdhygiene.in","password":"<the seeded password>"}'
 
 # Dependencies clean (expect 0 high)
 npm audit --omit=dev --audit-level=high

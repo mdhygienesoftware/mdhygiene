@@ -72,14 +72,25 @@ The anon key is safe to expose — it only grants what RLS permits.
 
 ## Admin dashboard
 
-`/admin/login` — seeded credentials:
+`/admin/login` — the one account is `admin@mdhygiene.in`.
 
-```
-admin@mdhygiene.in / ChangeMe123!
-```
+### Changing the admin password
 
-**Rotate this password immediately.** It was seeded directly into `auth.users`, so it's
-in the migration history and this README.
+There is no password-reset page in the app, so this is done from the Supabase
+dashboard. **Do not use "Send password recovery"**: that emails a link back to a
+URL this app does not handle, and it will go nowhere.
+
+1. **Authentication → Providers → Email** (older dashboards: **Policies**) →
+   enable **Prevent use of leaked passwords**. Do this *first* — it checks each
+   new password against HaveIBeenPwned, and turning it on afterwards never
+   checks the one you just set.
+2. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
+3. Sign in at `/admin/login` to confirm. Any session open elsewhere is displaced
+   on its next request — the app allows one active admin session at a time.
+
+The seeded password this project shipped with was published in this file and in
+the migration history, so it must be treated as public. If it has not been
+changed yet, that is the single most urgent thing on the project.
 
 | Section | What it does |
 |---|---|
