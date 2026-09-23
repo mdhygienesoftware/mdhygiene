@@ -3,13 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import ProductForm from "@/components/admin/ProductForm";
 import VariantsManager from "@/components/admin/VariantsManager";
 
-export default async function EditProductPage({ params }: { params: { id: string } }) {
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
   const [{ data: product }, { data: brands }, { data: categories }, { data: variants }] = await Promise.all([
-    supabase.from("products").select("*").eq("id", params.id).maybeSingle(),
+    supabase.from("products").select("*").eq("id", id).maybeSingle(),
     supabase.from("brands").select("*").order("sort_order"),
     supabase.from("product_categories").select("*").order("name"),
-    supabase.from("product_variants").select("*").eq("product_id", params.id).order("sort_order"),
+    supabase.from("product_variants").select("*").eq("product_id", id).order("sort_order"),
   ]);
   if (!product) return notFound();
 

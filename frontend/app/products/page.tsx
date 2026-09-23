@@ -23,20 +23,21 @@ export const metadata = {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { brand?: string; category?: string; type?: string };
+  searchParams: Promise<{ brand?: string; category?: string; type?: string }>;
 }) {
+  const { brand: activeBrand, category: activeCategory, type: activeType } = await searchParams;
+
   const [general, products, brands, categories] = await Promise.all([
     getSeoGeneral(),
     getProducts({
-      brandSlug: searchParams.brand,
-      categorySlug: searchParams.category,
-      catalogType: searchParams.type,
+      brandSlug: activeBrand,
+      categorySlug: activeCategory,
+      catalogType: activeType,
     }),
     getBrands(),
     getCategories(),
   ]);
 
-  const { brand: activeBrand, category: activeCategory, type: activeType } = searchParams;
   const isFiltered = Boolean(activeBrand || activeCategory || activeType);
 
   // With no filter applied, own-brand and OEM/private-label ranges are shown as

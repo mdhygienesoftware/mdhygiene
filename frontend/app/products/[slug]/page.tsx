@@ -30,8 +30,9 @@ export async function generateStaticParams() {
 }
 
 /** Per-product overrides set in admin win; otherwise fall back to product copy. */
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const [product, general] = await Promise.all([getProductBySlug(params.slug), getSeoGeneral()]);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const [product, general] = await Promise.all([getProductBySlug(slug), getSeoGeneral()]);
   if (!product) return {};
 
   const title = product.meta_title?.trim() || product.name;
@@ -51,10 +52,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   // Fetched together rather than in series; both are already deduped against
   // generateMetadata's calls by React cache().
-  const [product, general] = await Promise.all([getProductBySlug(params.slug), getSeoGeneral()]);
+  const [product, general] = await Promise.all([getProductBySlug(slug), getSeoGeneral()]);
   if (!product) return notFound();
 
   const siteUrl = resolveSiteUrl(general.canonical_domain);

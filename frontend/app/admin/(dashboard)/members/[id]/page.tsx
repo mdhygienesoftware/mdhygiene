@@ -5,9 +5,10 @@ import type { TeamMember } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function EditMemberPage({ params }: { params: { id: string } }) {
+export default async function EditMemberPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { data } = await supabase.from("team_members").select("*").eq("id", params.id).maybeSingle();
+  const { data } = await supabase.from("team_members").select("*").eq("id", id).maybeSingle();
   if (!data) return notFound();
 
   return (

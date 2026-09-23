@@ -30,8 +30,9 @@ export async function generateStaticParams() {
   return members.filter((member) => member.slug).map((member) => ({ slug: String(member.slug) }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const member = (await getTeamMemberBySlug(params.slug)) as TeamMember | null;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const member = (await getTeamMemberBySlug(slug)) as TeamMember | null;
   if (!member) return {};
 
   // The global title template already appends the company name.
@@ -64,9 +65,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function DigitalCardPage({ params }: { params: { slug: string } }) {
+export default async function DigitalCardPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [member, contact, social, brands, general] = await Promise.all([
-    getTeamMemberBySlug(params.slug) as Promise<TeamMember | null>,
+    getTeamMemberBySlug(slug) as Promise<TeamMember | null>,
     getContactInfo(),
     getSocialLinks(),
     getBrands(),

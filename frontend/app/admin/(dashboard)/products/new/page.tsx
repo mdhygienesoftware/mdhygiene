@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import ProductForm from "@/components/admin/ProductForm";
 import { catalogTypeLabel } from "@/lib/types";
 
-export default async function NewProductPage({ searchParams }: { searchParams: { type?: string } }) {
+export default async function NewProductPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
+  const { type } = await searchParams;
   const supabase = await createClient();
   const [{ data: brands }, { data: categories }] = await Promise.all([
     supabase.from("brands").select("*").order("sort_order"),
@@ -10,7 +11,7 @@ export default async function NewProductPage({ searchParams }: { searchParams: {
   ]);
 
   // Opened from the OEM section (?type=oem) or from Products (default).
-  const catalogType = searchParams.type === "oem" ? "oem" : "own_brand";
+  const catalogType = type === "oem" ? "oem" : "own_brand";
 
   return (
     <div className="flex flex-col gap-6">

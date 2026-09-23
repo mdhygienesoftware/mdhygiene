@@ -2,9 +2,10 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import HeroSlideForm from "@/components/admin/HeroSlideForm";
 
-export default async function EditHeroSlidePage({ params }: { params: { id: string } }) {
+export default async function EditHeroSlidePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { data: slide } = await supabase.from("hero_slides").select("*").eq("id", params.id).maybeSingle();
+  const { data: slide } = await supabase.from("hero_slides").select("*").eq("id", id).maybeSingle();
   if (!slide) return notFound();
 
   return (

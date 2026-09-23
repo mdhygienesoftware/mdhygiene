@@ -29,13 +29,14 @@ export async function generateStaticParams() {
 }
 
 /** Admin overrides win; otherwise fall back to the brand's own name and tagline. */
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   // getProducts is deduped against the page body's own call by React cache(),
   // so counting the range here costs no extra round trip.
   const [brand, general, products] = await Promise.all([
-    getBrandBySlug(params.slug),
+    getBrandBySlug(slug),
     getSeoGeneral(),
-    getProducts({ brandSlug: params.slug }),
+    getProducts({ brandSlug: slug }),
   ]);
   if (!brand) return {};
 
@@ -55,10 +56,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BrandPage({ params }: { params: { slug: string } }) {
+export default async function BrandPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [brand, products, general] = await Promise.all([
-    getBrandBySlug(params.slug),
-    getProducts({ brandSlug: params.slug }),
+    getBrandBySlug(slug),
+    getProducts({ brandSlug: slug }),
     getSeoGeneral(),
   ]);
   if (!brand) return notFound();
