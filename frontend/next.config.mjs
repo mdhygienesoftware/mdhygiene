@@ -24,6 +24,62 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
 
+  /**
+   * The addresses the old PHP site answered on, pointed at their replacements.
+   *
+   * mdhygiene.in has been serving visiting cards at /card/<number>.php. Those
+   * numbers are printed on cards and encoded in QR codes that are already in
+   * people's hands — a QR code cannot be edited once it is printed, so the
+   * address it points at has to keep working for as long as the cards exist.
+   * Each one now lands on the same person's new card.
+   *
+   * 308 rather than 307: permanent, so a search engine moves its record to the
+   * new address instead of re-checking the old one for ever.
+   */
+  async redirects() {
+    // Old numeric page → the slug of the same person's card today.
+    const cards = {
+      "72111": "MDH2X7V", // Digisha Kanani
+      "73592": "MDH5N6J", // Bhargav Patel
+      "75674": "MDH3R9T", // Nirali Rafaliya
+      "75730": "MDH4D8Z", // Pooja Tanna
+      "89800": "MDH7K4P", // Dharmendra Gurjar
+      "95105": "MDH8W2M", // Kishor Soliya
+      "95862": "MDH9F4C", // Janvi Desai
+      "95863": "MDH6B3H", // Rutika Vora
+      "95864": "MDH7Q5S", // Kishan Tanna
+    };
+
+    // The folder was uploaded in a way that answered on both paths, so both are
+    // covered. Costs nothing, and guessing wrong here breaks a printed card.
+    const prefixes = ["/card", "/card/card"];
+
+    const cardRedirects = prefixes.flatMap((prefix) =>
+      Object.entries(cards).map(([old, slug]) => ({
+        source: `${prefix}/${old}.php`,
+        destination: `/card/${slug}`,
+        permanent: true,
+      }))
+    );
+
+    return [
+      ...cardRedirects,
+
+      // The catalogue PDFs. The products pages carry the same range with
+      // current sizes and pack quantities, where the PDFs are a snapshot that
+      // stopped being true the day it was exported — so these point at the
+      // live catalogue rather than at a stale download.
+      { source: "/card/pdf/:file*", destination: "/products", permanent: true },
+      { source: "/card/card/pdf/:file*", destination: "/products", permanent: true },
+
+      // Any other numbered card page we do not have a mapping for. Better the
+      // homepage than an error, and it keeps the old site from leaving 404s
+      // behind in Search Console.
+      { source: "/card/:id(\\d+).php", destination: "/", permanent: true },
+      { source: "/card/card/:id(\\d+).php", destination: "/", permanent: true },
+    ];
+  },
+
   // Everything the platform used to add for us. On a VPS behind cPanel nothing
   // sets these unless we do, and a missing header is not visible in testing —
   // it only shows up in an audit or an incident.

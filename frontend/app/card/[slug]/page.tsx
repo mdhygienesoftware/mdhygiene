@@ -42,6 +42,19 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title,
     description,
     alternates: { canonical: `/card/${member.slug}` },
+    /**
+     * Kept out of search results.
+     *
+     * A card is one person's work email, phone and WhatsApp on a single page.
+     * It is meant to be handed over — scanned from a printed card, sent in a
+     * message — not found by someone searching. Indexed, the whole team's
+     * contact details are one scrape away.
+     *
+     * Nothing about the page changes: the link works, the QR code works, and
+     * `follow` still lets a crawler use the links on it. It simply does not
+     * appear in results.
+     */
+    robots: { index: false, follow: true },
     openGraph: {
       title,
       description,
