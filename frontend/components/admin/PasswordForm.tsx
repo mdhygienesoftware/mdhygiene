@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { changeAdminPasswordAction, MIN_PASSWORD_LENGTH } from "@/lib/admin-actions";
+import { changeAdminPasswordAction } from "@/lib/admin-actions";
+import { MIN_PASSWORD_LENGTH } from "@/lib/password";
 
 export default function PasswordForm() {
   const [error, setError] = useState<string | null>(null);

@@ -7,6 +7,7 @@ import type { ActionResult } from "@/lib/actions";
 import { isRenderableImage } from "@/lib/image";
 import { importMediaFromUrlAction } from "@/lib/media-import";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { MIN_PASSWORD_LENGTH } from "@/lib/password";
 
 /**
  * A Supabase client with no cookie handling and no session persistence, used
@@ -303,9 +304,6 @@ export async function deleteTeamMemberAction(id: string) {
 }
 
 // ---------- Account ----------
-
-/** Matches the minimum the form asks for; enforced here because the form can be bypassed. */
-export const MIN_PASSWORD_LENGTH = 12;
 
 /**
  * Changes the signed-in admin's own password.
