@@ -214,6 +214,11 @@ This is a Node application, not a PHP site: cPanel cannot serve it from
 step is for, what breaks if it is skipped, and a table of symptoms to causes.
 Follow that at the server; the summary below is for orientation.
 
+**Replacing the live PHP site on mdhygiene.in?** Use
+[`docs/MIGRATION.md`](docs/MIGRATION.md) instead. It stands the new site up on a
+subdomain first, so it is tested before anything about the live site changes,
+and it keeps the old site recoverable in under two minutes.
+
 The startup file is `frontend/server.js`, not `npm start`: cPanel runs Node
 apps under Passenger, which starts an app by loading a file rather than running
 a script.
