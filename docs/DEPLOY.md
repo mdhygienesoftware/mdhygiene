@@ -155,17 +155,15 @@ which is currently `https://mdhygiene.in`, without `www`.
 
 ---
 
-## 6. Install sharp
-
-```bash
-npm i sharp
-```
+## 6. sharp — nothing to do
 
 `next/image` resizes and re-encodes every photograph on the way out. With
-`sharp` it uses a native library; without it, it falls back to a WebAssembly
-encoder several times slower per image. On a shared VPS core that is the
-difference between a product photo appearing immediately and appearing after a
-visible beat.
+`sharp` it uses a native library; without it, a WebAssembly fallback several
+times slower per image — on a shared VPS core, the difference between a product
+photo appearing immediately and appearing after a visible beat.
+
+It used to need installing by hand. It is a dependency in `package.json` now, so
+`npm ci` in step 4 has already done it. Nothing to run here.
 
 ---
 

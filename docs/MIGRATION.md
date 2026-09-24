@@ -22,11 +22,15 @@ website. Migrating the site does not touch them.
 
 ## Before you start
 
-- **Do you have Terminal or SSH access?** cPanel's *Terminal* under Advanced.
-  You need it for `npm run build`. If your host has disabled it, see
-  [No terminal access](#no-terminal-access) at the end before going further.
-- Node 18.17+ available in *Setup Node.js App*.
+- **Setup Node.js App** must exist in cPanel. Without it this host cannot run
+  the site at all, and no amount of the rest will help. Use cPanel's search box
+  rather than hunting through sections — the grouping differs by theme.
+- **SSH Access** and **Git Version Control**, for the deploy key and the clone.
+- Node 18.17+ offered in *Setup Node.js App*.
 - The Supabase anon key to hand.
+
+This account has **no Terminal** in cPanel, so [step 3d](#3d-install-and-build)
+gives two ways to run the build without one.
 
 ---
 
@@ -128,17 +132,38 @@ while the old one carries on serving.
    `NEXT_PUBLIC_SITE_URL` to `https://mdhygiene.in` — **the real domain, not the
    subdomain.** The canonical tags are baked in at build time and should already
    name the address the site will live at.
-4. Copy the "enter virtual environment" command cPanel shows, run it in
-   **Terminal**, then:
+### 3d. Install and build
 
-   ```bash
-   cd ~/mdhygiene/frontend
-   npm ci
-   npm run build
-   npm i sharp
-   ```
+The build has to run **on the server** — it compiles for that machine and
+pre-renders pages by reading Supabase. There is no Terminal in this cPanel, so
+use one of these.
 
-5. Restart the application from the cPanel screen.
+**Either — SSH from your own PC (recommended).** You have SSH Access, which
+gives a real terminal with readable errors. In cPanel → *SSH Access*, note the
+host, username and port. On Windows, open PowerShell:
+
+```powershell
+ssh USERNAME@mdhygiene.in -p PORT
+```
+
+Then run the command cPanel's Node.js App screen shows under *enter virtual
+environment*, and:
+
+```bash
+cd ~/mdhygiene/frontend
+npm ci
+npm run build
+```
+
+**Or — the buttons on the Node.js App screen.** No terminal needed:
+
+1. **Run NPM Install** — installs everything in `package.json`, `sharp`
+   included, so there is no separate step for it.
+2. **Run JS script** → choose **build** → Run. This is `npm run build`. It takes
+   a few minutes and the screen gives little feedback; wait for it to finish
+   rather than clicking again.
+
+Then **Restart** the application.
 
 ### Keep the subdomain out of Google
 
@@ -265,18 +290,11 @@ point of moving rather than removing in Phase 5.
 
 ---
 
-## No terminal access
+## If the build fails on the server
 
-Some shared hosts disable Terminal. Without it you cannot run `npm run build` on
-the server, and the build **must** happen there — it compiles for the machine it
-runs on, and it pre-renders pages by reading Supabase.
-
-Options, best first:
-
-1. **Ask the host to enable Terminal or SSH.** On a VPS this is normally your
-   call to make.
-2. **Use the Node.js App screen's "Run JS script" button**, which runs a script
-   from `package.json`. Run `build` that way. `npm ci` has its own button ("Run
-   NPM Install").
-3. If neither is possible, this host cannot run a Next.js application properly
-   and the site would need a different hosting arrangement.
+| Symptom | Cause |
+|---|---|
+| Hangs, then fails | Outbound HTTPS is blocked. The build fetches two typefaces from `fonts.gstatic.com` and reads Supabase to pre-render pages. |
+| "supabaseUrl is required" | The environment variables are not set on the app, or were added after the build. Add them, then build again. |
+| Runs out of memory | Ask the host to raise the Node memory limit for the app. The build peaks well above what it needs at rest. |
+| Neither the buttons nor SSH work | This host cannot build a Next.js application, which means it cannot run this site. That is a hosting question, not a code one — raise it with the provider. |
