@@ -39,6 +39,11 @@ Do not skip this. It is the difference between a bad afternoon and a lost site.
    server is not a backup.
 3. cPanel → **Backup Wizard** → **Download a Full Account Backup** as well, if
    the account is small enough for your host to allow it.
+4. **Back up the databases separately.** A home-directory backup does *not*
+   include MySQL — it only covers files. cPanel → **Backup** → *Download a MySQL
+   Database Backup* → download each database listed. The old PHP site reads one
+   (see `card/db-config.php`), and without it the rollback restores a site with
+   no data behind it.
 
 Note what is in `public_html` while you are there. This project knows about the
 visiting cards and the catalogue PDFs; if the old site has anything else —
@@ -52,15 +57,53 @@ because after the cutover those addresses answer from the new app.
 The application must **not** live in `public_html`. Apache serves that folder
 directly, and the repository contains things no visitor should fetch.
 
-cPanel → **Git™ Version Control** → Create:
+**The repository is private**, so the server has to prove who it is before
+GitHub will hand the code over. That is a key exchange, and it is the fiddliest
+part of the whole migration — done once, then never again.
+
+### 2a. Make a key on the server
+
+cPanel → **SSH Access** → **Manage SSH Keys** → **Generate a New Key**.
+
+- Key name: `github`
+- Password: **leave the passphrase empty.** A key with a passphrase cannot be
+  used unattended, and this one is used by cPanel rather than by you.
+- Type RSA, 2048 or 4096.
+
+Then **Manage** → **Authorize** the key.
+
+### 2b. Give the public half to GitHub
+
+Back on Manage SSH Keys, next to the public key, click **View/Download** and
+copy the whole block (it starts `ssh-rsa`).
+
+GitHub → the `mdhygiene` repository → **Settings** → **Deploy keys** →
+**Add deploy key**:
+
+- Title: `cPanel mdhygiene.in`
+- Key: paste it
+- **Allow write access: leave unticked.** The server only ever needs to read.
+  A key that cannot write cannot damage the repository if the server is ever
+  compromised.
+
+### 2c. Clone
+
+cPanel → **Git™ Version Control** → **Create**:
 
 | Field | Value |
 |---|---|
-| Clone URL | `https://github.com/mdhygienesoftware/mdhygiene.git` |
-| Repository Path | `mdhygiene` (so it lands at `~/mdhygiene`, beside `public_html`, not inside it) |
+| Clone URL | `git@github.com:mdhygienesoftware/mdhygiene.git` |
+| Repository Path | `mdhygiene` |
 
-If the repository is private, cPanel will want a deploy key — Git Version
-Control shows you the public key to add under GitHub → Settings → Deploy keys.
+**The SSH URL, not the HTTPS one.** `https://github.com/...` will ask for a
+password it has no way to supply and fail; the deploy key only works over SSH.
+
+`~/mdhygiene` sits beside `public_html`, not inside it. That matters.
+
+> **Simpler alternative, if the key exchange fights you:** zip the project on
+> your own machine — everything except `node_modules` and `.next` — and upload
+> it through File Manager to `~/mdhygiene`. It works, but every future update
+> means repeating it by hand, where the git clone becomes `git pull`.
 
 ---
 
