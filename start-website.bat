@@ -12,9 +12,20 @@ echo.
 echo   Starting M.D. Hygiene website...
 echo.
 
-REM OneDrive turns build files into cloud placeholders, which makes Next.js
-REM crash on startup with an EINVAL readlink error. Clearing the build folder
-REM first avoids that; it is regenerated automatically.
+REM Refuse to start a second copy. Next.js would quietly move to port 3001,
+REM leaving you looking at a window that is not the site you opened.
+netstat -ano | findstr /r /c:"TCP.*:3000 .*LISTENING" >nul 2>&1
+if not errorlevel 1 (
+  echo   The website is already running at http://localhost:3000
+  echo   Close that window first if you want to restart it.
+  echo.
+  pause
+  exit /b
+)
+
+REM The dev server cannot reuse a .next folder left behind by "npm run build";
+REM it fails on startup with an EINVAL readlink error. Clearing it costs a few
+REM seconds and the folder is rebuilt automatically.
 if exist ".next" (
   echo   Clearing build cache...
   rmdir /s /q ".next" 2>nul
