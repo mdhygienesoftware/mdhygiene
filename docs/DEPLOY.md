@@ -21,12 +21,17 @@ this repository, which is on GitHub — so treat it as public knowledge. The mom
 public domain, that is an open door to every product, price, enquiry and job
 application in the system.
 
-1. Supabase dashboard → **Authentication → Policies** → turn on **Leaked
-   password protection**. Do this *before* changing the password, not after:
-   it checks the new password against HaveIBeenPwned, so a password that has
-   already appeared in a breach is refused rather than accepted.
-2. **Authentication → Users** → `admin@mdhygiene.in` → **Reset password**.
-3. Sign in at `/admin/login` with the new password to confirm it works.
+1. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
+   Generate it rather than choosing it — 20+ random characters.
+2. Sign in at `/admin/login` with the new password to confirm it works.
+
+Do **not** use "Send password recovery": the app has no password-reset route,
+so that email links to a URL that does not exist here.
+
+Supabase's leaked-password check (HaveIBeenPwned) would catch a weak choice
+automatically, but it is a Pro-plan feature and this project is on Free — a
+generated password gets you the same result. **Sign In / Providers → Email**
+does let you raise the minimum length and required characters on Free.
 
 Use a password manager. This account can edit everything on the public site.
 

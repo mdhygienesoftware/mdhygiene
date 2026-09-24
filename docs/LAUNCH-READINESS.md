@@ -127,11 +127,12 @@ There is no password-reset page in the app, so this is done from the Supabase
 dashboard. **Do not use "Send password recovery"** — it emails a link back to a
 URL this app does not handle.
 
-1. **Authentication → Providers → Email** (older dashboards: **Policies**) →
-   enable **Prevent use of leaked passwords**, *before* step 2, so the new
-   password is checked against known breaches.
-2. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
-3. Sign in at `/admin/login` to confirm.
+1. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
+   Generate it rather than choosing it, 20+ characters.
+2. Sign in at `/admin/login` to confirm.
+
+Leaked-password protection (M3 below) is a **Pro-plan feature** and this org is
+on Free, so it cannot be enabled — a generated password covers the same ground.
 
 ### Staff contact details
 

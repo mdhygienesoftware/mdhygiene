@@ -15,7 +15,7 @@ reading code. Commands used are shown so each can be re-checked after remediatio
 |---|---|---|
 | 🔴 Critical | 2 | C1 default admin password, **H1 Next.js RCE chain** (escalated 9 Sep) |
 | 🟠 High | 1 | C2 legacy DB credentials  ·  *(H2 enquiry rate limit — **fixed** 22 Sep; H3 open image proxy — **fixed** 9 Sep)* |
-| 🟡 Medium | 3 | M2 `is_admin()` exposed via RPC, M3 leaked-password protection off, M4 staff PII harvestable  ·  *(M1 security headers, M5 JSON-LD escaping — **fixed** 22 Sep)* |
+| 🟡 Medium | 3 | M2 `is_admin()` exposed via RPC, M3 leaked-password protection off *(Pro-plan only — not actionable)*, M4 staff PII harvestable  ·  *(M1 security headers, M5 JSON-LD escaping — **fixed** 22 Sep)* |
 | 🔵 Low | 4 | L1 no admin MFA, L2 no audit log, L3 no dependency scanning in CI, L4 no storage path separation |
 
 ### What is already correct
@@ -241,13 +241,23 @@ and `authenticated` through `/rest/v1/rpc/is_admin`.
 **Fix:** `revoke execute on function public.is_admin() from anon, authenticated;`
 RLS policies keep working, because policy evaluation is not subject to that grant.
 
-### M3 · Leaked-password protection disabled 🟡
+### M3 · Leaked-password protection disabled 🟡 *(not fixable on this plan — 24 Sep 2026)*
 
 Supabase Auth is not checking new passwords against HaveIBeenPwned.
 
-**Fix:** Dashboard → Authentication → Policies → enable leaked password protection. Set a
-minimum length while you are there. Do this **before** fixing C1 so the new password is
-checked.
+**Correction (24 Sep 2026):** the original fix said to enable this in the dashboard. It
+cannot be. Leaked-password protection is a **Pro-plan feature**, and the organisation
+(`mdhygienesoftware's Org`) is on **Free** — the toggle is absent, not hidden. Verified
+against the org's plan and Supabase's own documentation, after the setting could not be
+found. The advisor will keep reporting this; it is unactionable until the plan changes.
+
+**What to do instead:** generate the admin password rather than choosing one. The check
+exists to catch a password that already appears in a breach dump, and a 20+ character
+random string cannot, because nobody has used it before.
+
+**What *is* available on Free**, under Authentication → Sign In / Providers → Email:
+minimum password length (raise it to 12 or more) and required characters (digits,
+lowercase, uppercase, symbols). Both apply to any account created later.
 
 ### M4 · Staff contact details are bulk-harvestable 🟡
 

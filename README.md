@@ -80,13 +80,21 @@ There is no password-reset page in the app, so this is done from the Supabase
 dashboard. **Do not use "Send password recovery"**: that emails a link back to a
 URL this app does not handle, and it will go nowhere.
 
-1. **Authentication → Providers → Email** (older dashboards: **Policies**) →
-   enable **Prevent use of leaked passwords**. Do this *first* — it checks each
-   new password against HaveIBeenPwned, and turning it on afterwards never
-   checks the one you just set.
-2. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
-3. Sign in at `/admin/login` to confirm. Any session open elsewhere is displaced
+1. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
+   **Generate it, do not choose it** — 20+ random characters. This matters more
+   than it looks: see the note below.
+2. Sign in at `/admin/login` to confirm. Any session open elsewhere is displaced
    on its next request — the app allows one active admin session at a time.
+
+Supabase can reject passwords found in known breaches (HaveIBeenPwned), which
+would catch a weak choice automatically — but **that is a Pro-plan feature and
+this project is on Free**, so the toggle does not appear in the dashboard.
+Generating a random password achieves the same end by construction: a string
+nobody has used before cannot be in a breach list.
+
+Two settings under **Sign In / Providers → Email** *are* available on Free and
+are worth raising while you are there: **minimum password length** (12 or more)
+and **required characters** (digits, lower and uppercase, symbols).
 
 The seeded password this project shipped with was published in this file and in
 the migration history, so it must be treated as public. If it has not been
