@@ -123,16 +123,16 @@ free target for junk nobody would notice.
 The seeded password for `admin@mdhygiene.in` still authenticates, and it was
 published in the README and the migration history, so treat it as public.
 
-There is no password-reset page in the app, so this is done from the Supabase
-dashboard. **Do not use "Send password recovery"** — it emails a link back to a
-URL this app does not handle.
+Change it at **Admin → Account**, which takes the current password and a new
+one and applies the change without signing you out.
 
-1. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
-   Generate it rather than choosing it, 20+ characters.
-2. Sign in at `/admin/login` to confirm.
+That page was added because the dashboard had no working path: its "Reset
+password" button sends a recovery email, and the link returns to a URL this app
+has no route for.
 
-Leaked-password protection (M3 below) is a **Pro-plan feature** and this org is
-on Free, so it cannot be enabled — a generated password covers the same ground.
+Generate the new password rather than choosing one. Leaked-password protection
+(M3 below) is **Pro-plan only** and this org is on Free, so nothing checks a
+weak choice for you — a generated string covers the same ground.
 
 ### Staff contact details
 

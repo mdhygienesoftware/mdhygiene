@@ -6,6 +6,20 @@ import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/actions";
 import { isRenderableImage } from "@/lib/image";
 import { importMediaFromUrlAction } from "@/lib/media-import";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+
+/**
+ * A Supabase client with no cookie handling and no session persistence, used
+ * only to test whether a password is correct. Kept separate from the request's
+ * own client so that checking cannot disturb the session doing the checking.
+ */
+function createVerifierClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  );
+}
 
 function textArrayFromForm(formData: FormData, key: string): string[] {
   return String(formData.get(key) ?? "")
@@ -286,4 +300,70 @@ export async function deleteTeamMemberAction(id: string) {
   await supabase.from("team_members").delete().eq("id", id);
   revalidatePath("/admin/members");
   revalidatePath("/", "layout");
+}
+
+// ---------- Account ----------
+
+/** Matches the minimum the form asks for; enforced here because the form can be bypassed. */
+export const MIN_PASSWORD_LENGTH = 12;
+
+/**
+ * Changes the signed-in admin's own password.
+ *
+ * This exists because there is no other working way to do it. The Supabase
+ * dashboard's "Reset password" button sends a recovery *email*, and the link in
+ * it returns to a URL this app has no route for — so it dead-ends. Rotating the
+ * password had no path that actually completed.
+ *
+ * The current password is required and checked, not taken on trust. Without
+ * that, anyone who got hold of a live session cookie could lock the real owner
+ * out of their own admin panel by changing the password without knowing it.
+ */
+export async function changeAdminPasswordAction(formData: FormData): Promise<ActionResult> {
+  const current = String(formData.get("current_password") ?? "");
+  const next = String(formData.get("new_password") ?? "");
+  const confirm = String(formData.get("confirm_password") ?? "");
+
+  if (!current || !next) return { ok: false, error: "Fill in both password fields." };
+  if (next !== confirm) return { ok: false, error: "The two new passwords do not match." };
+  if (next.length < MIN_PASSWORD_LENGTH) {
+    return { ok: false, error: `Use at least ${MIN_PASSWORD_LENGTH} characters.` };
+  }
+  if (next === current) return { ok: false, error: "The new password is the same as the old one." };
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) return { ok: false, error: "Your session expired — sign in again." };
+
+  const { data: profile } = await supabase
+    .from("admin_profiles")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile) return { ok: false, error: "Your session expired — sign in again." };
+
+  // Verified on a throwaway client that never touches cookies. Signing in on
+  // the request's own client would replace the session mid-change, which the
+  // single-session check would then read as a different device and sign this
+  // one out — in the middle of changing its own password.
+  const verifier = createVerifierClient();
+  const { error: wrongPassword } = await verifier.auth.signInWithPassword({
+    email: user.email,
+    password: current,
+  });
+  if (wrongPassword) {
+    return { ok: false, error: "That is not the current password." };
+  }
+  // The check issued a session of its own; end it rather than leave it valid.
+  await verifier.auth.signOut();
+
+  const { error } = await supabase.auth.updateUser({ password: next });
+  if (error) {
+    // Supabase rejects a password its own rules refuse — length, required
+    // characters, or a breach match on plans that check for one. Its wording is
+    // clearer than anything generic we would put here.
+    return { ok: false, error: error.message };
+  }
+
+  return { ok: true };
 }

@@ -21,17 +21,19 @@ this repository, which is on GitHub — so treat it as public knowledge. The mom
 public domain, that is an open door to every product, price, enquiry and job
 application in the system.
 
-1. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
-   Generate it rather than choosing it — 20+ random characters.
-2. Sign in at `/admin/login` with the new password to confirm it works.
+Sign in at `/admin/login`, then go to **Admin → Account**. Enter the current
+password and a new one. It applies at once and does not sign you out.
 
-Do **not** use "Send password recovery": the app has no password-reset route,
-so that email links to a URL that does not exist here.
+Generate the new password rather than choosing one — 20+ random characters.
 
-Supabase's leaked-password check (HaveIBeenPwned) would catch a weak choice
-automatically, but it is a Pro-plan feature and this project is on Free — a
-generated password gets you the same result. **Sign In / Providers → Email**
-does let you raise the minimum length and required characters on Free.
+Do **not** use the Supabase dashboard's "Reset password" button. It sends a
+recovery email whose link returns to a URL this app has no route for, so it
+dead-ends; the Account page exists because of that.
+
+Supabase's leaked-password check (HaveIBeenPwned) would catch a weak choice for
+you, but it is Pro-plan only and this project is on Free — generating the
+password covers the same ground. **Sign In / Providers → Email** does let you
+raise minimum length and required characters on Free.
 
 Use a password manager. This account can edit everything on the public site.
 

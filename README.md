@@ -76,15 +76,24 @@ The anon key is safe to expose — it only grants what RLS permits.
 
 ### Changing the admin password
 
-There is no password-reset page in the app, so this is done from the Supabase
-dashboard. **Do not use "Send password recovery"**: that emails a link back to a
-URL this app does not handle, and it will go nowhere.
+Sign in and go to **Admin → Account**. Enter the current password and the new
+one; the change takes effect immediately and does not sign you out.
 
-1. **Authentication → Users** → `admin@mdhygiene.in` → set a new password.
-   **Generate it, do not choose it** — 20+ random characters. This matters more
-   than it looks: see the note below.
-2. Sign in at `/admin/login` to confirm. Any session open elsewhere is displaced
-   on its next request — the app allows one active admin session at a time.
+**Generate the new password, do not think one up** — 20+ random characters from
+a password manager. Supabase can reject passwords found in known breaches
+(HaveIBeenPwned), but that is a Pro-plan feature and this project is on Free, so
+nothing checks a weak choice for you. A generated string gets you the same
+result by construction: nobody has used it before, so it cannot be in a breach
+list.
+
+**Do not use the Supabase dashboard's "Reset password" button.** Despite the
+name it sends a recovery *email*, and the link in that email returns to a URL
+this app has no route for — it dead-ends. The Account page exists because that
+was the only path the dashboard offers, and it does not complete.
+
+Two settings under **Authentication → Sign In / Providers → Email** *are*
+available on Free and are worth raising: **minimum password length** (12 or
+more) and **required characters**.
 
 Supabase can reject passwords found in known breaches (HaveIBeenPwned), which
 would catch a weak choice automatically — but **that is a Pro-plan feature and
@@ -113,6 +122,7 @@ changed yet, that is the single most urgent thing on the project.
 | Members | Team roster grouped by department, with photo upload. Each member gets a digital visiting card at `/card/<code>` (the React port of the old PHP cards), toggled by *digital card enabled*. There is no public team listing — `show on public website` is currently inert |
 | Inquiries | Distributor enquiries with a new → contacted → closed pipeline |
 | SEO & GEO | Search, local/geographic and AI-engine settings (see below) |
+| Account | Change your own admin password. The only working way to do it — see below |
 
 ### SEO & GEO
 
