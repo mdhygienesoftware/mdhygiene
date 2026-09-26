@@ -67,7 +67,13 @@ export default function OemClients({
         {clients.map((client, i) => (
           <Reveal key={`${client.name}-${i}`} delay={i * 80} holdOnPhone>
             <li className="h-full">
-              <div className="relative h-24 md:h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
+              {/* The same height on a phone as on a desktop, which sounds
+                  like it affects every logo and affects exactly one. In two
+                  narrow columns the wordmarks run out of width long before
+                  they run out of height, so the box growing taller leaves them
+                  where they are. The square mark is the only one held back by
+                  height, so it is the only one that gains: 56px to 72px. */}
+              <div className="relative h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
                 {/* `fill` rather than declared dimensions. Every logo is a
                     different shape and an admin can upload another, so there
                     is no one width and height to state. Given fixed numbers,
