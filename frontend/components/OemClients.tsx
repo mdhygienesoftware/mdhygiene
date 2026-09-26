@@ -67,17 +67,21 @@ export default function OemClients({
         {clients.map((client, i) => (
           <Reveal key={`${client.name}-${i}`} delay={i * 80} holdOnPhone>
             <li className="h-full">
-              <div className="h-24 md:h-28 flex items-center justify-center overflow-hidden rounded-2xl border border-border bg-white px-5 py-4 transition-colors hover:border-pink/40">
+              <div className="relative h-24 md:h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
+                {/* `fill` rather than declared dimensions. Every logo is a
+                    different shape and an admin can upload another, so there
+                    is no one width and height to state. Given fixed numbers,
+                    the element takes that shape and object-contain then shrinks
+                    the real image inside it — which is why the two widest marks
+                    came out smallest. Filling the box and containing within it
+                    lets each logo use the full height whatever its
+                    proportions. */}
                 <Image
                   src={client.logo_url}
                   alt={`${client.name} — private-label client of M.D. Hygiene`}
-                  width={440}
-                  height={260}
-                  // Capped on both axes rather than sized from one: the files
-                  // are deliberately different shapes, and a tall one sized
-                  // only by width would grow straight out of the card.
-                  className="max-h-full max-w-full object-contain"
-                  sizes="(max-width: 640px) 45vw, 240px"
+                  fill
+                  className="object-contain p-5"
+                  sizes="(max-width: 640px) 45vw, 300px"
                 />
               </div>
             </li>
