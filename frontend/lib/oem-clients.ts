@@ -18,6 +18,7 @@ export const DEFAULT_OEM_CLIENTS: OemClientsBlock = {
     { name: "Trent Limited", logo_url: "/images/oem/trent.png" },
     { name: "Flipkart", logo_url: "/images/oem/flipkart.png" },
     { name: "ONGC", logo_url: "/images/oem/ongc.png" },
+    { name: "Astral Pipes", logo_url: "/images/oem/astral.png" },
   ],
 };
 
