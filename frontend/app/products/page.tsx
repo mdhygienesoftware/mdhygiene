@@ -96,7 +96,12 @@ export default async function ProductsPage({
 
         {isFiltered ? (
           <>
-            <ProductShowcase products={products} />
+            {/* Under the OEM filter an empty grid is not news to break — the
+                block below explains why there is nothing there. "Check back
+                soon" would promise a listing that is never coming. */}
+            {!(activeType === "oem" && products.length === 0) && (
+              <ProductShowcase products={products} />
+            )}
             {/* Filtering to private label and finding an empty shelf reads as
                 "they don't do this". The lines are not listed publicly — they
                 belong to the client — so the clients themselves are the answer

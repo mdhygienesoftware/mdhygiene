@@ -66,15 +66,17 @@ export default function OemClients({
         {clients.map((client, i) => (
           <Reveal key={`${client.name}-${i}`} delay={i * 80} holdOnPhone>
             <li className="h-full">
-              <div className="h-24 md:h-28 flex items-center justify-center rounded-2xl border border-border bg-white px-5 py-4 transition-colors hover:border-pink/40">
+              <div className="h-24 md:h-28 flex items-center justify-center overflow-hidden rounded-2xl border border-border bg-white px-5 py-4 transition-colors hover:border-pink/40">
                 <Image
                   src={client.logo_url}
                   alt={`${client.name} — private-label client of M.D. Hygiene`}
                   width={900}
                   height={300}
-                  // Every file is already 3:1 with the mark centred, so filling
-                  // the width and containing is enough — no per-logo tuning.
-                  className="h-auto w-full object-contain"
+                  // Capped on both axes rather than sized from one. The files
+                  // we ship are all 3:1, but a logo uploaded from the admin
+                  // panel could be any shape, and a tall one sized only by
+                  // width would grow straight out of the card.
+                  className="max-h-full max-w-full object-contain"
                   sizes="(max-width: 640px) 45vw, 240px"
                 />
               </div>
