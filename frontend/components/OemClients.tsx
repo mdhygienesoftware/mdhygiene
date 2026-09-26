@@ -67,19 +67,17 @@ export default function OemClients({
         {clients.map((client, i) => (
           <Reveal key={`${client.name}-${i}`} delay={i * 80} holdOnPhone>
             <li className="h-full">
-              {/* Taller on a phone than on a desktop, which reads backwards
-                  until you see what it does. In two narrow columns the
-                  wordmarks run out of width long before they run out of
-                  height, so raising the box leaves all three exactly where
-                  they are — only the square mark, the one thing held back by
-                  height, grows with it.
+              {/* Taller on a phone, with less room above and below the mark
+                  than beside it. Both changes move exactly one logo.
 
-                  120px is not a guess. A square logo at the same height as a
-                  wordmark covers barely half the area, which is what the eye
-                  reads as size, so matching them on height makes the square
-                  one look shrunken. At this height ONGC covers 97% of the area
-                  Trent does. */}
-              <div className="relative h-[7.5rem] md:h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
+                  Side by side in a grid, the eye does not compare heights or
+                  areas — it compares how much of each card is filled. The
+                  wordmarks reach the full width of theirs and stop, held by
+                  width, so neither a taller box nor thinner vertical padding
+                  reaches them. The square mark is held by height alone, and
+                  between them the two changes take it from 71% of the card's
+                  width to all of it. */}
+              <div className="relative h-[8.5rem] md:h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
                 {/* `fill` rather than declared dimensions. Every logo is a
                     different shape and an admin can upload another, so there
                     is no one width and height to state. Given fixed numbers,
@@ -92,7 +90,7 @@ export default function OemClients({
                   src={client.logo_url}
                   alt={`${client.name} — private-label client of M.D. Hygiene`}
                   fill
-                  className="object-contain p-5"
+                  className="object-contain px-5 py-3 md:p-5"
                   sizes="(max-width: 640px) 45vw, 300px"
                 />
               </div>
