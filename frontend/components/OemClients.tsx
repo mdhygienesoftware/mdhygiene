@@ -67,13 +67,19 @@ export default function OemClients({
         {clients.map((client, i) => (
           <Reveal key={`${client.name}-${i}`} delay={i * 80} holdOnPhone>
             <li className="h-full">
-              {/* The same height on a phone as on a desktop, which sounds
-                  like it affects every logo and affects exactly one. In two
-                  narrow columns the wordmarks run out of width long before
-                  they run out of height, so the box growing taller leaves them
-                  where they are. The square mark is the only one held back by
-                  height, so it is the only one that gains: 56px to 72px. */}
-              <div className="relative h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
+              {/* Taller on a phone than on a desktop, which reads backwards
+                  until you see what it does. In two narrow columns the
+                  wordmarks run out of width long before they run out of
+                  height, so raising the box leaves all three exactly where
+                  they are — only the square mark, the one thing held back by
+                  height, grows with it.
+
+                  120px is not a guess. A square logo at the same height as a
+                  wordmark covers barely half the area, which is what the eye
+                  reads as size, so matching them on height makes the square
+                  one look shrunken. At this height ONGC covers 97% of the area
+                  Trent does. */}
+              <div className="relative h-[7.5rem] md:h-28 overflow-hidden rounded-2xl border border-border bg-white transition-colors hover:border-pink/40">
                 {/* `fill` rather than declared dimensions. Every logo is a
                     different shape and an admin can upload another, so there
                     is no one width and height to state. Given fixed numbers,
