@@ -10,11 +10,13 @@ import type { OemClientsBlock } from "@/lib/types";
  * up a contract manufacturer is really asking who else trusted them, and a
  * recognised name answers that faster than any amount of copy.
  *
- * Every logo sits in an identical white box and is contained rather than
- * cropped. Client logos never share a shape — one is a wide wordmark, another
- * is square with its own coloured background baked in — and lining them up by
- * their edges would leave one looming over the next. Matching the boxes instead
- * of the marks is what makes a row of borrowed artwork look deliberate.
+ * Client logos never share a shape — one is a wide wordmark, another is square
+ * with its own coloured background baked in — and several arrive with large
+ * empty margins already in the file, which makes them render small beside a
+ * mark that fills its canvas. So the files under public/images/oem are all
+ * trimmed to their content and centred on one 3:1 canvas. Identical
+ * proportions in identical boxes is what gives a row of borrowed artwork the
+ * same optical weight.
  */
 export default function OemClients({
   block,
@@ -68,12 +70,12 @@ export default function OemClients({
                 <Image
                   src={client.logo_url}
                   alt={`${client.name} — private-label client of M.D. Hygiene`}
-                  width={220}
-                  height={130}
-                  // Contained inside a fixed box: the mark keeps its own
-                  // proportions and the row keeps its rhythm.
-                  className="max-h-full w-auto object-contain"
-                  sizes="(max-width: 640px) 45vw, 220px"
+                  width={900}
+                  height={300}
+                  // Every file is already 3:1 with the mark centred, so filling
+                  // the width and containing is enough — no per-logo tuning.
+                  className="h-auto w-full object-contain"
+                  sizes="(max-width: 640px) 45vw, 240px"
                 />
               </div>
             </li>

@@ -95,7 +95,38 @@ export default async function ProductsPage({
         </section>
 
         {isFiltered ? (
-          <ProductShowcase products={products} />
+          <>
+            <ProductShowcase products={products} />
+            {/* Filtering to private label and finding an empty shelf reads as
+                "they don't do this". The lines are not listed publicly — they
+                belong to the client — so the clients themselves are the answer
+                to what the filter was asking. */}
+            {activeType === "oem" && (
+              <section className="px-5 md:px-14 pb-4 md:pb-6">
+                <div className="bg-white border border-border rounded-2xl p-7 md:p-9 flex flex-col gap-6">
+                  <div className="flex flex-col gap-2 max-w-2xl">
+                    <h2 className="text-xl md:text-2xl font-extrabold text-navy">
+                      Private-label lines aren&apos;t listed publicly
+                    </h2>
+                    <p className="text-muted-2 text-[15px] leading-relaxed">
+                      They are manufactured to a client&apos;s own specification and packed under
+                      their brand, so they belong on their shelf rather than ours. Here is who we
+                      make them for.
+                    </p>
+                  </div>
+
+                  <OemClients block={oemClients} compact />
+
+                  <Link
+                    href="/contact"
+                    className="self-start bg-navy text-white px-8 py-4 rounded-lg font-semibold hover:bg-pink transition-colors"
+                  >
+                    Discuss a private-label run
+                  </Link>
+                </div>
+              </section>
+            )}
+          </>
         ) : (
           <>
             <ProductShowcase products={ownBrand} title="Our brands" />
