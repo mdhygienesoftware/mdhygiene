@@ -2,6 +2,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { deleteProductAction } from "@/lib/admin-actions";
 import DeleteButton from "@/components/admin/DeleteButton";
+import OemClientsForm from "@/components/admin/OemClientsForm";
+import { getOemClients } from "@/lib/queries";
 
 type OemProductRow = {
   id: string;
@@ -21,6 +23,7 @@ export default async function AdminOemPage() {
     .order("sort_order");
 
   const products = (data ?? []) as unknown as OemProductRow[];
+  const oemClients = await getOemClients();
 
   return (
     <div className="flex flex-col gap-6">
@@ -64,6 +67,10 @@ export default async function AdminOemPage() {
           ))}
         </div>
       )}
+
+      {/* The clients, kept with the OEM products because they are the same
+          part of the business — what we make for other people, and who. */}
+      <OemClientsForm block={oemClients} />
     </div>
   );
 }

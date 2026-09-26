@@ -167,3 +167,18 @@ export interface SeoRobots {
   disallow_paths: string[];
   extra_rules: string;
 }
+
+/** One company M.D. Hygiene manufactures for under their own brand. */
+export interface OemClient {
+  name: string;
+  logo_url: string;
+}
+
+/** The "we manufacture for" band, editable under Admin → OEM / Private Label. */
+export interface OemClientsBlock {
+  eyebrow: string;
+  heading: string;
+  caption: string;
+  is_active: boolean;
+  clients: OemClient[];
+}

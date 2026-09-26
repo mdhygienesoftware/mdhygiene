@@ -3,7 +3,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductShowcase from "@/components/ProductShowcase";
 import Brands from "@/components/Brands";
-import { getBrands, getCategories, getProducts } from "@/lib/queries";
+import OemClients from "@/components/OemClients";
+import { getBrands, getCategories, getOemClients, getProducts } from "@/lib/queries";
 import StructuredData, { itemListSchema } from "@/components/StructuredData";
 import { getSeoGeneral, resolveSiteUrl } from "@/lib/seo";
 import { CATALOG_TYPES } from "@/lib/types";
@@ -27,7 +28,7 @@ export default async function ProductsPage({
 }) {
   const { brand: activeBrand, category: activeCategory, type: activeType } = await searchParams;
 
-  const [general, products, brands, categories] = await Promise.all([
+  const [general, products, brands, categories, oemClients] = await Promise.all([
     getSeoGeneral(),
     getProducts({
       brandSlug: activeBrand,
@@ -36,6 +37,7 @@ export default async function ProductsPage({
     }),
     getBrands(),
     getCategories(),
+    getOemClients(),
   ]);
 
   const isFiltered = Boolean(activeBrand || activeCategory || activeType);
@@ -104,7 +106,8 @@ export default async function ProductsPage({
               // not a card: it spans the width and puts the ask in a button
               // rather than stranding a 768px box in a 1392px row.
               <section className="px-5 md:px-14 pb-4 md:pb-6">
-                <div className="bg-white border border-border rounded-2xl p-7 md:p-9 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10">
+                <div className="bg-white border border-border rounded-2xl p-7 md:p-9">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10">
                   <div className="flex flex-col gap-2 max-w-2xl">
                     <h2 className="text-xl md:text-2xl font-extrabold text-navy">OEM / Private label</h2>
                     <p className="text-muted-2 text-[15px] leading-relaxed">
@@ -119,6 +122,14 @@ export default async function ProductsPage({
                   >
                     Discuss a private-label run
                   </Link>
+                  </div>
+
+                  {/* Who already trusted us with a run. On a page that just
+                      asked for a private-label enquiry, this is the answer to
+                      the question the ask provokes. */}
+                  <div className="mt-7 md:mt-8 pt-7 md:pt-8 border-t border-border">
+                    <OemClients block={oemClients} compact />
+                  </div>
                 </div>
               </section>
             )}

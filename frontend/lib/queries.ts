@@ -1,8 +1,9 @@
 import { cache } from "react";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isRenderableImage } from "@/lib/image";
-import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, HeroSlide, GalleryBlock, Product, SiteGalleries, SiteVideos, VideoBlock } from "@/lib/types";
+import type { AboutContent, Brand, CareersContent, Category, CompanyStats, ContactInfo, GalleryBlock, HeroSlide, OemClientsBlock, Product, SiteGalleries, SiteVideos, VideoBlock } from "@/lib/types";
 import { withCareerDefaults } from "@/lib/careers";
+import { withOemClientDefaults } from "@/lib/oem-clients";
 
 /** Public content is fetched straight from Supabase with the anon key — RLS
  * (`is_active = true`) is the only filter that matters, so these never throw
@@ -116,6 +117,8 @@ export const getCompanyStats = () => getSetting<CompanyStats>("company_stats");
 export const getContactInfo = () => getSetting<ContactInfo>("contact");
 export const getAboutContent = () => getSetting<AboutContent>("about");
 export const getCertifications = () => getSetting<string[]>("certifications");
+export const getOemClients = async () =>
+  withOemClientDefaults(await getSetting<Partial<OemClientsBlock>>("oem_clients"));
 export const getFooterTagline = () => getSetting<{ text: string }>("footer_tagline");
 
 const EMPTY_GALLERY: GalleryBlock = {

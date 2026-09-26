@@ -8,8 +8,9 @@ import Certifications from "@/components/Certifications";
 import VideoSection from "@/components/VideoSection";
 import GallerySection from "@/components/GallerySection";
 import CareersStrip from "@/components/CareersStrip";
+import OemClients from "@/components/OemClients";
 import Footer from "@/components/Footer";
-import { getBrands, getCareers, getCertifications, getCompanyStats, getContactInfo, getFeaturedProducts, getHeroSlides, getSiteGalleries, getSiteVideos } from "@/lib/queries";
+import { getBrands, getCareers, getCertifications, getCompanyStats, getContactInfo, getFeaturedProducts, getHeroSlides, getOemClients, getSiteGalleries, getSiteVideos } from "@/lib/queries";
 import { getSeoAi, getSeoGeneral, getSeoLocal, resolveSiteUrl } from "@/lib/seo";
 import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } from "@/components/StructuredData";
 
@@ -19,7 +20,7 @@ import StructuredData, { faqSchema, localBusinessSchema, organizationSchema } fr
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [slides, stats, brands, featured, certifications, contact, careers, general, local, ai, videos, galleries] =
+  const [slides, stats, brands, featured, certifications, contact, careers, general, local, ai, videos, galleries, oemClients] =
     await Promise.all([
       getHeroSlides(),
       getCompanyStats(),
@@ -33,6 +34,7 @@ export default async function HomePage() {
       getSeoAi(),
       getSiteVideos(),
       getSiteGalleries(),
+      getOemClients(),
     ]);
 
   const siteUrl = resolveSiteUrl(general.canonical_domain);
@@ -53,6 +55,7 @@ export default async function HomePage() {
         <GallerySection gallery={galleries.home} />
         <ProductShowcase products={featured} title="Featured products" />
         <PartnerSegments />
+        <OemClients block={oemClients} />
         <Certifications names={certifications} />
         <CareersStrip careers={careers} />
       </main>
