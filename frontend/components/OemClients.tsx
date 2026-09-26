@@ -11,12 +11,13 @@ import type { OemClientsBlock } from "@/lib/types";
  * recognised name answers that faster than any amount of copy.
  *
  * Client logos never share a shape — one is a wide wordmark, another is square
- * with its own coloured background baked in — and several arrive with large
- * empty margins already in the file, which makes them render small beside a
- * mark that fills its canvas. So the files under public/images/oem are all
- * trimmed to their content and centred on one 3:1 canvas. Identical
- * proportions in identical boxes is what gives a row of borrowed artwork the
- * same optical weight.
+ * with its own coloured background baked in — so each sits in an identical box
+ * and is contained rather than cropped, keeping its own proportions while the
+ * row keeps its rhythm.
+ *
+ * Two of the supplied files had most of their canvas empty, which made them
+ * render small beside marks that filled theirs; those were trimmed to their
+ * content. The rest are as supplied.
  */
 export default function OemClients({
   block,
@@ -70,12 +71,11 @@ export default function OemClients({
                 <Image
                   src={client.logo_url}
                   alt={`${client.name} — private-label client of M.D. Hygiene`}
-                  width={900}
-                  height={300}
-                  // Capped on both axes rather than sized from one. The files
-                  // we ship are all 3:1, but a logo uploaded from the admin
-                  // panel could be any shape, and a tall one sized only by
-                  // width would grow straight out of the card.
+                  width={440}
+                  height={260}
+                  // Capped on both axes rather than sized from one: the files
+                  // are deliberately different shapes, and a tall one sized
+                  // only by width would grow straight out of the card.
                   className="max-h-full max-w-full object-contain"
                   sizes="(max-width: 640px) 45vw, 240px"
                 />
