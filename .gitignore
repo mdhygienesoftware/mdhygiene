@@ -18,3 +18,10 @@ coverage/
 # Legacy PHP visiting-card site (imported into the app; contains live DB
 # credentials in card/card/data.php and db-config.php — must not be committed)
 /card/
+
+# Import sources. The spreadsheet and the raw photographs are inputs to the
+# import, not part of the site — the chosen images are copied into
+# frontend/public/images/products and it is those that ship.
+/Products Image/
+/Products to import to website.xlsx
+/import-plan.json

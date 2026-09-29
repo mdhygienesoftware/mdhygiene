@@ -1,0 +1,1127 @@
+[
+  {
+    "id": "000c5d66-ed20-49b8-9343-a5fbc5cbd6eb",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "28c05491-314b-42d4-bc4c-ce82d2fc0334",
+    "slug": "7soft-diaper-jumbo-pack",
+    "name": "7Soft Diaper Jumbo Pack",
+    "description": "Pant-style baby diapers with 12-hour overnight protection and a natural baby-care soft-dry top sheet.",
+    "features": [
+      "12-hour overnight protection",
+      "Pant-style pull-up dry pants",
+      "Natural baby care top sheet",
+      "Sizes S–XL"
+    ],
+    "badges": [
+      "Jumbo Pack"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-diaper-jumbo-pack.jpg",
+    "is_active": true,
+    "is_featured": true,
+    "sort_order": 1,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Baby Diapers",
+      "slug": "baby-diapers"
+    },
+    "variants": [
+      {
+        "id": "63f32794-6348-4b89-8171-17c3efa88e7b",
+        "mrp": 399,
+        "sku": "7S-JUM-XL",
+        "case_qty": 24,
+        "net_price": 205,
+        "pack_count": "24 Pcs",
+        "product_id": "000c5d66-ed20-49b8-9343-a5fbc5cbd6eb",
+        "size_label": "XL",
+        "sort_order": 4,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "dbcb0c41-6d41-4865-9764-037554399e3b",
+        "mrp": 399,
+        "sku": "7S-JUM-L",
+        "case_qty": 48,
+        "net_price": 205,
+        "pack_count": "30 Pcs",
+        "product_id": "000c5d66-ed20-49b8-9343-a5fbc5cbd6eb",
+        "size_label": "L",
+        "sort_order": 3,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "ff1e7a93-c7b2-4c99-871d-d89f89e680dd",
+        "mrp": 399,
+        "sku": "7S-JUM-M",
+        "case_qty": 48,
+        "net_price": 205,
+        "pack_count": "34 Pcs",
+        "product_id": "000c5d66-ed20-49b8-9343-a5fbc5cbd6eb",
+        "size_label": "M",
+        "sort_order": 2,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "3274b06c-db45-4829-ab90-26412618ca7e",
+        "mrp": 399,
+        "sku": "7S-JUM-S",
+        "case_qty": 48,
+        "net_price": 205,
+        "pack_count": "40 Pcs",
+        "product_id": "000c5d66-ed20-49b8-9343-a5fbc5cbd6eb",
+        "size_label": "S",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "c324cacc-5893-469f-92ba-5b1fdaeea23d",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "28c05491-314b-42d4-bc4c-ce82d2fc0334",
+    "slug": "7soft-diaper-maha-jumbo-pack",
+    "name": "7Soft Diaper Maha Jumbo Pack",
+    "description": "Extra-count jumbo pack for high-turnover retail — the same 12-hour dry-pant protection in a bigger bag.",
+    "features": [
+      "12-hour overnight protection",
+      "Pant-style pull-up dry pants",
+      "Natural baby care top sheet",
+      "High-count retail pack"
+    ],
+    "badges": [
+      "Maha Jumbo Pack"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-diaper-maha-jumbo-pack.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 2,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Baby Diapers",
+      "slug": "baby-diapers"
+    },
+    "variants": [
+      {
+        "id": "fb332099-d33f-4ee6-b352-a43d29f9b200",
+        "mrp": 1049,
+        "sku": "7S-MJUM-XL",
+        "case_qty": 32,
+        "net_price": 385,
+        "pack_count": "56 Pcs",
+        "product_id": "c324cacc-5893-469f-92ba-5b1fdaeea23d",
+        "size_label": "XL",
+        "sort_order": 4,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "a5b87c31-1165-424f-8fbf-6244dd13ff4f",
+        "mrp": 1049,
+        "sku": "7S-MJUM-L",
+        "case_qty": 32,
+        "net_price": 385,
+        "pack_count": "62 Pcs",
+        "product_id": "c324cacc-5893-469f-92ba-5b1fdaeea23d",
+        "size_label": "L",
+        "sort_order": 3,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "67ff2f0c-f2aa-48da-a5a5-8d0d2b70d2fc",
+        "mrp": 1049,
+        "sku": "7S-MJUM-M",
+        "case_qty": 32,
+        "net_price": 385,
+        "pack_count": "72 Pcs",
+        "product_id": "c324cacc-5893-469f-92ba-5b1fdaeea23d",
+        "size_label": "M",
+        "sort_order": 2,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "9a585c5d-662c-4458-bd7c-a0092fe30400",
+        "mrp": 1049,
+        "sku": "7S-MJUM-S",
+        "case_qty": 32,
+        "net_price": 385,
+        "pack_count": "78 Pcs",
+        "product_id": "c324cacc-5893-469f-92ba-5b1fdaeea23d",
+        "size_label": "S",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "ae572a3b-2bb7-46b7-8588-f844f083591e",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "28c05491-314b-42d4-bc4c-ce82d2fc0334",
+    "slug": "7soft-diaper-premium-pack-50",
+    "name": "7Soft Diaper Premium Pack (50 Pcs)",
+    "description": "Premium-tier pant diapers for babies up to 14kg, packed 50 per bag / 32 per case.",
+    "features": [
+      "No.1 for baby's gentle skin",
+      "12-hour protection",
+      "7-times more absorbent"
+    ],
+    "badges": [
+      "Premium"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-diaper-premium-50pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 3,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Baby Diapers",
+      "slug": "baby-diapers"
+    },
+    "variants": [
+      {
+        "id": "415f11da-0a1f-4d06-975d-40c60efafd22",
+        "mrp": 825,
+        "sku": "7S-PREM50-L",
+        "case_qty": 32,
+        "net_price": 290,
+        "pack_count": "50 Pcs",
+        "product_id": "ae572a3b-2bb7-46b7-8588-f844f083591e",
+        "size_label": "L",
+        "sort_order": 3,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "b08e66a5-3a4c-4d8a-8f83-87c8e64b21bc",
+        "mrp": 725,
+        "sku": "7S-PREM50-M",
+        "case_qty": 32,
+        "net_price": 275,
+        "pack_count": "50 Pcs",
+        "product_id": "ae572a3b-2bb7-46b7-8588-f844f083591e",
+        "size_label": "M",
+        "sort_order": 2,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "1fe27e7e-884c-42d8-9c5f-d447c1a15ef1",
+        "mrp": 675,
+        "sku": "7S-PREM50-S",
+        "case_qty": 32,
+        "net_price": 260,
+        "pack_count": "50 Pcs",
+        "product_id": "ae572a3b-2bb7-46b7-8588-f844f083591e",
+        "size_label": "S",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "af24f82b-8148-4a61-a48a-3b2a8a154304",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "28c05491-314b-42d4-bc4c-ce82d2fc0334",
+    "slug": "7soft-diaper-premium-pack-75",
+    "name": "7Soft Diaper Premium Pack (75 Pcs)",
+    "description": "Premium-tier pant diapers, high-count 75-piece pack, 24 per case.",
+    "features": [
+      "No.1 for baby's gentle skin",
+      "12-hour protection",
+      "7-times more absorbent"
+    ],
+    "badges": [
+      "Premium"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-diaper-premium-75pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 4,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Baby Diapers",
+      "slug": "baby-diapers"
+    },
+    "variants": [
+      {
+        "id": "c0a8744d-0f62-47d3-888d-f66d1223b911",
+        "mrp": 1249,
+        "sku": "7S-PREM75-L",
+        "case_qty": 24,
+        "net_price": 400,
+        "pack_count": "75 Pcs",
+        "product_id": "af24f82b-8148-4a61-a48a-3b2a8a154304",
+        "size_label": "L",
+        "sort_order": 3,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "36ceb79b-b4a0-47f9-a2a2-4b9fd41cc7e4",
+        "mrp": 1075,
+        "sku": "7S-PREM75-M",
+        "case_qty": 24,
+        "net_price": 380,
+        "pack_count": "75 Pcs",
+        "product_id": "af24f82b-8148-4a61-a48a-3b2a8a154304",
+        "size_label": "M",
+        "sort_order": 2,
+        "stock_status": "in_stock"
+      },
+      {
+        "id": "6dcbeaf8-84ce-484d-9b6f-bdf852f8b544",
+        "mrp": 999,
+        "sku": "7S-PREM75-S",
+        "case_qty": 24,
+        "net_price": 360,
+        "pack_count": "75 Pcs",
+        "product_id": "af24f82b-8148-4a61-a48a-3b2a8a154304",
+        "size_label": "S",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "df48a387-7552-45b3-bdec-04f46a6e10b6",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-l",
+    "name": "7Soft Maxi Care (L)",
+    "description": "Instant-absorption maxi pads with advanced leak-lock side protection and odour control freshness.",
+    "features": [
+      "Instant absorption technology",
+      "Advanced leak protection",
+      "Soft cottony feel",
+      "Odour control freshness"
+    ],
+    "badges": [],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-l-6pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 5,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "7ff936ea-3f1a-4e3a-b5af-8ba73a8c9067",
+        "mrp": 25,
+        "sku": "7S-MC-L6",
+        "case_qty": 640,
+        "net_price": 14.5,
+        "pack_count": "6 Pads",
+        "product_id": "df48a387-7552-45b3-bdec-04f46a6e10b6",
+        "size_label": "L (235mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "f0f30647-1092-4683-85af-b0b38098e1a0",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-xl-6",
+    "name": "7Soft Maxi Care (XL · 6 Pads)",
+    "description": "Extra-large-coverage maxi pads, 235mm, with the advanced leak-lock system.",
+    "features": [
+      "Instant absorption technology",
+      "Advanced leak protection",
+      "Extra large coverage",
+      "Odour control freshness"
+    ],
+    "badges": [
+      "New"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-xl-6pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 6,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "bbeb7b97-cbc6-4003-9357-ffd7d58ce71b",
+        "mrp": 30,
+        "sku": "7S-MC-XL6",
+        "case_qty": 480,
+        "net_price": 16,
+        "pack_count": "6 Pads",
+        "product_id": "f0f30647-1092-4683-85af-b0b38098e1a0",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "74784add-20aa-431b-a652-0fb796901790",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-xl-18",
+    "name": "7Soft Maxi Care (XL · 18 Pads)",
+    "description": "Extra-large-coverage maxi pads in a bigger 18-pad pack.",
+    "features": [
+      "Instant absorption technology",
+      "Advanced leak protection",
+      "Extra large coverage",
+      "Odour control freshness"
+    ],
+    "badges": [
+      "New"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-xl-18pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 7,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "544d23f6-a07c-46b0-aa41-cdf4bc361f8d",
+        "mrp": 85,
+        "sku": "7S-MC-XL18",
+        "case_qty": 192,
+        "net_price": 48,
+        "pack_count": "18 Pads",
+        "product_id": "74784add-20aa-431b-a652-0fb796901790",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "4a18d7d0-a471-445d-a5ce-ccb842c94741",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-cottony-xl-6",
+    "name": "7Soft Maxi Care Cottony (XL · 6 Pads)",
+    "description": "Soft cottony-cover maxi pads with extra-large coverage, 280mm.",
+    "features": [
+      "Maxi soft cottony cover",
+      "Advanced leak protection",
+      "Extra large coverage",
+      "Odour control freshness"
+    ],
+    "badges": [
+      "Pro-extra"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-cottony-xl-6pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 8,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "b245bb6c-f08b-4675-a65e-49eebb176aac",
+        "mrp": 35,
+        "sku": "7S-MCC-XL6",
+        "case_qty": 480,
+        "net_price": 16.5,
+        "pack_count": "6 Pads",
+        "product_id": "4a18d7d0-a471-445d-a5ce-ccb842c94741",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "cc009b1d-1cd5-476d-b00f-7b3c7345c0f8",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-cottony-xl-18",
+    "name": "7Soft Maxi Care Cottony (XL · 18 Pads)",
+    "description": "Soft cottony-cover maxi pads, 280mm, bigger 18-pad pack.",
+    "features": [
+      "Maxi soft cottony cover",
+      "Advanced leak protection",
+      "Extra large coverage",
+      "Odour control freshness"
+    ],
+    "badges": [
+      "New"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-cottony-xl-18pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 9,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "e1d53b3d-9353-4dd0-a848-993426287ecb",
+        "mrp": 100,
+        "sku": "7S-MCC-XL18",
+        "case_qty": 192,
+        "net_price": 49,
+        "pack_count": "18 Pads",
+        "product_id": "cc009b1d-1cd5-476d-b00f-7b3c7345c0f8",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "028da178-392a-40f1-923a-ed713435be2d",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-xl-6-cottony-silky",
+    "name": "7Soft Maxi Care Cottony & Silky (XL · 6 Pads)",
+    "description": "Cottony & silky cover variant, 280mm, extra-large coverage.",
+    "features": [
+      "Cottony & silky cover",
+      "Advanced leak protection",
+      "Extra large coverage",
+      "Odour control freshness"
+    ],
+    "badges": [
+      "Pro-extra"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-xl-6pcs-purple.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 10,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "cd410639-b2db-426f-a8f4-719cc8386095",
+        "mrp": 35,
+        "sku": "7S-MCCS-XL6",
+        "case_qty": 480,
+        "net_price": 16.5,
+        "pack_count": "6 Pads",
+        "product_id": "028da178-392a-40f1-923a-ed713435be2d",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "12f7ee2c-cfaa-4454-8f42-7f09452b428c",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-xl-18-cottony-silky",
+    "name": "7Soft Maxi Care Cottony & Silky (XL · 18 Pads)",
+    "description": "Cottony & silky cover variant, 280mm, bigger 18-pad pack.",
+    "features": [
+      "Cottony & silky cover",
+      "Advanced leak protection",
+      "Extra large coverage",
+      "Odour control freshness"
+    ],
+    "badges": [
+      "New"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-xl-18pcs-purple.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 11,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "9614d7ce-f301-4121-9931-d70880b9e9b1",
+        "mrp": 100,
+        "sku": "7S-MCCS-XL18",
+        "case_qty": 192,
+        "net_price": 49,
+        "pack_count": "18 Pads",
+        "product_id": "12f7ee2c-cfaa-4454-8f42-7f09452b428c",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "ea379ddd-7c12-4864-b1b5-d247a65ab867",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-ultra-care-xl",
+    "name": "7Soft Ultra Care (XL)",
+    "description": "Advanced-protection pads with a super absorbent gel core and 360° total protection.",
+    "features": [
+      "Advanced protection technology",
+      "Super absorbent gel core",
+      "Ultra dry & soft feel",
+      "360° total protection"
+    ],
+    "badges": [
+      "New Technology"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-ultracare-xl-6pcs.jpg",
+    "is_active": true,
+    "is_featured": true,
+    "sort_order": 12,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "de8a7bd7-a90b-466a-9e10-e6df26acee1a",
+        "mrp": 40,
+        "sku": "7S-UC-XL6",
+        "case_qty": 1000,
+        "net_price": 20,
+        "pack_count": "6 Pads",
+        "product_id": "ea379ddd-7c12-4864-b1b5-d247a65ab867",
+        "size_label": "XL",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "d87b70a8-417c-4570-b859-132d415a04dc",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-maxi-care-cottony-xxl",
+    "name": "7Soft Maxi Care Cottony (XXL)",
+    "description": "Maxi soft cottony cover, 320mm, extra-long protection with fast absorption gel technology.",
+    "features": [
+      "Maxi soft cottony cover",
+      "Extra long protection",
+      "Fast absorption gel technology",
+      "Leak lock side protection"
+    ],
+    "badges": [],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-maxicare-cottony-xxl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": true,
+    "sort_order": 13,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "5af1c337-65ca-4f54-9388-91ae383305f0",
+        "mrp": 399,
+        "sku": "7S-MCC-XXL40",
+        "case_qty": 80,
+        "net_price": 135,
+        "pack_count": "40 Pads",
+        "product_id": "d87b70a8-417c-4570-b859-132d415a04dc",
+        "size_label": "XXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "a99d0a59-6796-4d10-af39-70caebca8a9f",
+    "brand_id": "7e38fae4-9e6c-4a12-b83e-9282986610e3",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "7soft-ultra-cottony-xxl",
+    "name": "7Soft Ultra Cottony (XXL)",
+    "description": "Ultra soft cottony cover, slim & comfortable, 320mm, extra-long protection.",
+    "features": [
+      "Ultra soft cottony cover",
+      "Extra long protection",
+      "Fast absorption gel technology",
+      "Leak lock side protection"
+    ],
+    "badges": [
+      "Extra Protection"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/7soft-ultracottony-xxl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 14,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "7Soft",
+      "slug": "7soft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "f7778bba-b36b-4a15-ab12-3db0b6352029",
+        "mrp": 399,
+        "sku": "7S-UCT-XXL40",
+        "case_qty": 120,
+        "net_price": 132.5,
+        "pack_count": "40 Pads",
+        "product_id": "a99d0a59-6796-4d10-af39-70caebca8a9f",
+        "size_label": "XXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "bd84b15e-85cb-4232-87ef-09c1c3607574",
+    "brand_id": "1e61f03d-db33-4ffc-9c1d-a08769e57d58",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "extrasure-maxi-care-xxl",
+    "name": "Extra Sure Maxi Care (XXL)",
+    "description": "Jumbo maxi-soft dry-cover pads, 320mm, with fast absorption gel technology and day & night protection.",
+    "features": [
+      "Maxi soft dry cover",
+      "Extra long protection",
+      "Fast absorption gel technology",
+      "Leak lock side protection"
+    ],
+    "badges": [
+      "Jumbo"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/extrasure-maxicare-xxl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": true,
+    "sort_order": 15,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "Extra Sure",
+      "slug": "extrasure"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "a2fea5a7-ee90-470c-9c31-b5850bee4f8b",
+        "mrp": 399,
+        "sku": "XS-MC-XXL40",
+        "case_qty": 80,
+        "net_price": 122,
+        "pack_count": "40 Pads",
+        "product_id": "bd84b15e-85cb-4232-87ef-09c1c3607574",
+        "size_label": "XXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "231a5cc5-c0d1-4655-9b1e-3b8ae5057d24",
+    "brand_id": "1e61f03d-db33-4ffc-9c1d-a08769e57d58",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "extrasure-maxi-care-xxl-bonus",
+    "name": "Extra Sure Maxi Care (XXL · 40+10 Bonus Pads)",
+    "description": "Same jumbo maxi-care formula with 10 bonus regular pads included.",
+    "features": [
+      "Maxi soft dry cover",
+      "Extra long protection",
+      "Fast absorption gel technology",
+      "40 + 10 free pads"
+    ],
+    "badges": [
+      "Jumbo",
+      "Bonus Pack"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/extrasure-maxicare-xxl-40plus10pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 16,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "Extra Sure",
+      "slug": "extrasure"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "7b233e3d-29aa-4a33-8a24-4f4e15232a9a",
+        "mrp": 399,
+        "sku": "XS-MC-XXL40B",
+        "case_qty": 80,
+        "net_price": 135,
+        "pack_count": "40+10 Pads",
+        "product_id": "231a5cc5-c0d1-4655-9b1e-3b8ae5057d24",
+        "size_label": "XXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "216776fa-9126-4d60-905f-c2e134cb3cb0",
+    "brand_id": "aca46a60-10e0-4eca-85b0-a5c88f108694",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "extrasoft-2x-maxi-purple",
+    "name": "Extra Soft 2X Maxi (Purple)",
+    "description": "2X faster-absorption jumbo pads, 280mm, with day & night protection.",
+    "features": [
+      "Maxi soft dry cover",
+      "2X faster absorption gel technology",
+      "Extra long protection",
+      "Leak lock side protection"
+    ],
+    "badges": [
+      "New Gel Technology"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/extrasoft-2x-maxi-purple-xl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 17,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "Extra Soft",
+      "slug": "extrasoft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "f87c7080-3ec9-430e-9132-4719165ebeb6",
+        "mrp": 349,
+        "sku": "XSF-2X-XL40",
+        "case_qty": 100,
+        "net_price": 94,
+        "pack_count": "40 Pads",
+        "product_id": "216776fa-9126-4d60-905f-c2e134cb3cb0",
+        "size_label": "XL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "95ff24ba-a5e7-4d86-8922-6e8b4cdf8934",
+    "brand_id": "aca46a60-10e0-4eca-85b0-a5c88f108694",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "extrasoft-3x-maxi-purple",
+    "name": "Extra Soft 3X Maxi (Purple)",
+    "description": "3X faster-absorption jumbo pads, 320mm, with day & night protection.",
+    "features": [
+      "Maxi soft dry cover",
+      "3X faster absorption gel technology",
+      "Extra long protection",
+      "Leak lock side protection"
+    ],
+    "badges": [
+      "New Gel Technology"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/extrasoft-3x-maxi-purple-xxl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": true,
+    "sort_order": 18,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "Extra Soft",
+      "slug": "extrasoft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "d6f22201-c84e-49b3-8b37-ba0d10dd8365",
+        "mrp": 399,
+        "sku": "XSF-3XP-XXL40",
+        "case_qty": 80,
+        "net_price": 102,
+        "pack_count": "40 Pads",
+        "product_id": "95ff24ba-a5e7-4d86-8922-6e8b4cdf8934",
+        "size_label": "XXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "081b5267-03cf-4f2b-bf72-874ffa425d5c",
+    "brand_id": "aca46a60-10e0-4eca-85b0-a5c88f108694",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "extrasoft-3x-maxi-pink",
+    "name": "Extra Soft 3X Maxi (Pink)",
+    "description": "3X faster-absorption jumbo pads, 320mm, in the Pink colourway.",
+    "features": [
+      "Maxi soft dry cover",
+      "3X faster absorption gel technology",
+      "Extra long protection",
+      "Leak lock side protection"
+    ],
+    "badges": [
+      "New Gel Technology"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/extrasoft-3x-maxi-pink-xxl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 19,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "Extra Soft",
+      "slug": "extrasoft"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "d75135e7-4352-4665-8eb7-65af930c5e0f",
+        "mrp": 399,
+        "sku": "XSF-3XPK-XXL40",
+        "case_qty": 80,
+        "net_price": 107,
+        "pack_count": "40 Pads",
+        "product_id": "081b5267-03cf-4f2b-bf72-874ffa425d5c",
+        "size_label": "XXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "18bc34a0-5bfb-433e-a235-cf56e7e4b5e8",
+    "brand_id": "a107855e-4d6b-45f5-92f5-7050d700e31b",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "24care-active-anions-xxl",
+    "name": "24Care Active Anions (XXL)",
+    "description": "8-layer protection with oxygen active anions, ultra soft cottony cover and antibacterial protection.",
+    "features": [
+      "8 layer protection",
+      "Oxygen active anions",
+      "Ultra soft cottony sanitary napkins",
+      "Antibacterial protection",
+      "Day & night protection"
+    ],
+    "badges": [
+      "Ultra"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/24care-active-anions-xxl-8pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 20,
+    "created_at": "2026-09-02T11:00:11.791477+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "24Care",
+      "slug": "24care"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "9d499aa3-5cf3-4b3b-8437-93363ca82bbc",
+        "mrp": 120,
+        "sku": "24C-AA-XXL8",
+        "case_qty": 250,
+        "net_price": 70,
+        "pack_count": "8 Pads",
+        "product_id": "18bc34a0-5bfb-433e-a235-cf56e7e4b5e8",
+        "size_label": "XXL (280mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  },
+  {
+    "id": "670d1c45-8bd6-43c6-b312-5582e7c51e58",
+    "brand_id": "a107855e-4d6b-45f5-92f5-7050d700e31b",
+    "category_id": "c03f3d7b-eb4a-4690-80c6-7689440b942c",
+    "slug": "24care-active-anions-xxxl",
+    "name": "24Care Active Anions (XXXL)",
+    "description": "8-layer protection with oxygen active anions in the biggest 320mm size, 40-pad pack.",
+    "features": [
+      "8 layer protection",
+      "Oxygen active anions",
+      "Ultra soft cottony sanitary napkins",
+      "Antibacterial protection",
+      "Day & night protection"
+    ],
+    "badges": [
+      "Ultra"
+    ],
+    "image_url": "https://gtpvibbeqlndkaezqniz.supabase.co/storage/v1/object/public/media/seed/products/24care-active-anions-xxxl-40pcs.jpg",
+    "is_active": true,
+    "is_featured": false,
+    "sort_order": 21,
+    "created_at": "2026-09-10T12:07:22.589424+00:00",
+    "catalog_type": "own_brand",
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "brand": {
+      "name": "24Care",
+      "slug": "24care"
+    },
+    "category": {
+      "name": "Sanitary Pads",
+      "slug": "sanitary-pads"
+    },
+    "variants": [
+      {
+        "id": "79268348-32b1-4587-a186-1ece9ab400fc",
+        "mrp": 599,
+        "sku": "24C-AA-XXXL40",
+        "case_qty": 120,
+        "net_price": 250,
+        "pack_count": "40 Pads",
+        "product_id": "670d1c45-8bd6-43c6-b312-5582e7c51e58",
+        "size_label": "XXXL (320mm)",
+        "sort_order": 1,
+        "stock_status": "in_stock"
+      }
+    ]
+  }
+]
