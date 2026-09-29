@@ -13,9 +13,14 @@ export default function ProductCard({ product }: { product: Product }) {
       // tall as its own text, and a row of them comes out ragged.
       className="h-full rounded-2xl overflow-hidden border border-border bg-white flex flex-col hover:shadow-lg transition-shadow"
     >
-      <div className="relative h-[220px] bg-[#F5E1EA]">
+      {/* Contained, not cropped. A packshot is taller than this box and
+          cover would take the crop out of the top and bottom of the pack —
+          which is the half with the brand on it. White rather than the pink
+          tint, because the photographs are cut out on white and a tinted
+          border around them reads as a mistake. */}
+      <div className="relative h-[220px] bg-white">
         {isRenderableImage(product.image_url) && (
-          <Image src={product.image_url} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+          <Image src={product.image_url} alt={product.name} fill className="object-contain p-4" sizes="(max-width: 768px) 100vw, 25vw" />
         )}
         {product.badges?.[0] && (
           <span className="absolute top-3 left-3 bg-navy text-white text-[11px] font-bold px-3 py-1 rounded-full">

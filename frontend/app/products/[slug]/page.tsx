@@ -74,9 +74,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <Header />
       <main className="px-5 md:px-14 py-8 md:py-12 flex flex-col gap-10 md:gap-12">
         <div className="grid md:grid-cols-2 gap-7 md:gap-10">
-          <div className="relative rounded-2xl h-[240px] sm:h-[300px] md:h-[340px] bg-[#F5E1EA] overflow-hidden">
+          <div className="relative rounded-2xl h-[240px] sm:h-[300px] md:h-[340px] bg-white border border-border overflow-hidden">
             {isRenderableImage(product.image_url) && (
-              <Image src={product.image_url} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+              <Image src={product.image_url} alt={product.name} fill className="object-contain p-6" sizes="(max-width: 768px) 100vw, 50vw" />
             )}
           </div>
           <div className="flex flex-col gap-5">

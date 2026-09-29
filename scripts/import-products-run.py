@@ -22,9 +22,15 @@ OUT_IMAGES = os.path.join(ROOT, "frontend", "public", "images", "products")
 PLAN = os.path.join(ROOT, "import-plan.json")
 SQL_OUT = os.path.join(ROOT, "import-products.sql")
 
-# Wide enough for the product detail page on a retina screen; these are
-# packshots on flat backgrounds, so they compress well at this size.
-MAX_SIZE = (900, 900)
+# Every packshot is centred on one square canvas at this size.
+#
+# The supplied photographs run from 0.42 to 2.93 in aspect — mostly tall packs,
+# a few wide ones. Dropped into a landscape card as they are, the tall ones
+# lose their top and bottom to the crop, which is what was cutting the packs in
+# half. One shape for all of them, with the pack contained inside it, means the
+# card can show the whole thing and the grid still lines up.
+CANVAS = 900
+FILL = 0.92
 
 SIZE_ORDER = {"Small": 1, "Medium": 2, "Large": 3, "Extra Large": 4,
               "235mm": 1, "280mm": 2, "320mm": 3}
@@ -86,7 +92,10 @@ def main():
 
     for order, p in enumerate(plan, 1):
         # --- the photograph
-        target_name = f"{p['slug']}.jpg"
+        # -sq marks the square canvas. A new name rather than overwriting:
+        # optimised images are cached by URL for a month, so replacing a file
+        # in place leaves everyone who has seen it looking at the old crop.
+        target_name = f"{p['slug']}-sq.jpg"
         im = Image.open(p["image_source"])
         if im.mode in ("RGBA", "LA", "P"):
             flat = Image.new("RGB", im.size, (255, 255, 255))
@@ -95,8 +104,10 @@ def main():
             im = flat
         else:
             im = im.convert("RGB")
-        im.thumbnail(MAX_SIZE, Image.LANCZOS)
-        im.save(os.path.join(OUT_IMAGES, target_name), "JPEG", quality=86, optimize=True)
+        im.thumbnail((int(CANVAS * FILL), int(CANVAS * FILL)), Image.LANCZOS)
+        canvas = Image.new("RGB", (CANVAS, CANVAS), (255, 255, 255))
+        canvas.paste(im, ((CANVAS - im.width) // 2, (CANVAS - im.height) // 2))
+        canvas.save(os.path.join(OUT_IMAGES, target_name), "JPEG", quality=86, optimize=True)
 
         image_url = f"/images/products/{target_name}"
         description = describe(p)
