@@ -183,6 +183,25 @@ with each other instead of reinforcing.
 
 ---
 
+## To confirm on a production build
+
+- **Soft 404 on a deleted product.** `/products/<removed-slug>` renders the
+  not-found page but answers **200** in the dev server, where a path with no
+  route at all correctly answers 404. A 200 with "not found" on it keeps the
+  address in Google's index and sends people to a dead end from search. The
+  page calls `notFound()` as it should, so this may be a dev-server artifact —
+  check it against `npm run build && npm start` before launch:
+
+  ```bash
+  curl -sI https://mdhygiene.in/products/7soft-diaper-jumbo-pack | head -1
+  # want: HTTP/1.1 404 Not Found
+  ```
+
+  It matters more than it looks now that the catalogue can be reimported: every
+  re-slug turns the previous product addresses into this case.
+
+---
+
 ## Accepted, not fixed
 
 - **No enforcing CSP** beyond `frame-ancestors`. The inline GTM bootstrap and
